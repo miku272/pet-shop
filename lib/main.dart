@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'router.dart';
 import './screens/home_screen.dart';
+import './screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }

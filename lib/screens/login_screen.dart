@@ -1,0 +1,186 @@
+import 'package:flutter/material.dart';
+
+import '../size_config.dart';
+import '../app_styles.dart';
+
+import '../widgets/custom_textbox.dart';
+
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
+    return Scaffold(
+      backgroundColor: lighterOrange,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Image.asset(
+                'assets/images/login_top.png',
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 15),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: paddingHorizontal),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Login',
+                              style: sourceSansProBold.copyWith(
+                                fontSize: 25,
+                                color: grey,
+                              ),
+                            ),
+                            Text(
+                              'Sign in to continue',
+                              style: sourceSansProRegular.copyWith(
+                                fontSize: 15,
+                                color: grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Form(
+                      child: Column(
+                        children: const <Widget>[
+                          CustomTextbox(
+                            Icons.email_outlined,
+                            'Email',
+                            false,
+                          ),
+                          SizedBox(height: 15),
+                          CustomTextbox(
+                            Icons.lock_outline,
+                            'Password',
+                            true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {},
+                          child: Text(
+                            'Forget Password?',
+                            style: sourceSansProBold.copyWith(
+                              color: orange,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 19,
+                                horizontal: 63,
+                              ),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: grey,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Sign in',
+                                  style: sourceSansProBold.copyWith(
+                                    color: boxShadowColor,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 25,
+                              vertical: 14,
+                            ),
+                            // width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: lightOrange,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'G',
+                                style: sourceSansProBold.copyWith(
+                                  color: orange,
+                                  fontSize: 30,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 45),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Don\'t have an account? ',
+                          style: sourceSansProBold.copyWith(
+                            color: grey,
+                            fontSize: 18,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Text(
+                            'Signup ',
+                            style: sourceSansProBold.copyWith(
+                              color: orange,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'now',
+                          style: sourceSansProBold.copyWith(
+                            color: grey,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
