@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../app_styles.dart';
 
@@ -7,8 +6,10 @@ class CustomTextbox extends StatelessWidget {
   final String labelData;
   final IconData prefixIcon;
   final bool isHidden;
+  final String? Function(String?)? validator;
 
-  const CustomTextbox(this.prefixIcon, this.labelData, this.isHidden,
+  const CustomTextbox(
+      this.prefixIcon, this.labelData, this.isHidden, this.validator,
       {super.key});
 
   @override
@@ -37,6 +38,7 @@ class CustomTextbox extends StatelessWidget {
           ),
           border: InputBorder.none,
         ),
+        validator: validator,
       ),
     );
   }

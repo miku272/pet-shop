@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'router.dart';
 // import './screens/home_screen.dart';
-import './screens/login_screen.dart';
+// import './screens/login_screen.dart';
+import './screens/registration_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
       // home: const HomeScreen(),
-      home: const LoginScreen(),
+      // home: const LoginScreen(),
+      home: const RegistrationScreen(),
     );
   }
 }
