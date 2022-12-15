@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^3.0.1
   flutter_svg: ^1.1.6
+  lottie: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/loaders/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

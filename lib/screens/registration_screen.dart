@@ -4,11 +4,19 @@ import '../size_config.dart';
 import '../app_styles.dart';
 
 import '../widgets/custom_textbox.dart';
-import '../screens/registration_screen.dart';
+import '../screens/login_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  static const String routeName = '/login-screen';
-  const LoginScreen({super.key});
+class RegistrationScreen extends StatefulWidget {
+  static const String routeName = '/registration-page';
+  const RegistrationScreen({super.key});
+
+  @override
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
+}
+
+class _RegistrationScreenState extends State<RegistrationScreen> {
+  var _isValidated = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +45,14 @@ class LoginScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'Login',
+                              'Register',
                               style: sourceSansProBold.copyWith(
                                 fontSize: 25,
                                 color: grey,
                               ),
                             ),
                             Text(
-                              'Sign in to continue',
+                              'Sign up to continue',
                               style: sourceSansProRegular.copyWith(
                                 fontSize: 15,
                                 color: grey,
@@ -56,46 +64,61 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Form(
+                      key: _formKey,
                       child: Column(
-                        children: const <Widget>[
+                        children: <Widget>[
+                          CustomTextbox(
+                            Icons.person,
+                            'Your Name',
+                            false,
+                            (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !RegExp(r'[a-z A-Z]+$').hasMatch(value)) {
+                                return 'Please enter valid name';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 15),
                           CustomTextbox(
                             Icons.email_outlined,
                             'Email',
                             false,
-                            null,
+                            (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
+                                      .hasMatch(value)) {
+                                return 'Please enter valid email';
+                              }
+
+                              return null;
+                            },
                           ),
                           SizedBox(height: 15),
                           CustomTextbox(
                             Icons.lock_outline,
                             'Password',
                             true,
-                            null,
+                            (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              }
+
+                              return null;
+                            },
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            'Forget Password?',
-                            style: sourceSansProBold.copyWith(
-                              color: orange,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                     const SizedBox(height: 40),
                     Row(
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: () {},
+                            onTap: _isValidated ? () {} : null,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -104,14 +127,16 @@ class LoginScreen extends StatelessWidget {
                               ),
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: grey,
+                                color: _isValidated ? grey : lightOrange,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
                                 child: Text(
-                                  'Sign in',
+                                  'Sign up',
                                   style: sourceSansProBold.copyWith(
-                                    color: boxShadowColor,
+                                    color: _isValidated
+                                        ? boxShadowColor
+                                        : lightGrey,
                                     fontSize: 20,
                                   ),
                                 ),
@@ -121,7 +146,11 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 15),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            setState(() {
+                              _isValidated = !_isValidated;
+                            });
+                          },
                           borderRadius: BorderRadius.circular(12),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -130,7 +159,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             // width: double.infinity,
                             decoration: BoxDecoration(
-                              color: lightOrange,
+                              color: grey,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Center(
@@ -152,7 +181,7 @@ class LoginScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Don\'t have an account? ',
+                          'Already have an account? ',
                           style: sourceSansProBold.copyWith(
                             color: grey,
                             fontSize: 18,
@@ -161,11 +190,11 @@ class LoginScreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             Navigator.of(context).pushReplacementNamed(
-                              RegistrationScreen.routeName,
+                              LoginScreen.routeName,
                             );
                           },
                           child: Text(
-                            'Signup ',
+                            'Sign in ',
                             style: sourceSansProBold.copyWith(
                               color: orange,
                               fontSize: 18,
