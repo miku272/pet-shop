@@ -15,8 +15,16 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  var _isValidated = false;
   final _formKey = GlobalKey<FormState>();
+  var temp = [];
+
+  void _saveForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // print(temp);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +88,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                               return null;
                             },
+                            (value) {
+                              temp.add(value!.trim());
+                            },
                           ),
                           const SizedBox(height: 15),
                           CustomTextbox(
@@ -96,6 +107,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                               return null;
                             },
+                            (value) {
+                              temp.add(value!.trim());
+                            },
                           ),
                           const SizedBox(height: 15),
                           CustomTextbox(
@@ -107,7 +121,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 return 'Please enter password';
                               }
 
+                              if (value.length <= 6) {
+                                return 'Please enter password of more than 6 characters';
+                              }
+
                               return null;
+                            },
+                            (value) {
+                              temp.add(value);
                             },
                           ),
                         ],
@@ -118,7 +139,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: _isValidated ? () {} : null,
+                            onTap: _saveForm,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -127,16 +148,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               ),
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: _isValidated ? grey : lightOrange,
+                                color: grey,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
                                 child: Text(
                                   'Sign up',
                                   style: sourceSansProBold.copyWith(
-                                    color: _isValidated
-                                        ? boxShadowColor
-                                        : lightGrey,
+                                    color: boxShadowColor,
                                     fontSize: 20,
                                   ),
                                 ),
@@ -146,11 +165,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         const SizedBox(width: 15),
                         InkWell(
-                          onTap: () {
-                            setState(() {
-                              _isValidated = !_isValidated;
-                            });
-                          },
+                          onTap: () {},
                           borderRadius: BorderRadius.circular(12),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -159,7 +174,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                             // width: double.infinity,
                             decoration: BoxDecoration(
-                              color: grey,
+                              color: lightOrange,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Center(

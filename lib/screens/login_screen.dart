@@ -6,9 +6,25 @@ import '../app_styles.dart';
 import '../widgets/custom_textbox.dart';
 import '../screens/registration_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = '/login-screen';
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  var temp = [];
+
+  void _saveForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // print(temp);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +72,46 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Form(
+                      key: _formKey,
                       child: Column(
-                        children: const <Widget>[
+                        children: <Widget>[
                           CustomTextbox(
                             Icons.email_outlined,
                             'Email',
                             false,
-                            null,
+                            (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
+                                      .hasMatch(value)) {
+                                return 'Please enter valid email';
+                              }
+
+                              return null;
+                            },
+                            (value) {
+                              temp.add(value!.trim());
+                            },
                           ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                           CustomTextbox(
                             Icons.lock_outline,
                             'Password',
                             true,
-                            null,
+                            (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              }
+
+                              if (value.length <= 6) {
+                                return 'Please enter password of more than 6 characters';
+                              }
+
+                              return null;
+                            },
+                            (value) {
+                              temp.add(value);
+                            },
                           ),
                         ],
                       ),
@@ -95,7 +137,7 @@ class LoginScreen extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: () {},
+                            onTap: _saveForm,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(

@@ -7,9 +7,10 @@ class CustomTextbox extends StatelessWidget {
   final IconData prefixIcon;
   final bool isHidden;
   final String? Function(String?)? validator;
+  final void Function(String?)? onSave;
 
-  const CustomTextbox(
-      this.prefixIcon, this.labelData, this.isHidden, this.validator,
+  const CustomTextbox(this.prefixIcon, this.labelData, this.isHidden,
+      this.validator, this.onSave,
       {super.key});
 
   @override
@@ -39,6 +40,7 @@ class CustomTextbox extends StatelessWidget {
           border: InputBorder.none,
         ),
         validator: validator,
+        onSaved: onSave,
       ),
     );
   }

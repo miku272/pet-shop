@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'router.dart';
-// import './screens/home_screen.dart';
-// import './screens/login_screen.dart';
 import './screens/registration_screen.dart';
 
 void main() {
@@ -21,8 +19,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      // home: const HomeScreen(),
-      // home: const LoginScreen(),
       home: const RegistrationScreen(),
     );
   }
