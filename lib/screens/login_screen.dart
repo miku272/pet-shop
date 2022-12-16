@@ -16,13 +16,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  var temp = [];
+  var temp =
+      []; // This variable is created only to store the values entered by users. Marked for deletion later
 
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // print(temp);
+      // print(temp); // Use this to check the values entered by users, in debug console. Marked for deletion later
     }
   }
 
