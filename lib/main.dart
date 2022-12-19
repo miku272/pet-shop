@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 import 'router.dart';
-import './screens/registration_screen.dart';
+import './screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      home: const RegistrationScreen(),
+      home: const HomeScreen(),
     );
   }
 }

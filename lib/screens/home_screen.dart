@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
 import '../widgets/pet_container.dart';
 
+import './login_screen.dart';
 import './pet_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -80,12 +82,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     'assets/nav_icon.svg',
                     width: 18,
                   ),
-                  const CircleAvatar(
-                    radius: 20,
-                    backgroundColor: orange,
-                    backgroundImage: NetworkImage(
-                        'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
+                  Text(
+                    'Pet Shop',
+                    style: sourceSansProBold.copyWith(
+                      fontSize: 23,
+                      color: grey,
+                    ),
                   ),
+                  FirebaseAuth.instance.currentUser == null
+                      ? InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(LoginScreen.routeName);
+                          },
+                          child: Text(
+                            'Login',
+                            style: sourceSansProSemiBold.copyWith(
+                              color: lightGrey,
+                              fontSize: 16.5,
+                            ),
+                          ),
+                        )
+                      : const CircleAvatar(
+                          radius: 20,
+                          backgroundColor: orange,
+                          backgroundImage: NetworkImage(
+                              'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
+                        ),
                 ],
               ),
             ),
