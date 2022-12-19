@@ -77,10 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: <Widget>[
                           CustomTextbox(
-                            Icons.email_outlined,
-                            'Email',
-                            false,
-                            (value) {
+                            prefixIcon: Icons.email_outlined,
+                            labelData: 'Email',
+                            isHidden: false,
+                            validator: (value) {
                               if (value == null ||
                                   value.isEmpty ||
                                   !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
@@ -90,16 +90,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               return null;
                             },
-                            (value) {
+                            onSave: (value) {
                               temp.add(value!.trim());
                             },
                           ),
                           const SizedBox(height: 15),
                           CustomTextbox(
-                            Icons.lock_outline,
-                            'Password',
-                            true,
-                            (value) {
+                            prefixIcon: Icons.lock_outline,
+                            labelData: 'Password',
+                            isHidden: true,
+                            validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter password';
                               }
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               return null;
                             },
-                            (value) {
+                            onSave: (value) {
                               temp.add(value);
                             },
                           ),

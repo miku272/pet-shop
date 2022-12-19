@@ -10,6 +10,7 @@ import './login_screen.dart';
 import './pet_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = '/home-screen';
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: paddingHorizontal),

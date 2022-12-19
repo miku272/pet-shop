@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../size_config.dart';
 import '../app_styles.dart';
 
+import '../services/helper_fucntion.dart';
+import '../widgets/my_snackbar.dart';
 import '../widgets/custom_textbox.dart';
-import '../screens/login_screen.dart';
+import '../services/auth_service.dart';
+import './login_screen.dart';
+import './home_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String routeName = '/registration-page';
@@ -16,13 +19,44 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-  var temp = [];
+  final authService = AuthService();
+  bool _isLoading = false;
+  String fullName = '';
+  String email = '';
+  String password = '';
 
-  void _saveForm() {
+  void _register() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       _formKey.currentState!.save();
 
-      // print(temp);
+      dynamic value = await authService.registerUserWithEmailAndPassword(
+          fullName, email, password);
+
+      if (value == true) {
+        // await HelperFunction.setUserLoggedInStatus(true);
+        await HelperFunction.setUserName(fullName);
+        await HelperFunction.setUserEmail(email);
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (mounted) {
+          MySnackbar.showSnackbar(context, red, value);
+        }
+      }
     }
   }
 
@@ -76,10 +110,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       child: Column(
                         children: <Widget>[
                           CustomTextbox(
-                            Icons.person,
-                            'Your Name',
-                            false,
-                            (value) {
+                            prefixIcon: Icons.person,
+                            labelData: 'Your Name',
+                            isHidden: false,
+                            validator: (value) {
                               if (value == null ||
                                   value.isEmpty ||
                                   !RegExp(r'[a-z A-Z]+$').hasMatch(value)) {
@@ -88,16 +122,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                               return null;
                             },
-                            (value) {
-                              temp.add(value!.trim());
+                            onSave: (value) {
+                              fullName = value!.trim();
                             },
                           ),
                           const SizedBox(height: 15),
                           CustomTextbox(
-                            Icons.email_outlined,
-                            'Email',
-                            false,
-                            (value) {
+                            prefixIcon: Icons.email_outlined,
+                            labelData: 'Email',
+                            isHidden: false,
+                            validator: (value) {
                               if (value == null ||
                                   value.isEmpty ||
                                   !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
@@ -107,16 +141,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                               return null;
                             },
-                            (value) {
-                              temp.add(value!.trim());
+                            onSave: (value) {
+                              email = value!.trim();
                             },
                           ),
                           const SizedBox(height: 15),
                           CustomTextbox(
-                            Icons.lock_outline,
-                            'Password',
-                            true,
-                            (value) {
+                            prefixIcon: Icons.lock_outline,
+                            labelData: 'Password',
+                            isHidden: true,
+                            validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter password';
                               }
@@ -127,8 +161,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                               return null;
                             },
-                            (value) {
-                              temp.add(value);
+                            onSave: (value) {
+                              password = value!;
                             },
                           ),
                         ],
@@ -139,7 +173,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: _saveForm,
+                            onTap: _register,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -152,13 +186,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
-                                child: Text(
-                                  'Sign up',
-                                  style: sourceSansProBold.copyWith(
-                                    color: boxShadowColor,
-                                    fontSize: 20,
-                                  ),
-                                ),
+                                child: _isLoading
+                                    ? const CircularProgressIndicator(
+                                        color: boxShadowColor,
+                                      )
+                                    : Text(
+                                        'Sign up',
+                                        style: sourceSansProBold.copyWith(
+                                          color: boxShadowColor,
+                                          fontSize: 20,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

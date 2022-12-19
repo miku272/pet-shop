@@ -9,9 +9,14 @@ class CustomTextbox extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onSave;
 
-  const CustomTextbox(this.prefixIcon, this.labelData, this.isHidden,
-      this.validator, this.onSave,
-      {super.key});
+  const CustomTextbox({
+    required this.prefixIcon,
+    required this.labelData,
+    required this.isHidden,
+    this.validator,
+    this.onSave,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
