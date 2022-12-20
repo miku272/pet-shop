@@ -1,10 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_shop/services/database_service.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
 
+import '../widgets/my_snackbar.dart';
 import '../widgets/custom_textbox.dart';
-import '../screens/registration_screen.dart';
+import '../services/auth_service.dart';
+import '../services/helper_fucntion.dart';
+import './registration_screen.dart';
+import './home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login-screen';
@@ -16,14 +23,48 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  var temp =
-      []; // This variable is created only to store the values entered by users. Marked for deletion later
+  final authService = AuthService();
+  bool _isLoading = false;
+  String email = '';
+  String password = '';
 
-  void _saveForm() {
+  void _signin() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       _formKey.currentState!.save();
 
-      // print(temp); // Use this to check the values entered by users, in debug console. Marked for deletion later
+      dynamic value =
+          await authService.loginUserWithEmailAndPassword(email, password);
+
+      if (value == true) {
+        QuerySnapshot snapshot =
+            await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                .getUserDataUsingEmail(email);
+
+        // await HelperFunction.setUserLoggedInStatus(true);
+        await HelperFunction.setUserFirstName(snapshot.docs[0]['firstName']);
+        await HelperFunction.setUserLastName(snapshot.docs[0]['lastName']);
+        await HelperFunction.setUserEmail(email);
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (mounted) {
+          MySnackbar.showSnackbar(context, red, value);
+        }
+      }
     }
   }
 
@@ -91,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                             onSave: (value) {
-                              temp.add(value!.trim());
+                              email = value!;
                             },
                           ),
                           const SizedBox(height: 15),
@@ -111,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                             onSave: (value) {
-                              temp.add(value);
+                              password = value!;
                             },
                           ),
                         ],
@@ -138,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: _saveForm,
+                            onTap: _signin,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -151,13 +192,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
-                                child: Text(
-                                  'Sign in',
-                                  style: sourceSansProBold.copyWith(
-                                    color: boxShadowColor,
-                                    fontSize: 20,
-                                  ),
-                                ),
+                                child: _isLoading
+                                    ? const CircularProgressIndicator(
+                                        color: boxShadowColor,
+                                      )
+                                    : Text(
+                                        'Sign in',
+                                        style: sourceSansProBold.copyWith(
+                                          color: boxShadowColor,
+                                          fontSize: 20,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

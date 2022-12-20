@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../size_config.dart';
 import '../app_styles.dart';
 import '../widgets/pet_container.dart';
+import '../services/auth_service.dart';
 
 import './login_screen.dart';
 import './pet_detail_screen.dart';
@@ -104,12 +105,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
-                      : const CircleAvatar(
-                          radius: 20,
-                          backgroundColor: orange,
-                          backgroundImage: NetworkImage(
-                              'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
-                        ),
+                      : InkWell(
+                          onTap: () {
+                            setState(() {
+                              AuthService().signOut();
+                            });
+                          },
+                          child: Text(
+                            'Sign out',
+                            style: sourceSansProSemiBold.copyWith(
+                              color: lightGrey,
+                              fontSize: 16.5,
+                            ),
+                          ),
+                        )
+                  // : const CircleAvatar(
+                  //     radius: 20,
+                  //     backgroundColor: orange,
+                  //     backgroundImage: NetworkImage(
+                  //         'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
+                  //   ),
                 ],
               ),
             ),

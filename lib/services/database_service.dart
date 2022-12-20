@@ -6,14 +6,22 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future addUserData(String fullName, String email) async {
+  Future addUserData(String firstName, String lastName, String email) async {
     return await userCollection.doc(uid).set({
       'uid': uid,
-      'fullName': fullName,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
       'gender': null,
       'address': null,
       'profilePic': null,
     });
+  }
+
+  Future getUserDataUsingEmail(String userEmail) async {
+    QuerySnapshot querySnapshot =
+        await userCollection.where('email', isEqualTo: userEmail).get();
+
+    return querySnapshot;
   }
 }

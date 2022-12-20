@@ -21,7 +21,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final authService = AuthService();
   bool _isLoading = false;
-  String fullName = '';
+  String firstName = '';
+  String lastName = '';
   String email = '';
   String password = '';
 
@@ -34,11 +35,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _formKey.currentState!.save();
 
       dynamic value = await authService.registerUserWithEmailAndPassword(
-          fullName, email, password);
+          firstName, lastName, email, password);
 
       if (value == true) {
         // await HelperFunction.setUserLoggedInStatus(true);
-        await HelperFunction.setUserName(fullName);
+        await HelperFunction.setUserFirstName(firstName);
+        await HelperFunction.setUserLastName(lastName);
         await HelperFunction.setUserEmail(email);
 
         setState(() {
@@ -111,19 +113,37 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         children: <Widget>[
                           CustomTextbox(
                             prefixIcon: Icons.person,
-                            labelData: 'Your Name',
+                            labelData: 'First Name',
                             isHidden: false,
                             validator: (value) {
                               if (value == null ||
                                   value.isEmpty ||
                                   !RegExp(r'[a-z A-Z]+$').hasMatch(value)) {
-                                return 'Please enter valid name';
+                                return 'Please enter valid first name';
                               }
 
                               return null;
                             },
                             onSave: (value) {
-                              fullName = value!.trim();
+                              firstName = value!.trim();
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          CustomTextbox(
+                            prefixIcon: Icons.person,
+                            labelData: 'Last Name',
+                            isHidden: false,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !RegExp(r'[a-z A-Z]+$').hasMatch(value)) {
+                                return 'Please enter valid last name';
+                              }
+
+                              return null;
+                            },
+                            onSave: (value) {
+                              lastName = value!.trim();
                             },
                           ),
                           const SizedBox(height: 15),
