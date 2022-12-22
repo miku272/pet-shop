@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 import 'router.dart';
+import './app_styles.dart';
 import './screens/home_screen.dart';
 
 void main() async {
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pet Shop',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        primarySwatch: Colors.orange,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
       home: const HomeScreen(),
