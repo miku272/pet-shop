@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pet_shop/widgets/app_drawer.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
@@ -80,9 +81,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  SvgPicture.asset(
-                    'assets/nav_icon.svg',
-                    width: 18,
+                  IconButton(
+                    icon: SvgPicture.asset(
+                      'assets/nav_icon.svg',
+                      width: 18,
+                    ),
+                    onPressed: () {
+                      AppDrawer();
+                    },
                   ),
                   Text(
                     'Pet Shop',
