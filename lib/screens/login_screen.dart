@@ -91,8 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       children: <Widget>[
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Text(
                               'Login',
@@ -109,6 +109,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ],
+                        ),
+                        Expanded(child: Container()),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed(HomeScreen.routeName);
+                          },
+                          child: Text(
+                            'Continue without login',
+                            style: sourceSansProSemiBold.copyWith(
+                              color: orange,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
                       ],
                     ),
