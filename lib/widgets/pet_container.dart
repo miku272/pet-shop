@@ -23,9 +23,11 @@ class PetContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenProps = MediaQuery.of(context);
+
     return Container(
-      height: 170,
-      width: 150,
+      height: screenProps.orientation == Orientation.portrait ? 200 : 250,
+      width: 180,
       margin: EdgeInsets.only(
         left: index == 0 ? 25 : 15,
         right: index == totalLength - 1 ? 25 : 0,
@@ -66,7 +68,9 @@ class PetContainer extends StatelessWidget {
                   child: Text(
                     petName,
                     style: sourceSansProBold.copyWith(
-                      fontSize: SizeConfig.blockSizeHorizontal! * 4,
+                      fontSize: screenProps.orientation == Orientation.portrait
+                          ? SizeConfig.blockSizeHorizontal! * 4
+                          : SizeConfig.blockSizeHorizontal! * 2,
                       color: orange,
                     ),
                   ),
@@ -87,7 +91,9 @@ class PetContainer extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: sourceSansProBold.copyWith(
-                  fontSize: SizeConfig.blockSizeHorizontal! * 4.5,
+                  fontSize: screenProps.orientation == Orientation.portrait
+                      ? SizeConfig.blockSizeHorizontal! * 3.9
+                      : SizeConfig.blockSizeHorizontal! * 2.5,
                   color: grey,
                 ),
               ),
@@ -100,7 +106,9 @@ class PetContainer extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: sourceSansProRegular.copyWith(
-                  fontSize: SizeConfig.blockSizeHorizontal! * 2.9,
+                  fontSize: screenProps.orientation == Orientation.portrait
+                      ? SizeConfig.blockSizeHorizontal! * 3.5
+                      : SizeConfig.blockSizeHorizontal! * 2,
                   color: lightGrey,
                 ),
               ),

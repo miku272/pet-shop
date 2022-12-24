@@ -104,6 +104,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ],
                         ),
+                        Expanded(child: Container()),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed(HomeScreen.routeName);
+                          },
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            'Continue without\nsign up',
+                            style: sourceSansProSemiBold.copyWith(
+                              color: orange,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),

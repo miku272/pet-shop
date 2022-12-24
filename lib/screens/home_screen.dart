@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
@@ -105,10 +106,61 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : InkWell(
-                          onTap: () {
-                            setState(() {
-                              AuthService().signOut();
-                            });
+                          onTap: () async {
+                            showAnimatedDialog(
+                              context: context,
+                              animationType:
+                                  DialogTransitionType.slideFromBottom,
+                              duration: const Duration(milliseconds: 300),
+                              builder: (context) => AlertDialog(
+                                elevation: 5,
+                                alignment: Alignment.bottomCenter,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                title: const Text('Logout'),
+                                content: Text(
+                                  'Are you sure you want to logout?',
+                                  style: sourceSansProRegular.copyWith(
+                                    color: grey,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () async {
+                                      await AuthService().signOut();
+
+                                      if (mounted) {
+                                        Navigator.of(context)
+                                            .pushReplacementNamed(
+                                          HomeScreen.routeName,
+                                        );
+                                      }
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: sourceSansProSemiBold.copyWith(
+                                        color: orange,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'No',
+                                      style: sourceSansProSemiBold.copyWith(
+                                        color: orange,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                           child: Text(
                             'Sign out',
@@ -199,7 +251,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 15),
             SizedBox(
-              height: 170,
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? 200
+                  : 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: dogs.length,
@@ -231,7 +285,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 15),
             SizedBox(
-              height: 170,
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? 200
+                  : 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: cats.length,
@@ -250,6 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
