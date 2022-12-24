@@ -208,7 +208,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: _register,
+                            onTap: _isLoading ? () {} : _register,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(

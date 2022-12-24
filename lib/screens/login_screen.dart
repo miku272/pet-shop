@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:pet_shop/services/database_service.dart';
 
 import '../size_config.dart';
@@ -11,6 +11,7 @@ import '../widgets/custom_textbox.dart';
 import '../services/auth_service.dart';
 import '../services/helper_fucntion.dart';
 import './registration_screen.dart';
+import './forget_password_screen.dart';
 import './home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -177,7 +178,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(ForgetPasswordScreen.routeName);
+                          },
                           child: Text(
                             'Forget Password?',
                             style: sourceSansProBold.copyWith(
@@ -193,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: _signin,
+                            onTap: _isLoading ? () {} : _signin,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
