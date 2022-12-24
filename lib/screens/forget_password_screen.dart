@@ -4,6 +4,9 @@ import '../app_styles.dart';
 import '../size_config.dart';
 import '../widgets/custom_textbox.dart';
 
+import './login_screen.dart';
+import './home_screen.dart';
+
 class ForgetPasswordScreen extends StatefulWidget {
   static const routeName = '/forget-password-screen';
   const ForgetPasswordScreen({Key? key}) : super(key: key);
@@ -25,6 +28,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
     return Scaffold(
       backgroundColor: lightOrange,
+      appBar: AppBar(
+        backgroundColor: lightOrange,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: paddingHorizontal),
@@ -97,6 +103,45 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       ),
                     ),
                   ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? SizeConfig.blockSizeVertical! * 8
+                        : SizeConfig.blockSizeVertical! * 17,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(LoginScreen.routeName);
+                      },
+                      child: Text(
+                        'Login',
+                        style: sourceSansProBold.copyWith(
+                          color: orange,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(HomeScreen.routeName);
+                      },
+                      child: Text(
+                        'Continue without login',
+                        style: sourceSansProBold.copyWith(
+                          color: orange,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
