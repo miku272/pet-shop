@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pet_shop/app_styles.dart';
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+class CustomAppDrawer extends StatelessWidget {
+  const CustomAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      elevation: 5,
       child: Column(
         children: <Widget>[
           Container(

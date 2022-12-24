@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pet_shop/widgets/app_drawer.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
 import '../widgets/pet_container.dart';
+import '../widgets/custom_app_drawer.dart';
 import '../services/auth_service.dart';
 
 import './login_screen.dart';
@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Scaffold(
+      drawer: const CustomAppDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: white,
         currentIndex: _selectedIndex,
@@ -81,15 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      'assets/nav_icon.svg',
-                      width: 18,
-                    ),
-                    onPressed: () {
-                      AppDrawer();
-                    },
-                  ),
+                  const DrawerIconButton(),
                   Text(
                     'Pet Shop',
                     style: sourceSansProBold.copyWith(
@@ -260,6 +253,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class DrawerIconButton extends StatelessWidget {
+  const DrawerIconButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: SvgPicture.asset(
+        'assets/nav_icon.svg',
+        width: 18,
+      ),
+      onPressed: () {
+        Scaffold.of(context).openDrawer();
+      },
     );
   }
 }
