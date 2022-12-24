@@ -42,6 +42,36 @@ class AuthService {
     }
   }
 
+  Future resetEmailPassword(String email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+
+      return true;
+    } on FirebaseAuthException catch (error) {
+      return error.message;
+    }
+  }
+
+  Future sendVerificationEmail() async {
+    try {
+      await firebaseAuth.currentUser!.sendEmailVerification();
+
+      return true;
+    } catch (error) {
+      return error.toString();
+    }
+  }
+
+  Future passwordUpdate(String newPassword) async {
+    try {
+      await firebaseAuth.currentUser!.updatePassword(newPassword);
+
+      return true;
+    } on FirebaseAuthException catch (error) {
+      return error.message;
+    }
+  }
+
   Future signOut() async {
     try {
       await HelperFunction.setUserFirstName('');

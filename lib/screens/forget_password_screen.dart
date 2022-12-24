@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../app_styles.dart';
 import '../size_config.dart';
 import '../widgets/custom_textbox.dart';
+import '../widgets/my_snackbar.dart';
+import '../services/auth_service.dart';
 
 import './login_screen.dart';
 import './home_screen.dart';
@@ -17,10 +19,44 @@ class ForgetPasswordScreen extends StatefulWidget {
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  String email = '';
+  final authService = AuthService();
   var _isLoading = false;
+  String email = '';
 
-  void _resetPassword() async {}
+  void _resetPassword() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      _formKey.currentState!.save();
+
+      dynamic value = await authService.resetEmailPassword(email);
+
+      if (value == true) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (mounted) {
+          MySnackbar.showSnackbar(context, Colors.black,
+              'Password reset link sent to your email. Can\'t find the email? Check your spam folder or try \'Forget password\' again.');
+        }
+
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (mounted) {
+          MySnackbar.showSnackbar(context, red, value);
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +100,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     return null;
                   },
                   onSave: (value) {
-                    email = value!;
+                    email = value!.trim();
                   },
                 ),
               ),
@@ -74,33 +110,32 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     MediaQuery.of(context).orientation == Orientation.portrait
                         ? SizeConfig.blockSizeVertical! * 8
                         : SizeConfig.blockSizeVertical! * 17,
-                child: Expanded(
-                  child: InkWell(
-                    onTap: _isLoading ? () {} : _resetPassword,
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 19,
-                        horizontal: 63,
-                      ),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: grey,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
+                width: double.infinity,
+                child: InkWell(
+                  onTap: _isLoading ? () {} : _resetPassword,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 19,
+                      horizontal: 63,
+                    ),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: grey,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              color: boxShadowColor,
+                            )
+                          : Text(
+                              'Reset Password',
+                              style: sourceSansProBold.copyWith(
                                 color: boxShadowColor,
-                              )
-                            : Text(
-                                'Reset Password',
-                                style: sourceSansProBold.copyWith(
-                                  color: boxShadowColor,
-                                  fontSize: 20,
-                                ),
+                                fontSize: 20,
                               ),
-                      ),
+                            ),
                     ),
                   ),
                 ),

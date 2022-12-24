@@ -13,7 +13,7 @@ class MySnackbar {
           ),
         ),
         backgroundColor: color,
-        duration: const Duration(seconds: 4),
+        duration: const Duration(seconds: 10),
         action: SnackBarAction(
           label: 'ok',
           onPressed: () {

@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                             onSave: (value) {
-                              email = value!;
+                              email = value!.trim();
                             },
                           ),
                           const SizedBox(height: 15),
