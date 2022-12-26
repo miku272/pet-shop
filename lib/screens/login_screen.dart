@@ -239,13 +239,55 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: lightOrange,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Center(
-                              child: Text(
-                                'G',
-                                style: sourceSansProBold.copyWith(
-                                  color: orange,
-                                  fontSize: 30,
-                                ),
+                            child: InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                dynamic value =
+                                    await authService.loginUserWithGoogle();
+
+                                if (value[0] == true) {
+                                  // await HelperFunction.setUserLoggedInStatus(true);
+
+                                  await HelperFunction.setUserFirstName(
+                                      value[1]);
+                                  await HelperFunction.setUserLastName(
+                                      value[2]);
+                                  await HelperFunction.setUserEmail(value[3]);
+
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+
+                                  if (mounted) {
+                                    Navigator.of(context).pushReplacementNamed(
+                                        HomeScreen.routeName);
+                                  }
+                                } else {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+
+                                  if (mounted) {
+                                    MySnackbar.showSnackbar(
+                                        context, red, value);
+                                  }
+                                }
+                              },
+                              child: Center(
+                                child: _isLoading
+                                    ? const CircularProgressIndicator(
+                                        color: boxShadowColor,
+                                      )
+                                    : Text(
+                                        'G',
+                                        style: sourceSansProBold.copyWith(
+                                          color: orange,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

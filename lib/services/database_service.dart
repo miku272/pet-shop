@@ -6,7 +6,13 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future addUserData(String firstName, String lastName, String email) async {
+  Future addUserData(
+    String firstName,
+    String lastName,
+    String email, {
+    String? gender,
+    String? profilePic,
+  }) async {
     return await userCollection.doc(uid).set({
       'uid': uid,
       'firstName': firstName,
@@ -20,7 +26,11 @@ class DatabaseService {
 
   Future getUserDataUsingEmail(String userEmail) async {
     QuerySnapshot querySnapshot =
-        await userCollection.where('email', isEqualTo: userEmail).get();
+        await userCollection.where('email', isEqualTo: userEmail).get(
+              const GetOptions(
+                source: Source.server,
+              ),
+            );
 
     return querySnapshot;
   }

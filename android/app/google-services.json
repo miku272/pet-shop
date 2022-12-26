@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "179414069579-dnilncs6tatfgsuumm9i41frepna6ppt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pet_shop",
+            "certificate_hash": "7f7ad8edbd62fe31cf7e4669332b97bd8aa552f2"
+          }
+        },
+        {
           "client_id": "179414069579-viq1nqvc76svndd2420oses72bv6ionf.apps.googleusercontent.com",
           "client_type": 3
         }
