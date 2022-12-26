@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
@@ -8,7 +6,6 @@ import '../app_styles.dart';
 import '../services/helper_fucntion.dart';
 import '../widgets/my_snackbar.dart';
 import '../widgets/custom_textbox.dart';
-import '../services/database_service.dart';
 import '../services/auth_service.dart';
 import './login_screen.dart';
 import './home_screen.dart';
@@ -264,12 +261,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     await authService.loginUserWithGoogle();
 
                                 if (value[0] == true) {
-                                  QuerySnapshot snapshot =
-                                      await DatabaseService(
-                                              uid: FirebaseAuth
-                                                  .instance.currentUser!.uid)
-                                          .getUserDataUsingEmail(email);
-
                                   // await HelperFunction.setUserLoggedInStatus(true);
                                   await HelperFunction.setUserFirstName(
                                       value[1]);
