@@ -39,18 +39,36 @@ class HelperFunction {
   static Future<String?> getUserFirstName() async {
     final sf = await SharedPreferences.getInstance();
 
-    return sf.getString(userFirstNameKey);
+    final firstName = sf.getString(userFirstNameKey);
+
+    if (firstName != '') {
+      return firstName;
+    } else {
+      return null;
+    }
   }
 
   static Future<String?> getUserLastName() async {
     final sf = await SharedPreferences.getInstance();
 
-    return sf.getString(userLastNameKey);
+    final lastName = sf.getString(userLastNameKey);
+
+    if (lastName != '') {
+      return lastName;
+    } else {
+      return null;
+    }
   }
 
   static Future<String?> getUserEmail() async {
     final sf = await SharedPreferences.getInstance();
 
-    return sf.getString(userEmailKey);
+    final email = sf.getString(userEmailKey);
+
+    if (email != '') {
+      return email;
+    } else {
+      return null;
+    }
   }
 }

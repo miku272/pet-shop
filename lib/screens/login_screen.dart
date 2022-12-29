@@ -248,14 +248,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 dynamic value =
                                     await authService.loginUserWithGoogle();
 
-                                if (value[0] == true) {
+                                if (value == true) {
                                   // await HelperFunction.setUserLoggedInStatus(true);
+                                  // await HelperFunction.setUserFirstName(
+                                  //     value[1]);
+                                  // await HelperFunction.setUserLastName(
+                                  //     value[2]);
+                                  // await HelperFunction.setUserEmail(value[3]);
 
-                                  await HelperFunction.setUserFirstName(
-                                      value[1]);
-                                  await HelperFunction.setUserLastName(
-                                      value[2]);
-                                  await HelperFunction.setUserEmail(value[3]);
+                                  print(
+                                      await HelperFunction.getUserFirstName());
+                                  print(await HelperFunction.getUserLastName());
+                                  print(await HelperFunction.getUserEmail());
 
                                   setState(() {
                                     _isLoading = false;

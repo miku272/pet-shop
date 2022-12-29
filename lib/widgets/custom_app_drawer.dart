@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pet_shop/app_styles.dart';
+
+import '../app_styles.dart';
 
 class CustomAppDrawer extends StatelessWidget {
   const CustomAppDrawer({super.key});

@@ -71,14 +71,27 @@ class AuthService {
             profilePic: googleUser.photoUrl,
           );
         }
-      }
+        final firstName = snapshot.docs[0]['firstName'];
+        await HelperFunction.setUserFirstName(firstName);
 
-      return [
-        true,
-        googleUser.displayName!.split(' ')[0],
-        googleUser.displayName!.split(' ')[1],
-        googleUser.email,
-      ];
+        final lastName = snapshot.docs[0]['lastName'];
+        await HelperFunction.setUserLastName(lastName);
+
+        final email = snapshot.docs[0]['email'];
+        await HelperFunction.setUserEmail(email);
+
+        // HelperFunction.setUserFirstName(snapshot.docs[0]['firstName']);
+        // HelperFunction.setUserLastName(snapshot.docs[0]['lastName']);
+        // HelperFunction.setUserEmail(snapshot.docs[0]['email']);
+
+        // return [
+        //   true,
+        //   googleUser.displayName!.split(' ')[0],
+        //   googleUser.displayName!.split(' ')[1],
+        //   googleUser.email,
+        // ];
+        return true;
+      }
     } on FirebaseAuthException catch (error) {
       return error.message;
     }

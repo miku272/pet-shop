@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:pet_shop/services/database_service.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
@@ -213,14 +214,56 @@ class _HomeScreenState extends State<HomeScreen> {
                                       SizeConfig.blockSizeHorizontal! * 5.5,
                                   color: black),
                             ),
-                            Text(
-                              textAlign: TextAlign.left,
-                              'User 👋',
-                              style: sourceSansProMedium.copyWith(
-                                  fontSize:
-                                      SizeConfig.blockSizeHorizontal! * 5.5,
-                                  color: black),
-                            ),
+                            FirebaseAuth.instance.currentUser != null
+                                ? FutureBuilder(
+                                    initialData: 'User👋',
+                                    future: DatabaseService()
+                                        .getUserDataUsingEmail(FirebaseAuth
+                                            .instance.currentUser!.email!),
+                                    builder: (context, snapshot) => snapshot
+                                                .connectionState ==
+                                            ConnectionState.waiting
+                                        ? const SizedBox()
+                                        : Flexible(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: paddingHorizontal,
+                                              ),
+                                              child: Text(
+                                                textAlign: TextAlign.left,
+                                                snapshot.hasData
+                                                    ? '${snapshot.data.docs[0]['firstName'].toString()}👋'
+                                                    : 'User👋',
+                                                style: sourceSansProMedium
+                                                    .copyWith(
+                                                  fontSize: SizeConfig
+                                                          .blockSizeHorizontal! *
+                                                      5.5,
+                                                  color: black,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                  )
+                                : Text(
+                                    textAlign: TextAlign.left,
+                                    'User👋',
+                                    style: sourceSansProMedium.copyWith(
+                                      fontSize:
+                                          SizeConfig.blockSizeHorizontal! * 5.5,
+                                      color: black,
+                                    ),
+                                  ),
+                            // Text(
+                            //   textAlign: TextAlign.left,
+                            //   'User 👋',
+                            //   style: sourceSansProMedium.copyWith(
+                            //       fontSize:
+                            //           SizeConfig.blockSizeHorizontal! * 5.5,
+                            //       color: black),
+                            // ),
                           ],
                         ),
                         const SizedBox(height: 10),
