@@ -256,10 +256,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   //     value[2]);
                                   // await HelperFunction.setUserEmail(value[3]);
 
-                                  print(
-                                      await HelperFunction.getUserFirstName());
-                                  print(await HelperFunction.getUserLastName());
-                                  print(await HelperFunction.getUserEmail());
+                                  // print(
+                                  //     await HelperFunction.getUserFirstName());
+                                  // print(await HelperFunction.getUserLastName());
+                                  // print(await HelperFunction.getUserEmail());
 
                                   setState(() {
                                     _isLoading = false;
