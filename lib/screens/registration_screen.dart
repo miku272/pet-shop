@@ -8,7 +8,7 @@ import '../widgets/my_snackbar.dart';
 import '../widgets/custom_textbox.dart';
 import '../services/auth_service.dart';
 import './login_screen.dart';
-import './home_screen.dart';
+import 'bottom_navigation_bar_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String routeName = '/registration-page';
@@ -49,7 +49,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         });
 
         if (mounted) {
-          Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+          Navigator.of(context)
+              .pushReplacementNamed(BottomNavigationBarScreen.routeName);
         }
       } else {
         setState(() {
@@ -108,8 +109,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         Expanded(child: Container()),
                         InkWell(
                           onTap: () {
-                            Navigator.of(context)
-                                .pushReplacementNamed(HomeScreen.routeName);
+                            Navigator.of(context).pushReplacementNamed(
+                                BottomNavigationBarScreen.routeName);
                           },
                           child: Text(
                             textAlign: TextAlign.center,
@@ -274,7 +275,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                                   if (mounted) {
                                     Navigator.of(context).pushReplacementNamed(
-                                        HomeScreen.routeName);
+                                        BottomNavigationBarScreen.routeName);
                                   }
                                 } else {
                                   setState(() {

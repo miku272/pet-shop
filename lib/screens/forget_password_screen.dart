@@ -7,7 +7,7 @@ import '../widgets/my_snackbar.dart';
 import '../services/auth_service.dart';
 
 import './login_screen.dart';
-import './home_screen.dart';
+import 'bottom_navigation_bar_screen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   static const routeName = '/forget-password-screen';
@@ -165,8 +165,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(HomeScreen.routeName);
+                        Navigator.of(context).pushReplacementNamed(
+                            BottomNavigationBarScreen.routeName);
                       },
                       child: Text(
                         'Continue without login',

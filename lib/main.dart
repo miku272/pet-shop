@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 import 'router.dart';
-import './screens/home_screen.dart';
+import 'screens/bottom_navigation_bar_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      home: const HomeScreen(),
+      home: const BottomNavigationBarScreen(),
     );
   }
 }

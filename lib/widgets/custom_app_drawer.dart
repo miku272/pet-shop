@@ -6,7 +6,7 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import '../app_styles.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
-import '../screens/home_screen.dart';
+import '../screens/bottom_navigation_bar_screen.dart';
 
 class CustomAppDrawer extends StatefulWidget {
   const CustomAppDrawer({super.key});
@@ -59,12 +59,11 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            // image: NetworkImage(
-                            //   'https://i.pinimg.com/736x/8d/86/6a/8d866a5494c2374372fe6ad82c32cdf2.jpg',
-                            // ),
                             image: NetworkImage(
                                 'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
-                            fit: BoxFit.fill,
+                            // image: NetworkImage(
+                            //     'https://www.clipartmax.com/png/middle/108-1085862_aim-for-teaching-has-always-helped-me-and-encouraged-girl-avatar-png.png'),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
@@ -150,7 +149,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
 
                                   if (mounted) {
                                     Navigator.of(context).pushReplacementNamed(
-                                      HomeScreen.routeName,
+                                      BottomNavigationBarScreen.routeName,
                                     );
                                   }
                                 },

@@ -12,7 +12,7 @@ import '../services/auth_service.dart';
 import '../services/helper_fucntion.dart';
 import './registration_screen.dart';
 import './forget_password_screen.dart';
-import './home_screen.dart';
+import 'bottom_navigation_bar_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login-screen';
@@ -55,7 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
 
         if (mounted) {
-          Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+          Navigator.of(context)
+              .pushReplacementNamed(BottomNavigationBarScreen.routeName);
         }
       } else {
         setState(() {
@@ -114,8 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Expanded(child: Container()),
                         InkWell(
                           onTap: () {
-                            Navigator.of(context)
-                                .pushReplacementNamed(HomeScreen.routeName);
+                            Navigator.of(context).pushReplacementNamed(
+                                BottomNavigationBarScreen.routeName);
                           },
                           child: Text(
                             'Continue without login',
@@ -267,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   if (mounted) {
                                     Navigator.of(context).pushReplacementNamed(
-                                        HomeScreen.routeName);
+                                        BottomNavigationBarScreen.routeName);
                                   }
                                 } else {
                                   setState(() {
