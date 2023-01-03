@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+
 import '../size_config.dart';
 import '../app_styles.dart';
+import '../widgets/drawer_icon_button.dart';
 import '../widgets/pet_container.dart';
 import '../widgets/custom_app_drawer.dart';
 import '../services/auth_service.dart';
@@ -319,25 +320,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class DrawerIconButton extends StatelessWidget {
-  const DrawerIconButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: SvgPicture.asset(
-        'assets/nav_icon.svg',
-        width: 18,
-      ),
-      onPressed: () {
-        Scaffold.of(context).openDrawer();
-      },
     );
   }
 }

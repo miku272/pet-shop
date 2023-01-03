@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 import 'router.dart';
+
 import './screens/home_screen.dart';
 
 void main() async {

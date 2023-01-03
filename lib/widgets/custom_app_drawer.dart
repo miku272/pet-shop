@@ -104,8 +104,13 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).pushReplacementNamed(
+                        // Navigator.of(context).pushReplacementNamed(
+                        //   HomeScreen.routeName,
+                        // );
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(
                           HomeScreen.routeName,
+                          (route) => false,
                         );
                       },
                     )
