@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      // home: const BottomNavigationBarScreen(),
       home: const HomeScreen(),
     );
   }

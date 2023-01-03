@@ -7,6 +7,8 @@ import '../app_styles.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
 import '../screens/home_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/cart_screen.dart';
 
 class CustomAppDrawer extends StatefulWidget {
   const CustomAppDrawer({super.key});
@@ -94,6 +96,22 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
               ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
+                      leading: const Icon(Icons.home),
+                      title: Text(
+                        'Home',
+                        style: sourceSansProRegular.copyWith(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed(
+                          HomeScreen.routeName,
+                        );
+                      },
+                    )
+                  : const SizedBox(),
+              FirebaseAuth.instance.currentUser != null
+                  ? ListTile(
                       leading: const Icon(Icons.person),
                       title: Text(
                         'Profile',
@@ -101,7 +119,27 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                           fontSize: 20,
                         ),
                       ),
-                      onTap: null,
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          ProfileScreen.routeName,
+                        );
+                      },
+                    )
+                  : const SizedBox(),
+              FirebaseAuth.instance.currentUser != null
+                  ? ListTile(
+                      leading: const Icon(Icons.card_travel),
+                      title: Text(
+                        'Cart',
+                        style: sourceSansProRegular.copyWith(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          CartScreen.routeName,
+                        );
+                      },
                     )
                   : const SizedBox(),
               // const ListTile(
@@ -118,7 +156,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                   ? ListTile(
                       leading: const Icon(Icons.logout),
                       title: Text(
-                        'sign out',
+                        'Sign out',
                         style: sourceSansProRegular.copyWith(
                           fontSize: 20,
                         ),
