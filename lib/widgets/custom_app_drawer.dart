@@ -6,7 +6,7 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import '../app_styles.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
-import '../screens/bottom_navigation_bar_screen.dart';
+import '../screens/home_screen.dart';
 
 class CustomAppDrawer extends StatefulWidget {
   const CustomAppDrawer({super.key});
@@ -149,7 +149,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
 
                                   if (mounted) {
                                     Navigator.of(context).pushReplacementNamed(
-                                      BottomNavigationBarScreen.routeName,
+                                      HomeScreen.routeName,
                                     );
                                   }
                                 },
