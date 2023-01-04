@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../app_styles.dart';
 
+import '../widgets/main_loading.dart';
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/custom_app_drawer.dart';
 import '../widgets/profile_screen_list_tile.dart';
 
 import '../services/auth_service.dart';
+import '../services/database_service.dart';
 
 import './home_screen.dart';
+import './update_password_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/profile-screen';
@@ -88,101 +92,109 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       drawer: const CustomAppDrawer(),
       body: SafeArea(
-        child: ListView(
-          children: <Widget>[
-            const SizedBox(height: 20),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: paddingHorizontal),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      const DrawerIconButton(),
-                      Text(
-                        'Your Profile',
-                        style: sourceSansProBold.copyWith(
-                          fontSize: 23,
-                          color: grey,
-                        ),
-                      ),
-                      const SizedBox(), // Place something here
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const CircleAvatar(
-                    radius: 100,
-                    backgroundImage: NetworkImage(
-                      'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Naresh Sharma',
-                    style: sourceSansProBold.copyWith(
-                      fontSize: 25,
-                      color: black,
-                    ),
-                  ),
-                  Text(
-                    'sharmanaresh272@gmail.com',
-                    style: sourceSansProSemiBold.copyWith(
-                      fontSize: 22,
-                      color: grey,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: black,
+        child: FutureBuilder(
+          future: DatabaseService().getUserDataUsingUid(
+            FirebaseAuth.instance.currentUser!.uid,
+          ),
+          builder: (context, snapshot) => snapshot.connectionState ==
+                  ConnectionState.waiting
+              ? const MainLoading()
+              : ListView(
+                  children: <Widget>[
+                    const SizedBox(height: 20),
+                    Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: paddingHorizontal,
-                        vertical: 5,
+                          horizontal: paddingHorizontal),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const DrawerIconButton(),
+                              Text(
+                                'Your Profile',
+                                style: sourceSansProBold.copyWith(
+                                  fontSize: 23,
+                                  color: grey,
+                                ),
+                              ),
+                              const SizedBox(), // Place something here
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const CircleAvatar(
+                            radius: 100,
+                            backgroundImage: NetworkImage(
+                              commonMaleAvatar,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            '${snapshot.data.docs[0]['firstName']} ${snapshot.data.docs[0]['lastName']}',
+                            style: sourceSansProBold.copyWith(
+                              fontSize: 25,
+                              color: black,
+                            ),
+                          ),
+                          Text(
+                            snapshot.data.docs[0]['email'],
+                            style: sourceSansProSemiBold.copyWith(
+                              fontSize: 22,
+                              color: grey,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: black,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: paddingHorizontal,
+                                vertical: 5,
+                              ),
+                            ),
+                            child: Text(
+                              'Edit Profile',
+                              style: sourceSansProMedium.copyWith(
+                                color: white,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          const Divider(color: boxShadowColor),
+                          const SizedBox(height: 20),
+                          const ProfileScreenListTile(
+                            leadIcon: Icons.settings,
+                            title: 'Settings',
+                            trailIcon: Icons.arrow_right_rounded,
+                          ),
+                          ProfileScreenListTile(
+                            onPress: () {
+                              Navigator.of(context).pushNamed(
+                                UpdatePasswordScreen.routeName,
+                              );
+                            },
+                            leadIcon: Icons.key,
+                            title: 'Update Password',
+                            trailIcon: Icons.arrow_right_rounded,
+                          ),
+                          const Divider(color: boxShadowColor),
+                          ProfileScreenListTile(
+                            onPress: _shareApp,
+                            leadIcon: Icons.share,
+                            title: 'Share this app',
+                          ),
+                          ProfileScreenListTile(
+                            onPress: _logout,
+                            leadIcon: Icons.logout,
+                            title: 'log out',
+                            titleColor: red,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Text(
-                      'Edit Profile',
-                      style: sourceSansProMedium.copyWith(
-                        color: white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  const Divider(color: boxShadowColor),
-                  const SizedBox(height: 20),
-                  const ProfileScreenListTile(
-                    leadIcon: Icons.settings,
-                    title: 'Settings',
-                    trailIcon: Icons.arrow_right_rounded,
-                  ),
-                  const ProfileScreenListTile(
-                    leadIcon: Icons.settings,
-                    title: 'Settings',
-                    trailIcon: Icons.arrow_right_rounded,
-                  ),
-                  const ProfileScreenListTile(
-                    leadIcon: Icons.settings,
-                    title: 'Settings',
-                    trailIcon: Icons.arrow_right_rounded,
-                  ),
-                  const Divider(color: boxShadowColor),
-                  ProfileScreenListTile(
-                    onPress: _shareApp,
-                    leadIcon: Icons.share,
-                    title: 'Share this app',
-                  ),
-                  ProfileScreenListTile(
-                    onPress: _logout,
-                    leadIcon: Icons.logout,
-                    title: 'log out',
-                    titleColor: red,
-                  ),
-                ],
-              ),
-            ),
-          ],
+                  ],
+                ),
         ),
       ),
     );

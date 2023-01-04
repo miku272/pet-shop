@@ -34,4 +34,15 @@ class DatabaseService {
 
     return querySnapshot;
   }
+
+  Future getUserDataUsingUid(String userUid) async {
+    QuerySnapshot querySnapshot =
+        await userCollection.where('uid', isEqualTo: userUid).get(
+              const GetOptions(
+                source: Source.server,
+              ),
+            );
+
+    return querySnapshot;
+  }
 }

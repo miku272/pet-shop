@@ -34,3 +34,9 @@ final sourceSansProRegular = GoogleFonts.sourceSansPro(
 final sourceSansProLight = GoogleFonts.sourceSansPro(
   fontWeight: FontWeight.w300,
 );
+
+const commonMaleAvatar =
+    'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png';
+
+const commonFemaleAvatar =
+    'https://www.clipartmax.com/png/middle/108-1085862_aim-for-teaching-has-always-helped-me-and-encouraged-girl-avatar-png.png';

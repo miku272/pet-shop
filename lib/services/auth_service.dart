@@ -117,8 +117,14 @@ class AuthService {
     }
   }
 
-  Future passwordUpdate(String newPassword) async {
+  Future passwordUpdate(
+      String email, String currPassword, String newPassword) async {
     try {
+      final cred =
+          EmailAuthProvider.credential(email: email, password: currPassword);
+
+      await firebaseAuth.currentUser!.reauthenticateWithCredential(cred);
+
       await firebaseAuth.currentUser!.updatePassword(newPassword);
 
       return true;

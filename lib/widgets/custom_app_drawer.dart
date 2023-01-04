@@ -62,9 +62,8 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: NetworkImage(
-                                'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
-                            // image: NetworkImage(
-                            //     'https://www.clipartmax.com/png/middle/108-1085862_aim-for-teaching-has-always-helped-me-and-encouraged-girl-avatar-png.png'),
+                              commonMaleAvatar,
+                            ),
                             fit: BoxFit.cover,
                           ),
                         ),
