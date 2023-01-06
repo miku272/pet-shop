@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app_styles.dart';
 
 class CustomTextbox extends StatelessWidget {
+  final String? initValue;
   final String labelData;
   final IconData prefixIcon;
   final bool isHidden;
@@ -10,6 +11,7 @@ class CustomTextbox extends StatelessWidget {
   final void Function(String?)? onSave;
 
   const CustomTextbox({
+    this.initValue,
     required this.prefixIcon,
     required this.labelData,
     required this.isHidden,
@@ -30,6 +32,7 @@ class CustomTextbox extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextFormField(
+        initialValue: initValue,
         obscureText: isHidden,
         keyboardType: TextInputType.emailAddress,
         cursorColor: grey,

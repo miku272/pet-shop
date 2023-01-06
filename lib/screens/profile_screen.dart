@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: const CustomAppDrawer(),
+      drawer: const CustomAppDrawer(),
       body: SafeArea(
         child: FutureBuilder(
           future: DatabaseService().getUserDataUsingUid(
@@ -123,10 +123,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          const CircleAvatar(
-                            radius: 100,
-                            backgroundImage: NetworkImage(
+                          CircleAvatar(
+                            radius: 80,
+                            backgroundImage: const NetworkImage(
                               commonMaleAvatar,
+                            ),
+                            child: Stack(
+                              children: <Widget>[
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: const CircleAvatar(
+                                      backgroundColor: boxShadowColor,
+                                      child: Icon(
+                                        color: black,
+                                        Icons.edit,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 10),
