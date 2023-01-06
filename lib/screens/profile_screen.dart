@@ -14,6 +14,7 @@ import '../services/auth_service.dart';
 import '../services/database_service.dart';
 
 import './home_screen.dart';
+import './edit_profile_screen.dart';
 import './update_password_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const CustomAppDrawer(),
+      // drawer: const CustomAppDrawer(),
       body: SafeArea(
         child: FutureBuilder(
           future: DatabaseService().getUserDataUsingUid(
@@ -145,7 +146,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 10),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                EditProfileScreen.routeName,
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: black,
                               padding: const EdgeInsets.symmetric(
@@ -163,11 +168,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(color: boxShadowColor),
                           const SizedBox(height: 20),
-                          const ProfileScreenListTile(
-                            leadIcon: Icons.settings,
-                            title: 'Settings',
-                            trailIcon: Icons.arrow_right_rounded,
-                          ),
                           ProfileScreenListTile(
                             onPress: () {
                               Navigator.of(context).pushNamed(
