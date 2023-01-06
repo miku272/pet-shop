@@ -6,6 +6,7 @@ class CustomTextbox extends StatelessWidget {
   final String? initValue;
   final String labelData;
   final IconData prefixIcon;
+  final TextInputType? textInputType;
   final bool isHidden;
   final String? Function(String?)? validator;
   final void Function(String?)? onSave;
@@ -14,6 +15,7 @@ class CustomTextbox extends StatelessWidget {
     this.initValue,
     required this.prefixIcon,
     required this.labelData,
+    this.textInputType,
     required this.isHidden,
     this.validator,
     this.onSave,
@@ -34,7 +36,7 @@ class CustomTextbox extends StatelessWidget {
       child: TextFormField(
         initialValue: initValue,
         obscureText: isHidden,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: textInputType ?? TextInputType.text,
         cursorColor: grey,
         decoration: InputDecoration(
           prefixIcon: Icon(
