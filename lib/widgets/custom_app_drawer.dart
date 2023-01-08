@@ -95,7 +95,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
               ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
-                      leading: const Icon(Icons.home),
+                      leading: const Icon(Icons.home_outlined),
                       title: Text(
                         'Home',
                         style: sourceSansProRegular.copyWith(
@@ -116,7 +116,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                   : const SizedBox(),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
-                      leading: const Icon(Icons.person),
+                      leading: const Icon(Icons.person_outline),
                       title: Text(
                         'Profile',
                         style: sourceSansProRegular.copyWith(
@@ -146,16 +146,16 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                       },
                     )
                   : const SizedBox(),
-              // const ListTile(
-              //   leading: Icon(Icons.settings),
-              //   title: Text(
-              //     'Settings',
-              //     style: TextStyle(
-              //       fontSize: 18,
-              //     ),
-              //   ),
-              //   onTap: null,
-              // ),
+              const ListTile(
+                leading: Icon(Icons.favorite_outline),
+                title: Text(
+                  'My wishlist',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                onTap: null,
+              ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
                       leading: const Icon(Icons.logout),

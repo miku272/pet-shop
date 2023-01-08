@@ -15,6 +15,7 @@ import '../services/database_service.dart';
 
 import './home_screen.dart';
 import './edit_profile_screen.dart';
+import './address_screen.dart';
 import './update_password_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -186,6 +187,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(color: boxShadowColor),
                           const SizedBox(height: 20),
+                          ProfileScreenListTile(
+                            onPress: () {
+                              Navigator.of(context).pushNamed(
+                                AddressScreen.routeName,
+                              );
+                            },
+                            leadIcon: Icons.location_city,
+                            title: 'Your Addresses',
+                            trailIcon: Icons.arrow_right_rounded,
+                          ),
                           ProfileScreenListTile(
                             onPress: () {
                               Navigator.of(context).pushNamed(
