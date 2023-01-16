@@ -29,6 +29,17 @@ class AddressEditor extends StatefulWidget {
 
 class _AddressEditorState extends State<AddressEditor> {
   bool isEditing = false;
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  String fullName= '';
+  String mobNumber = '' ;
+  String pinCode = '';
+  String addressLine1 = '';
+  String addressLine2 = '';
+  String city = '';
+  String state = '';
+
 
   @override
   void initState() {
@@ -38,6 +49,17 @@ class _AddressEditorState extends State<AddressEditor> {
 
     super.initState();
   }
+
+  void addAddress () async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      _formKey.currentState!.save();
+    }
+  }
+  void updateAddress() {}
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +76,7 @@ class _AddressEditorState extends State<AddressEditor> {
             children: <Widget>[
               const SizedBox(height: 20),
               Form(
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     CustomTextbox(
@@ -66,6 +89,9 @@ class _AddressEditorState extends State<AddressEditor> {
                         }
 
                         return null;
+                      },
+                      onSave: (value) {
+                        fullName = value!;
                       },
                     ),
                     const SizedBox(height: 20),
@@ -85,6 +111,9 @@ class _AddressEditorState extends State<AddressEditor> {
 
                         return null;
                       },
+                      onSave: (value){
+                        mobNumber = value!;
+                      },
                     ),
                     const SizedBox(height: 20),
                     CustomTextbox(
@@ -103,6 +132,9 @@ class _AddressEditorState extends State<AddressEditor> {
 
                         return null;
                       },
+                      onSave: (value) {
+                        pinCode =value!;
+                      },
                     ),
                     const SizedBox(height: 20),
                     CustomTextbox(
@@ -116,6 +148,9 @@ class _AddressEditorState extends State<AddressEditor> {
                         }
 
                         return null;
+                      },
+                      onSave: (value) {
+                        addressLine1 = value!;
                       },
                     ),
                     const SizedBox(height: 20),
@@ -131,6 +166,9 @@ class _AddressEditorState extends State<AddressEditor> {
 
                         return null;
                       },
+                      onSave: (value) {
+                        addressLine2 = value!;
+                      },
                     ),
                     const SizedBox(height: 20),
                     CustomTextbox(
@@ -143,6 +181,9 @@ class _AddressEditorState extends State<AddressEditor> {
                         }
 
                         return null;
+                      },
+                      onSave: (value) {
+                        city = value!;
                       },
                     ),
                     const SizedBox(height: 20),
@@ -157,13 +198,16 @@ class _AddressEditorState extends State<AddressEditor> {
 
                         return null;
                       },
+                      onSave: (value) {
+                        state = value!;
+                      },
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 30),
               InkWell(
-                onTap: () {},
+                onTap: isEditing ? updateAddress : addAddress,
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(

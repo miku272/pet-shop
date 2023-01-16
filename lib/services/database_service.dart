@@ -24,6 +24,17 @@ class DatabaseService {
     });
   }
 
+  Future addAddress(
+    String fullName,
+    String mobNumber,
+    String addressLine1,
+    String addressLine2,
+    String city,
+    String state,
+  ) async {
+    
+  }
+
   Future getUserDataUsingEmail(String userEmail) async {
     QuerySnapshot querySnapshot =
         await userCollection.where('email', isEqualTo: userEmail).get(
