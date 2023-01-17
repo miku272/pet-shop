@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../app_styles.dart';
 
+import '../services/database_service.dart';
+
 import '../widgets/custom_textbox.dart';
+import '../widgets/my_snackbar.dart';
 
 class AddressEditorScreen extends StatelessWidget {
   static const routeName = '/address-editor-screen';
@@ -32,14 +36,13 @@ class _AddressEditorState extends State<AddressEditor> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  String fullName= '';
-  String mobNumber = '' ;
+  String fullName = '';
+  String mobNumber = '';
   String pinCode = '';
   String addressLine1 = '';
   String addressLine2 = '';
   String city = '';
   String state = '';
-
 
   @override
   void initState() {
@@ -50,15 +53,37 @@ class _AddressEditorState extends State<AddressEditor> {
     super.initState();
   }
 
-  void addAddress () async {
+  void addAddress() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      _formKey.currentState!.save();
+
+      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .addAddress(
+        fullName,
+        mobNumber,
+        pinCode,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+      );
+
       setState(() {
         _isLoading = false;
       });
 
-      _formKey.currentState!.save();
+      if (mounted) {
+        MySnackbar.showSnackbar(context, Colors.black, 'Address Added');
+
+        Navigator.of(context).pop();
+      }
     }
   }
+
   void updateAddress() {}
 
   @override
@@ -111,7 +136,7 @@ class _AddressEditorState extends State<AddressEditor> {
 
                         return null;
                       },
-                      onSave: (value){
+                      onSave: (value) {
                         mobNumber = value!;
                       },
                     ),
@@ -133,7 +158,7 @@ class _AddressEditorState extends State<AddressEditor> {
                         return null;
                       },
                       onSave: (value) {
-                        pinCode =value!;
+                        pinCode = value!;
                       },
                     ),
                     const SizedBox(height: 20),

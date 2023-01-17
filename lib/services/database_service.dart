@@ -27,12 +27,21 @@ class DatabaseService {
   Future addAddress(
     String fullName,
     String mobNumber,
+    String pinCode,
     String addressLine1,
     String addressLine2,
     String city,
     String state,
   ) async {
-    
+    return await userCollection.doc(uid).collection('address').doc().set({
+      'fullName': fullName,
+      'mobNumber': mobNumber,
+      'pinCode': pinCode,
+      'addressLine1': addressLine1,
+      'addressLine2': addressLine2,
+      'city': city,
+      'state': state,
+    });
   }
 
   Future getUserDataUsingEmail(String userEmail) async {
