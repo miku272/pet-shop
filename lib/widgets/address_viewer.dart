@@ -4,7 +4,6 @@ import '../app_styles.dart';
 
 class AddressViewer extends StatelessWidget {
   final String name;
-  final String plotNo;
   final String number;
   final String pinCode;
   final String addressLine1;
@@ -17,7 +16,6 @@ class AddressViewer extends StatelessWidget {
   const AddressViewer({
     Key? key,
     required this.name,
-    required this.plotNo,
     required this.number,
     required this.pinCode,
     required this.addressLine1,
@@ -34,7 +32,7 @@ class AddressViewer extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       width: double.infinity,
-      height: 500,
+      height: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -52,12 +50,6 @@ class AddressViewer extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-          Text(
-            plotNo,
-            style: sourceSansProRegular.copyWith(
-              fontSize: 20,
-            ),
           ),
           Text(
             addressLine1,

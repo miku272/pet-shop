@@ -6,7 +6,6 @@ import '../app_styles.dart';
 import '../services/database_service.dart';
 
 import '../widgets/custom_textbox.dart';
-import '../widgets/my_snackbar.dart';
 
 class AddressEditorScreen extends StatelessWidget {
   static const routeName = '/address-editor-screen';
@@ -77,8 +76,6 @@ class _AddressEditorState extends State<AddressEditor> {
       });
 
       if (mounted) {
-        MySnackbar.showSnackbar(context, Colors.black, 'Address Added');
-
         Navigator.of(context).pop();
       }
     }
@@ -232,7 +229,17 @@ class _AddressEditorState extends State<AddressEditor> {
               ),
               const SizedBox(height: 30),
               InkWell(
-                onTap: isEditing ? updateAddress : addAddress,
+                onTap: () {
+                  if (!_isLoading) {
+                    if (isEditing) {
+                      updateAddress();
+                    } else {
+                      addAddress();
+                    }
+                  } else {
+                    () {};
+                  }
+                },
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -245,13 +252,15 @@ class _AddressEditorState extends State<AddressEditor> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Text(
-                      isEditing ? 'Update Address' : 'Add Address',
-                      style: sourceSansProBold.copyWith(
-                        color: boxShadowColor,
-                        fontSize: 20,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: boxShadowColor)
+                        : Text(
+                            isEditing ? 'Update Address' : 'Add Address',
+                            style: sourceSansProBold.copyWith(
+                              color: boxShadowColor,
+                              fontSize: 20,
+                            ),
+                          ),
                   ),
                 ),
               ),

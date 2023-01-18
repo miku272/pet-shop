@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
   final String? uid;
@@ -42,6 +43,29 @@ class DatabaseService {
       'city': city,
       'state': state,
     });
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAddress() async {
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> userAddresses = [];
+
+    final address = await userCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('address')
+        .get();
+
+    for (var element in address.docs) {
+      userAddresses.add(element);
+    }
+
+    return userAddresses;
+  }
+
+  Future deleteUserAddress(String docId) async {
+    await userCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('address')
+        .doc(docId)
+        .delete();
   }
 
   Future getUserDataUsingEmail(String userEmail) async {
