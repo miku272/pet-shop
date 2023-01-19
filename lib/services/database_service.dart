@@ -19,7 +19,6 @@ class DatabaseService {
       'lastName': lastName,
       'email': email,
       'gender': null,
-      'address': null,
       'profilePic': null,
     });
   }
