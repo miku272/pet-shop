@@ -16,6 +16,7 @@ class DatabaseService {
   }) async {
     return await userCollection.doc(uid).set({
       'uid': uid,
+      'defaultAddressid': null,
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
@@ -44,6 +45,34 @@ class DatabaseService {
     });
   }
 
+  Future updateAddress(
+    String addressId,
+    String fullName,
+    String mobNumber,
+    String pinCode,
+    String addressLine1,
+    String addressLine2,
+    String city,
+    String state,
+  ) async {
+    return await userCollection
+        .doc(uid)
+        .collection('address')
+        .doc(addressId)
+        .set(
+      {
+        'fullName': fullName,
+        'mobNumber': mobNumber,
+        'pinCode': pinCode,
+        'addressLine1': addressLine1,
+        'addressLine2': addressLine2,
+        'city': city,
+        'state': state,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAddress() async {
     List<QueryDocumentSnapshot<Map<String, dynamic>>> userAddresses = [];
 
@@ -57,6 +86,12 @@ class DatabaseService {
     }
 
     return userAddresses;
+  }
+
+  Future<String> getDefaultAddress() async {
+    final userData = await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    return userData.data()!['defaultAddressId'];
   }
 
   Future deleteUserAddress(String docId) async {

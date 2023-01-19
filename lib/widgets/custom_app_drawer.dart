@@ -229,7 +229,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
             margin: const EdgeInsets.only(bottom: 60),
             child: Center(
               child: Text(
-                'Copyright©️ 2022    Pet Shop',
+                'Copyright©️ 2023    Pet Shop',
                 style: sourceSansProRegular.copyWith(
                   color: grey,
                   fontSize: 18,

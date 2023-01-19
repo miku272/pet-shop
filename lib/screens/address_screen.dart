@@ -22,6 +22,19 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
+  var defaultAddress = '';
+
+  getDefaultAddress() async {
+    defaultAddress = await DatabaseService().getDefaultAddress();
+  }
+
+  @override
+  void initState() {
+    getDefaultAddress();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +104,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                     itemCount: snapshot.data!.length,
                                     itemBuilder: (context, index) =>
                                         AddressViewer(
+                                      isDefault: true,
                                       name: snapshot.data![index]
                                           .data()['fullName'],
                                       number: snapshot.data![index]
@@ -105,7 +119,34 @@ class _AddressScreenState extends State<AddressScreen> {
                                           snapshot.data![index].data()['city'],
                                       state:
                                           snapshot.data![index].data()['state'],
-                                      edit: () {},
+                                      edit: () async {
+                                        Navigator.of(context).pushNamed(
+                                          AddressEditorScreen.routeName,
+                                          arguments: {
+                                            'isEditing': snapshot.data![index].id == defaultAddress,
+                                            'addressId':
+                                                snapshot.data![index].id,
+                                            'name': snapshot.data![index]
+                                                .data()['fullName'],
+                                            'city': snapshot.data![index]
+                                                .data()['city'],
+                                            'addressLine1': snapshot
+                                                .data![index]
+                                                .data()['addressLine1'],
+                                            'addressLine2': snapshot
+                                                .data![index]
+                                                .data()['addressLine2'],
+                                            'number': snapshot.data![index]
+                                                .data()['mobNumber'],
+                                            'pinCode': snapshot.data![index]
+                                                .data()['pinCode'],
+                                            'state': snapshot.data![index]
+                                                .data()['state'],
+                                          },
+                                        ).then((value) {
+                                          setState(() {});
+                                        });
+                                      },
                                       delete: () async {
                                         showAnimatedDialog(
                                           context: context,

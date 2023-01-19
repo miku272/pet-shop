@@ -81,7 +81,35 @@ class _AddressEditorState extends State<AddressEditor> {
     }
   }
 
-  void updateAddress() {}
+  void updateAddress() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      _formKey.currentState!.save();
+
+      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .updateAddress(
+        widget.args!['addressId'],
+        fullName,
+        mobNumber,
+        pinCode,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if(mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app_styles.dart';
 
 class AddressViewer extends StatelessWidget {
+  final bool isDefault;
   final String name;
   final String number;
   final String pinCode;
@@ -15,6 +16,7 @@ class AddressViewer extends StatelessWidget {
 
   const AddressViewer({
     Key? key,
+    required this.isDefault,
     required this.name,
     required this.number,
     required this.pinCode,
@@ -94,11 +96,21 @@ class AddressViewer extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 30),
+              const SizedBox(width: 15),
               ElevatedButton(
                 onPressed: delete,
                 child: Text(
                   'Remove',
+                  style: sourceSansProSemiBold.copyWith(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              ElevatedButton(
+                onPressed: isDefault ? null : () {},
+                child: Text(
+                  isDefault ? 'Default' : 'Set as default',
                   style: sourceSansProSemiBold.copyWith(
                     fontSize: 15,
                   ),

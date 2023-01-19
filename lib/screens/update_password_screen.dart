@@ -154,7 +154,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                               color: boxShadowColor,
                             )
                           : Text(
-                              'Reset Password',
+                              'Update Password',
                               style: sourceSansProBold.copyWith(
                                 color: boxShadowColor,
                                 fontSize: 20,
