@@ -28,6 +28,12 @@ class _AddressScreenState extends State<AddressScreen> {
     defaultAddress = await DatabaseService().getDefaultAddress();
   }
 
+  setDefaultAddress(String addressId) async {
+    await DatabaseService().setDefaultAddress(addressId);
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     getDefaultAddress();
@@ -104,7 +110,8 @@ class _AddressScreenState extends State<AddressScreen> {
                                     itemCount: snapshot.data!.length,
                                     itemBuilder: (context, index) =>
                                         AddressViewer(
-                                      isDefault: true,
+                                      addressId: snapshot.data![index].id,
+                                      setDefaultAddress: setDefaultAddress,
                                       name: snapshot.data![index]
                                           .data()['fullName'],
                                       number: snapshot.data![index]
@@ -123,7 +130,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                         Navigator.of(context).pushNamed(
                                           AddressEditorScreen.routeName,
                                           arguments: {
-                                            'isEditing': snapshot.data![index].id == defaultAddress,
+                                            'isEditing': true,
                                             'addressId':
                                                 snapshot.data![index].id,
                                             'name': snapshot.data![index]

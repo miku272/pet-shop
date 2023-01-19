@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../app_styles.dart';
 
+import '../services/database_service.dart';
+
 class AddressViewer extends StatelessWidget {
-  final bool isDefault;
+  final String addressId;
   final String name;
   final String number;
   final String pinCode;
@@ -13,10 +15,11 @@ class AddressViewer extends StatelessWidget {
   final String state;
   final VoidCallback edit;
   final VoidCallback delete;
+  final Function(String) setDefaultAddress;
 
   const AddressViewer({
     Key? key,
-    required this.isDefault,
+    required this.addressId,
     required this.name,
     required this.number,
     required this.pinCode,
@@ -26,6 +29,7 @@ class AddressViewer extends StatelessWidget {
     required this.state,
     required this.edit,
     required this.delete,
+    required this.setDefaultAddress,
   }) : super(key: key);
 
   @override
@@ -107,14 +111,32 @@ class AddressViewer extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 15),
-              ElevatedButton(
-                onPressed: isDefault ? null : () {},
-                child: Text(
-                  isDefault ? 'Default' : 'Set as default',
-                  style: sourceSansProSemiBold.copyWith(
-                    fontSize: 15,
-                  ),
-                ),
+              FutureBuilder(
+                future: DatabaseService().getDefaultAddress(),
+                builder: (context, snapshot) =>
+                    snapshot.connectionState == ConnectionState.waiting
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: boxShadowColor,
+                            ),
+                          )
+                        : ElevatedButton(
+                            onPressed: snapshot.data!.trim() == addressId.trim()
+                                ? null
+                                : () async {
+                                    setDefaultAddress(addressId);
+                                  },
+                            child: Text(
+                              snapshot.data!.trim() == addressId.trim()
+                                  ? 'Default'
+                                  : 'Set as default',
+                              style: sourceSansProSemiBold.copyWith(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
               ),
             ],
           ),

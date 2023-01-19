@@ -88,8 +88,16 @@ class DatabaseService {
     return userAddresses;
   }
 
+  Future<void> setDefaultAddress(String addressId) async {
+    await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(
+      {'defaultAddressId': addressId},
+      SetOptions(merge: true),
+    );
+  }
+
   Future<String> getDefaultAddress() async {
-    final userData = await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    final userData =
+        await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
 
     return userData.data()!['defaultAddressId'];
   }
