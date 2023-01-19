@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../app_styles.dart';
+
+import '../services/database_service.dart';
 
 import '../widgets/custom_textbox.dart';
 
@@ -32,14 +35,13 @@ class _AddressEditorState extends State<AddressEditor> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  String fullName= '';
-  String mobNumber = '' ;
+  String fullName = '';
+  String mobNumber = '';
   String pinCode = '';
   String addressLine1 = '';
   String addressLine2 = '';
   String city = '';
   String state = '';
-
 
   @override
   void initState() {
@@ -50,15 +52,35 @@ class _AddressEditorState extends State<AddressEditor> {
     super.initState();
   }
 
-  void addAddress () async {
+  void addAddress() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      _formKey.currentState!.save();
+
+      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .addAddress(
+        fullName,
+        mobNumber,
+        pinCode,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+      );
+
       setState(() {
         _isLoading = false;
       });
 
-      _formKey.currentState!.save();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
+
   void updateAddress() {}
 
   @override
@@ -111,7 +133,7 @@ class _AddressEditorState extends State<AddressEditor> {
 
                         return null;
                       },
-                      onSave: (value){
+                      onSave: (value) {
                         mobNumber = value!;
                       },
                     ),
@@ -133,7 +155,7 @@ class _AddressEditorState extends State<AddressEditor> {
                         return null;
                       },
                       onSave: (value) {
-                        pinCode =value!;
+                        pinCode = value!;
                       },
                     ),
                     const SizedBox(height: 20),
@@ -207,7 +229,17 @@ class _AddressEditorState extends State<AddressEditor> {
               ),
               const SizedBox(height: 30),
               InkWell(
-                onTap: isEditing ? updateAddress : addAddress,
+                onTap: () {
+                  if (!_isLoading) {
+                    if (isEditing) {
+                      updateAddress();
+                    } else {
+                      addAddress();
+                    }
+                  } else {
+                    () {};
+                  }
+                },
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -220,13 +252,15 @@ class _AddressEditorState extends State<AddressEditor> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Text(
-                      isEditing ? 'Update Address' : 'Add Address',
-                      style: sourceSansProBold.copyWith(
-                        color: boxShadowColor,
-                        fontSize: 20,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: boxShadowColor)
+                        : Text(
+                            isEditing ? 'Update Address' : 'Add Address',
+                            style: sourceSansProBold.copyWith(
+                              color: boxShadowColor,
+                              fontSize: 20,
+                            ),
+                          ),
                   ),
                 ),
               ),

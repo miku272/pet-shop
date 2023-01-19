@@ -83,33 +83,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Form(
                       key: _formKey,
                       child: Column(
-                        children: <Widget>[
-                          const CustomTextbox(
+                        children: const <Widget>[
+                          CustomTextbox(
                             prefixIcon: Icons.person,
                             labelData: 'First name',
                             isHidden: false,
                           ),
-                          const SizedBox(height: 10),
-                          const CustomTextbox(
+                          SizedBox(height: 10),
+                          CustomTextbox(
                             prefixIcon: Icons.person,
                             labelData: 'Last name',
                             isHidden: false,
                           ),
-                          const SizedBox(height: 10),
-                          const CustomTextbox(
+                          SizedBox(height: 10),
+                          CustomTextbox(
                             prefixIcon: Icons.email,
                             textInputType: TextInputType.emailAddress,
                             labelData: 'Email',
                             isHidden: false,
                           ),
-                          const SizedBox(height: 10),
-                          const CustomTextbox(
+                          SizedBox(height: 10),
+                          CustomTextbox(
                             prefixIcon: Icons.phone,
                             textInputType: TextInputType.number,
                             labelData: 'Phone Number',
                             isHidden: false,
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10),
                         ],
                       ),
                     ),
