@@ -117,6 +117,39 @@ class AuthService {
     }
   }
 
+  Future nameUpdate(String firstName, String lastName) async {
+    await DatabaseService().updateName(firstName, lastName);
+
+    await HelperFunction.setUserFirstName(firstName);
+    await HelperFunction.setUserLastName(lastName);
+
+    return true;
+  }
+
+  Future emailUpdate(String newEmail) async {
+    try {
+      await firebaseAuth.currentUser!.updateEmail(newEmail);
+
+      await DatabaseService().updateEmail(newEmail);
+
+      await HelperFunction.setUserEmail(newEmail);
+
+      return true;
+    } on FirebaseAuthException catch (error) {
+      return error.message;
+    }
+  }
+
+  Future numberUpdate(String newPhoneNumber) async {
+    try {
+      final userPrevNumber = await DatabaseService().getUserNumber();
+      if (userPrevNumber == null || userPrevNumber.isEmpty) {
+      } else {}
+    } on FirebaseAuthException catch (error) {
+      return error.message;
+    }
+  }
+
   Future passwordUpdate(
       String email, String currPassword, String newPassword) async {
     try {

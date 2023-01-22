@@ -20,9 +20,45 @@ class DatabaseService {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
+      'number': null,
       'gender': null,
       'profilePic': null,
     });
+  }
+
+  Future updateName(String firstName, String lastName) async {
+    return await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(
+      {
+        'firstName': firstName,
+        'lastName': lastName,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Future updateEmail(String newEmail) async {
+    return await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(
+      {
+        'email': newEmail,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Future updateNumber(String newPhoneNumber) async {
+    return await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(
+      {
+        'number': newPhoneNumber,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Future getUserNumber() async {
+    final userData =
+        await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    return userData.data()!['number'];
   }
 
   Future addAddress(
