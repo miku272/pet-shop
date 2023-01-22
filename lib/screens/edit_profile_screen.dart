@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../app_styles.dart';
@@ -25,6 +26,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _emailFormKey = GlobalKey<FormState>();
   final _numberFormKey = GlobalKey<FormState>();
 
+  final _controller = TextEditingController();
+
   var _isNameLoading = false;
   var _isEmailLoading = false;
   var _isNumberLoading = false;
@@ -49,6 +52,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
 
       if (mounted) {
+        _nameFormKey.currentState!.reset();
         MySnackbar.showSnackbar(context, black, 'Name updated Successfully');
       }
     }
@@ -70,6 +74,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       if (value == true) {
         if (mounted) {
+          _emailFormKey.currentState!.reset();
+
           MySnackbar.showSnackbar(
             context,
             black,
@@ -87,7 +93,101 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _updateNumber() async {
     if (_numberFormKey.currentState!.validate()) {
       _numberFormKey.currentState!.save();
+
+      setState(() {
+        _isNumberLoading = true;
+      });
+
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: '+91$phoneNumber',
+        verificationCompleted: (PhoneAuthCredential credential) {},
+        verificationFailed: (FirebaseAuthException error) {},
+        codeSent: (String verificationId, int? resendToken) {
+          showAnimatedDialog(
+            context: context,
+            animationType: DialogTransitionType.slideFromBottom,
+            duration: const Duration(milliseconds: 300),
+            builder: (context) => AlertDialog(
+              elevation: 5,
+              alignment: Alignment.bottomCenter,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: const Text('Verify OTP'),
+              content: CustomTextbox(
+                textEditingController: _controller,
+                prefixIcon: Icons.numbers,
+                labelData: 'Enter OTP here',
+                textInputType: TextInputType.number,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: sourceSansProSemiBold.copyWith(
+                      color: orange,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    dynamic value = await AuthService().numberUpdate(
+                      phoneNumber,
+                      verificationId,
+                      _controller.text,
+                    );
+
+                    if (value == true) {
+                      if (mounted) {
+                        MySnackbar.showSnackbar(
+                          context,
+                          black,
+                          'Number Updated Successfully',
+                        );
+
+                        Navigator.of(context).pop();
+                      }
+                    } else {
+                      if (mounted) {
+                        MySnackbar.showSnackbar(
+                          context,
+                          black,
+                          value,
+                        );
+
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  },
+                  child: Text(
+                    'Verify',
+                    style: sourceSansProSemiBold.copyWith(
+                      color: orange,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+
+      setState(() {
+        _isNumberLoading = false;
+      });
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -189,14 +289,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             },
                           ),
                           TextButton(
-                            onPressed: _updateName,
-                            child: Text(
-                              'Update Name',
-                              style: sourceSansProSemiBold.copyWith(
-                                fontSize: 18,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
+                            onPressed: _isNameLoading ? () {} : _updateName,
+                            child: _isNameLoading
+                                ? const CircularProgressIndicator(
+                                    color: boxShadowColor)
+                                : Text(
+                                    'Update Name',
+                                    style: sourceSansProSemiBold.copyWith(
+                                      fontSize: 18,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -228,18 +331,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             },
                           ),
                           TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(
+                            onPressed: () async {
+                              final value =
+                                  await Navigator.of(context).pushNamed(
                                 ReAuthanticationScreen.routeName,
                               );
+
+                              if (value == null) {
+                                return;
+                              }
+
+                              if (value == true) {
+                                _updateEmail();
+                              } else {
+                                if (mounted) {
+                                  MySnackbar.showSnackbar(context, red, value);
+                                }
+                              }
                             },
-                            child: Text(
-                              'Update Email',
-                              style: sourceSansProSemiBold.copyWith(
-                                fontSize: 18,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
+                            child: _isEmailLoading
+                                ? const CircularProgressIndicator(
+                                    color: boxShadowColor,
+                                  )
+                                : Text(
+                                    'Update Email',
+                                    style: sourceSansProSemiBold.copyWith(
+                                      fontSize: 18,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -253,7 +373,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: <Widget>[
                           CustomTextbox(
                             prefixIcon: Icons.phone,
-                            textInputType: TextInputType.number,
+                            textInputType: TextInputType.phone,
                             labelData: 'Phone Number',
                             isHidden: false,
                             validator: (value) {
@@ -267,16 +387,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                               return null;
                             },
+                            onSave: (value) {
+                              phoneNumber = value!.trim();
+                            },
                           ),
                           TextButton(
-                            onPressed: _updateNumber,
-                            child: Text(
-                              'Update Number',
-                              style: sourceSansProSemiBold.copyWith(
-                                fontSize: 18,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
+                            onPressed: () async {
+                              final value =
+                                  await Navigator.of(context).pushNamed(
+                                ReAuthanticationScreen.routeName,
+                              );
+
+                              if (value == null) {
+                                return;
+                              }
+
+                              if (value == true) {
+                                _updateNumber();
+                              } else {
+                                if (mounted) {
+                                  MySnackbar.showSnackbar(context, red, value);
+                                }
+                              }
+                            },
+                            child: _isNumberLoading
+                                ? const CircularProgressIndicator(
+                                    color: boxShadowColor,
+                                  )
+                                : Text(
+                                    'Update Number',
+                                    style: sourceSansProSemiBold.copyWith(
+                                      fontSize: 18,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),

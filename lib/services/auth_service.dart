@@ -140,11 +140,33 @@ class AuthService {
     }
   }
 
-  Future numberUpdate(String newPhoneNumber) async {
+  Future numberUpdate(
+      String newPhoneNumber, String verificationId, String smsCode) async {
     try {
       final userPrevNumber = await DatabaseService().getUserNumber();
       if (userPrevNumber == null || userPrevNumber.isEmpty) {
-      } else {}
+        final credendial = PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: smsCode,
+        );
+
+        await firebaseAuth.currentUser!.linkWithCredential(credendial);
+
+        await DatabaseService().updateNumber(newPhoneNumber);
+
+        return true;
+      } else {
+        final credendial = PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: smsCode,
+        );
+
+        await firebaseAuth.currentUser!.updatePhoneNumber(credendial);
+
+        await DatabaseService().updateNumber(newPhoneNumber);
+
+        return true;
+      }
     } on FirebaseAuthException catch (error) {
       return error.message;
     }
@@ -159,6 +181,20 @@ class AuthService {
       await firebaseAuth.currentUser!.reauthenticateWithCredential(cred);
 
       await firebaseAuth.currentUser!.updatePassword(newPassword);
+
+      return true;
+    } on FirebaseAuthException catch (error) {
+      return error.message;
+    }
+  }
+
+  Future reauthUser(String email, String password) async {
+    try {
+      final reAuthData =
+          EmailAuthProvider.credential(email: email, password: password);
+
+      await FirebaseAuth.instance.currentUser!
+          .reauthenticateWithCredential(reAuthData);
 
       return true;
     } on FirebaseAuthException catch (error) {

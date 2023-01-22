@@ -124,28 +124,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          CircleAvatar(
+                          const CircleAvatar(
                             radius: 80,
-                            backgroundImage: const NetworkImage(
+                            backgroundImage: NetworkImage(
                               commonMaleAvatar,
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: const CircleAvatar(
-                                      backgroundColor: boxShadowColor,
-                                      child: Icon(
-                                        color: black,
-                                        Icons.edit,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -163,6 +145,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: grey,
                             ),
                           ),
+                          snapshot.data.docs[0]['number'] != null
+                              ? Text(
+                                  '+91 ${snapshot.data.docs[0]['number']}',
+                                  style: sourceSansProSemiBold.copyWith(
+                                    fontSize: 22,
+                                    color: grey,
+                                  ),
+                                )
+                              : const SizedBox(),
                           const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {

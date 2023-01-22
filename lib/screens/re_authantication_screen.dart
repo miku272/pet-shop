@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../app_styles.dart';
 
 import '../widgets/custom_textbox.dart';
+
+import '../services/auth_service.dart';
 
 class ReAuthanticationScreen extends StatefulWidget {
   static const routeName = '/reauth-screen';
@@ -20,11 +23,31 @@ class _ReAuthanticationScreenState extends State<ReAuthanticationScreen> {
 
   var password = '';
 
-  void reauth() async {}
+  void _reauth() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      dynamic value = await AuthService()
+          .reauthUser(FirebaseAuth.instance.currentUser!.email!, password);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (mounted) {
+        Navigator.of(context).pop(value);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: lighterOrange,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -43,6 +66,7 @@ class _ReAuthanticationScreenState extends State<ReAuthanticationScreen> {
                 ),
                 const SizedBox(height: 10),
                 Form(
+                  key: _formKey,
                   child: CustomTextbox(
                     prefixIcon: Icons.key,
                     labelData: 'Password',
@@ -57,6 +81,35 @@ class _ReAuthanticationScreenState extends State<ReAuthanticationScreen> {
                     onSave: (value) {
                       password = value!;
                     },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: _isLoading ? () {} : _reauth,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 19,
+                      horizontal: 63,
+                    ),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: grey,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              color: boxShadowColor,
+                            )
+                          : Text(
+                              'Submit',
+                              style: sourceSansProBold.copyWith(
+                                color: boxShadowColor,
+                                fontSize: 20,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
               ],
