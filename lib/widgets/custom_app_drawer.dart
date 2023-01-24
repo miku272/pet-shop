@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../app_styles.dart';
@@ -26,6 +27,12 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
       qureySnapshot = await DatabaseService().getUserDataUsingEmail(email);
       setState(() {});
     }
+  }
+
+  void _shareApp() async {
+    await Share.share(
+      'Hey! Check out this cool app!\nwww . pet_shop . com',
+    );
   }
 
   @override
@@ -58,11 +65,13 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                           top: 30,
                           bottom: 10,
                         ),
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: NetworkImage(
-                              commonMaleAvatar,
+                              qureySnapshot!.docs[0]['avatar'] == 'm'
+                                  ? commonMaleAvatar
+                                  : commonFemaleAvatar,
                             ),
                             fit: BoxFit.cover,
                           ),
@@ -158,6 +167,16 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                       onTap: null,
                     )
                   : const SizedBox(),
+              ListTile(
+                leading: const Icon(Icons.share),
+                title: Text(
+                  'Share this app',
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: _shareApp,
+              ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
                       leading: const Icon(Icons.logout),

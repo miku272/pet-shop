@@ -21,9 +21,23 @@ class DatabaseService {
       'lastName': lastName,
       'email': email,
       'number': null,
-      'gender': null,
+      'avatar': 'm',
       'profilePic': null,
     });
+  }
+
+  Future updateAvatar(String avatar) async {
+    return await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(
+      {'avatar': avatar},
+      SetOptions(merge: true),
+    );
+  }
+
+  Future getAvatar() async {
+    final userData =
+        await userCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    return userData.data()!['avatar'];
   }
 
   Future updateName(String firstName, String lastName) async {

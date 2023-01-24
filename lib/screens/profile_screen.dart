@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../app_styles.dart';
 
@@ -27,12 +26,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  void _shareApp() async {
-    await Share.share(
-      'Hey! Check out this cool app!\nwww . pet_shop . com',
-    );
-  }
-
   void _logout() {
     showAnimatedDialog(
       context: context,
@@ -124,10 +117,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 80,
                             backgroundImage: NetworkImage(
-                              commonMaleAvatar,
+                              snapshot.data.docs[0]['avatar'] == 'm'
+                                  ? commonMaleAvatar
+                                  : commonFemaleAvatar,
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -199,11 +194,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             trailIcon: Icons.arrow_right_rounded,
                           ),
                           const Divider(color: boxShadowColor),
-                          ProfileScreenListTile(
-                            onPress: _shareApp,
-                            leadIcon: Icons.share,
-                            title: 'Share this app',
-                          ),
                           ProfileScreenListTile(
                             onPress: _logout,
                             leadIcon: Icons.logout,

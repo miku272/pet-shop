@@ -28,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   final _controller = TextEditingController();
 
+  var _isAvatarLoading = false;
   var _isNameLoading = false;
   var _isEmailLoading = false;
   var _isNumberLoading = false;
@@ -36,6 +37,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   var lastName = '';
   var email = '';
   var phoneNumber = '';
+
+  var avatar = 'm';
+
+  void _selectAvatar() {
+    if (avatar == 'm') {
+      setState(() {
+        avatar = 'f';
+      });
+    } else {
+      setState(() {
+        avatar = 'm';
+      });
+    }
+  }
+
+  void getAvatar() async {
+    final avt = await DatabaseService().getAvatar();
+
+    avatar = avt;
+  }
+
+  void _updateAvatar() async {
+    setState(() {
+      _isAvatarLoading = true;
+    });
+
+    await DatabaseService().updateAvatar(avatar);
+
+    setState(() {
+      _isAvatarLoading = false;
+    });
+
+    if (mounted) {
+      MySnackbar.showSnackbar(context, black, 'Avatar updated successfully');
+    }
+  }
 
   void _updateName() async {
     if (_nameFormKey.currentState!.validate()) {
@@ -185,6 +222,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   @override
+  void initState() {
+    getAvatar();
+
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -228,29 +272,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    CircleAvatar(
-                      radius: 80,
-                      backgroundImage: const NetworkImage(
-                        commonMaleAvatar,
-                      ),
-                      child: Stack(
-                        children: <Widget>[
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: InkWell(
-                              onTap: () {},
-                              child: const CircleAvatar(
-                                backgroundColor: boxShadowColor,
-                                child: Icon(
-                                  color: black,
-                                  Icons.edit,
-                                ),
-                              ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: _selectAvatar,
+                          child: CircleAvatar(
+                            radius: avatar == 'm' ? 60 : 40,
+                            backgroundImage: const NetworkImage(
+                              commonMaleAvatar,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        GestureDetector(
+                          onTap: _selectAvatar,
+                          child: CircleAvatar(
+                            radius: avatar == 'f' ? 60 : 40,
+                            backgroundImage: const NetworkImage(
+                              commonFemaleAvatar,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    TextButton(
+                      onPressed: _isAvatarLoading ? () {} : _updateAvatar,
+                      child: _isAvatarLoading
+                          ? const CircularProgressIndicator(
+                              color: boxShadowColor)
+                          : Text(
+                              'Update Avatar',
+                              style: sourceSansProSemiBold.copyWith(
+                                fontSize: 18,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 25),
                     const Divider(color: boxShadowColor),
