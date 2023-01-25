@@ -5,10 +5,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../app_styles.dart';
-
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
-
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/cart_screen.dart';
@@ -60,55 +58,27 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                 child: Center(
                   child: Column(
                     children: <Widget>[
-                      FirebaseAuth.instance.currentUser != null
-                          ? FutureBuilder(
-                              future: DatabaseService().getUserDataUsingUid(
-                                FirebaseAuth.instance.currentUser!.uid,
-                              ),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator(
-                                    color: boxShadowColor,
-                                  );
-                                }
-                                return Container(
-                                  width: 100,
-                                  height: 100,
-                                  margin: const EdgeInsets.only(
-                                    top: 30,
-                                    bottom: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        qureySnapshot!.docs[0]['avatar'] == 'm'
-                                            ? commonMaleAvatar
-                                            : commonFemaleAvatar,
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                );
-                              })
-                          : Container(
-                              width: 100,
-                              height: 100,
-                              margin: const EdgeInsets.only(
-                                top: 30,
-                                bottom: 10,
-                              ),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    commonMaleAvatar,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        margin: const EdgeInsets.only(
+                          top: 30,
+                          bottom: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              qureySnapshot?.docs != null
+                                  ? qureySnapshot!.docs[0]['avatar'] == 'm'
+                                      ? commonMaleAvatar
+                                      : commonFemaleAvatar
+                                  : commonMaleAvatar,
                             ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                       Text(
                         qureySnapshot == null
                             ? 'Hello User'
