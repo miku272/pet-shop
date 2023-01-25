@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
+
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/pet_container.dart';
 import '../widgets/custom_app_drawer.dart';
-import '../services/auth_service.dart';
+
 import '../services/database_service.dart';
 
 import './login_screen.dart';
 import './pet_detail_screen.dart';
+import './chat_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -22,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final temp = true;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -74,76 +77,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : InkWell(
-                          onTap: () async {
-                            showAnimatedDialog(
-                              context: context,
-                              animationType:
-                                  DialogTransitionType.slideFromBottom,
-                              duration: const Duration(milliseconds: 300),
-                              builder: (context) => AlertDialog(
-                                elevation: 5,
-                                alignment: Alignment.bottomCenter,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                title: const Text('Logout'),
-                                content: Text(
-                                  'Are you sure you want to logout?',
-                                  style: sourceSansProRegular.copyWith(
-                                    color: grey,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () async {
-                                      await AuthService().signOut();
-
-                                      if (mounted) {
-                                        Navigator.of(context)
-                                            .pushReplacementNamed(
-                                          HomeScreen.routeName,
-                                        );
-                                      }
-                                    },
-                                    child: Text(
-                                      'Yes',
-                                      style: sourceSansProSemiBold.copyWith(
-                                        color: orange,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'No',
-                                      style: sourceSansProSemiBold.copyWith(
-                                        color: orange,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              ChatListScreen.routeName,
                             );
                           },
-                          child: Text(
-                            'Sign out',
-                            style: sourceSansProSemiBold.copyWith(
-                              color: lightGrey,
-                              fontSize: 16.5,
-                            ),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: <Widget>[
+                              const Icon(
+                                Icons.chat_bubble_outline_rounded,
+                                color: grey,
+                              ),
+                              temp
+                                  ? Positioned(
+                                      top: -10,
+                                      right: -10,
+                                      child: CircleAvatar(
+                                        backgroundColor: boxShadowColor,
+                                        radius: 10,
+                                        child: Center(
+                                          child: Text(
+                                            '1',
+                                            style: sourceSansProSemiBold
+                                                .copyWith(color: black),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ],
                           ),
-                        )
-                  // : const CircleAvatar(
-                  //     radius: 20,
-                  //     backgroundColor: orange,
-                  //     backgroundImage: NetworkImage(
-                  //         'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png'),
-                  //   ),
+                        ),
                 ],
               ),
             ),

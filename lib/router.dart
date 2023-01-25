@@ -5,6 +5,8 @@ import './screens/forget_password_screen.dart';
 import './screens/registration_screen.dart';
 import './screens/re_authantication_screen.dart';
 import './screens/home_screen.dart';
+import './screens/chat_list_screen.dart';
+import './screens/chat_screen.dart';
 import './screens/cart_screen.dart';
 import './screens/profile_screen.dart';
 import './screens/edit_profile_screen.dart';
@@ -43,6 +45,18 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (context) => const HomeScreen(),
+      );
+
+    case ChatListScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const ChatListScreen(),
+      );
+
+    case ChatScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const ChatScreen(),
       );
 
     case CartScreen.routeName:
