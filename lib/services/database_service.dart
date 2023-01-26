@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class DatabaseService {
   final String? uid;
   final userCollection = FirebaseFirestore.instance.collection('users');
+  final chatCollection = FirebaseFirestore.instance.collection('chats');
 
   DatabaseService({this.uid});
 
@@ -20,6 +21,7 @@ class DatabaseService {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
+      'chats': null,
       'number': null,
       'avatar': 'm',
       'profilePic': null,
@@ -180,5 +182,40 @@ class DatabaseService {
             );
 
     return querySnapshot;
+  }
+
+  Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getUserChats() async {
+    return userCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
+  }
+
+  Future createChat(String senderId, String receiverId) async {
+    final chatDoc = await chatCollection.add({
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'chatId': null,
+      'recentMessage': null,
+      'recentMessageSender': null,
+    });
+
+    await chatDoc.update({
+      'chatId': chatDoc.id,
+    });
+
+    final senderDocRef = userCollection.doc(senderId);
+    final receiverDocRef = userCollection.doc(receiverId);
+
+    await senderDocRef.update(
+      {
+        'chats': FieldValue.arrayUnion([(chatDoc.id)]),
+      },
+    );
+
+    await receiverDocRef.update(
+      {
+        'chats': FieldValue.arrayUnion([(chatDoc.id)]),
+      },
+    );
   }
 }

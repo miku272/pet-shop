@@ -29,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _logout() {
     showAnimatedDialog(
       context: context,
+      barrierDismissible: true,
       animationType: DialogTransitionType.slideFromBottom,
       duration: const Duration(milliseconds: 300),
       builder: (context) => AlertDialog(

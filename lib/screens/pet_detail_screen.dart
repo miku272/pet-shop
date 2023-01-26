@@ -4,9 +4,39 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../size_config.dart';
 import '../app_styles.dart';
 
-class PetDetailScreen extends StatelessWidget {
+import '../services/database_service.dart';
+
+import './chat_list_screen.dart';
+
+class PetDetailScreen extends StatefulWidget {
   static const String routeName = '/pet-detail-screen';
   const PetDetailScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PetDetailScreen> createState() => _PetDetailScreenState();
+}
+
+class _PetDetailScreenState extends State<PetDetailScreen> {
+  var _isChatLoading = false;
+
+  createChat() async {
+    setState(() {
+      _isChatLoading = true;
+    });
+
+    await DatabaseService().createChat(
+      '7Ymz94J2UTgSk6ZbOfX8UoTe3jk1',
+      'MHJo8F9IrVPmA7FIdwQBUAH8aVn1',
+    );
+
+    setState(() {
+      _isChatLoading = false;
+    });
+
+    if (mounted) {
+      Navigator.of(context).pushNamed(ChatListScreen.routeName);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +45,7 @@ class PetDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: white,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: _isChatLoading ? () {} : createChat,
         extendedPadding: const EdgeInsets.symmetric(
             horizontal: paddingHorizontal, vertical: 18),
         shape: RoundedRectangleBorder(

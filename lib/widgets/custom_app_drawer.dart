@@ -191,6 +191,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                       onTap: () async {
                         showAnimatedDialog(
                           context: context,
+                          barrierDismissible: true,
                           animationType: DialogTransitionType.slideFromBottom,
                           duration: const Duration(milliseconds: 300),
                           builder: (context) => AlertDialog(
