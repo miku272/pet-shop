@@ -23,8 +23,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final temp = true;
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -84,28 +82,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: Stack(
                             clipBehavior: Clip.none,
-                            children: <Widget>[
-                              const Icon(
+                            children: const <Widget>[
+                              Icon(
                                 Icons.chat_bubble_outline_rounded,
                                 color: grey,
                               ),
-                              temp
-                                  ? Positioned(
-                                      top: -10,
-                                      right: -10,
-                                      child: CircleAvatar(
-                                        backgroundColor: boxShadowColor,
-                                        radius: 10,
-                                        child: Center(
-                                          child: Text(
-                                            '1',
-                                            style: sourceSansProSemiBold
-                                                .copyWith(color: black),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox(),
+                              // temp
+                              //     ? Positioned(
+                              //         top: -10,
+                              //         right: -10,
+                              //         child: CircleAvatar(
+                              //           backgroundColor: boxShadowColor,
+                              //           radius: 10,
+                              //           child: Center(
+                              //             child: Text(
+                              //               '1',
+                              //               style: sourceSansProSemiBold
+                              //                   .copyWith(color: black),
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       )
+                              //     : const SizedBox(),
                             ],
                           ),
                         ),
