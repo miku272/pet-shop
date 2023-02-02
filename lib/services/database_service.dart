@@ -232,4 +232,11 @@ class DatabaseService {
       String chatId) async {
     return chatCollection.doc(chatId).snapshots();
   }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getStaticChatDataUsingUid(
+      String chatId) async {
+    final chatData = await chatCollection.doc(chatId).get();
+
+    return chatData;
+  }
 }

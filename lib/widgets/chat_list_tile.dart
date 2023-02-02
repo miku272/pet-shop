@@ -43,7 +43,7 @@ class _ChatListTileState extends State<ChatListTile> {
       stream: chatList,
       builder: (context, snapshot) {
         String recentMessage =
-            snapshot.data['recentMessage'] ?? 'Ask for adoption ❤️';
+            snapshot.data['recentMessage'] ?? 'With ❤️ from pet shop';
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
