@@ -199,6 +199,7 @@ class DatabaseService {
       'chatId': null,
       'recentMessage': null,
       'recentMessageSender': null,
+      'recentMessageTime': null,
     });
 
     final senderData = await getUserDataUsingUid(senderId);
@@ -246,5 +247,15 @@ class DatabaseService {
         .collection('messages')
         .orderBy('time')
         .snapshots();
+  }
+
+  Future sendMessage(String chatId, Map<String, dynamic> chat) async {
+    await chatCollection.doc(chatId).collection('messages').add(chat);
+
+    await chatCollection.doc(chatId).update({
+      'recentMessage': chat['message'],
+      'recentMessageSender': chat['senderId'],
+      'recentMessageTime': chat['time'].toString(),
+    });
   }
 }

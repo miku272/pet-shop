@@ -79,7 +79,16 @@ class _ChatScreenWidState extends State<ChatScreenWid> {
     if (_controller.text.isNotEmpty) {
       Map<String, dynamic> chatMessage = {
         'message': _controller.text,
+        'senderId': FirebaseAuth.instance.currentUser!.uid,
+        'senderName': userData!.docs[0]['firstName'],
+        'time': DateTime.now().millisecondsSinceEpoch,
       };
+
+      DatabaseService().sendMessage(widget.chatId, chatMessage);
+
+      setState(() {
+        _controller.clear();
+      });
     }
   }
 
