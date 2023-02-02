@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../app_styles.dart';
 
 class ChatScreen extends StatefulWidget {
   static const routeName = '/chat-screen';
@@ -12,6 +15,9 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    String chatId = ModalRoute.of(context)!.settings.arguments as String;
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    return const Scaffold();
   }
 }

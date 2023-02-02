@@ -21,7 +21,7 @@ class DatabaseService {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
-      'chats': null,
+      'chats': [],
       'number': null,
       'avatar': 'm',
       'profilePic': null,
@@ -193,14 +193,23 @@ class DatabaseService {
   Future createChat(String senderId, String receiverId) async {
     final chatDoc = await chatCollection.add({
       'senderId': senderId,
+      'senderName': null,
       'receiverId': receiverId,
+      'receiverName': null,
       'chatId': null,
       'recentMessage': null,
       'recentMessageSender': null,
     });
 
+    final senderData = await getUserDataUsingUid(senderId);
+    final receiverData = await getUserDataUsingUid(receiverId);
+
     await chatDoc.update({
       'chatId': chatDoc.id,
+      'senderName':
+          '${senderData.docs[0]['firstName']} ${senderData.docs[0]['lastName']}',
+      'receiverName':
+          '${receiverData.docs[0]['firstName']} ${receiverData.docs[0]['lastName']}',
     });
 
     final senderDocRef = userCollection.doc(senderId);
@@ -217,5 +226,10 @@ class DatabaseService {
         'chats': FieldValue.arrayUnion([(chatDoc.id)]),
       },
     );
+  }
+
+  Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getChatDataUsingUid(
+      String chatId) async {
+    return chatCollection.doc(chatId).snapshots();
   }
 }

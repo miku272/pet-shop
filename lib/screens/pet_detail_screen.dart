@@ -52,12 +52,18 @@ class _PetDetailScreenState extends State<PetDetailScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
         backgroundColor: grey,
-        label: const Text(
-          'Ask for adoption',
-          style: TextStyle(
-            color: boxShadowColor,
-          ),
-        ),
+        label: _isChatLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: boxShadowColor,
+                ),
+              )
+            : const Text(
+                'Ask for adoption',
+                style: TextStyle(
+                  color: boxShadowColor,
+                ),
+              ),
         // icon: SvgPicture.asset('assets/add_to_cart_icon.svg'),
         icon: const Icon(
           Icons.chat_bubble_outline_rounded,
