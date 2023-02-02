@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../app_styles.dart';
 
 import '../widgets/main_loading.dart';
+import '../widgets/message_tile.dart';
 
 import '../services/database_service.dart';
 
@@ -40,6 +42,9 @@ class ChatScreenWid extends StatefulWidget {
 class _ChatScreenWidState extends State<ChatScreenWid> {
   final currentUser = FirebaseAuth.instance.currentUser!.uid;
   var appBarTitle = '';
+  Stream? chat;
+  QuerySnapshot? userData;
+  final TextEditingController _controller = TextEditingController();
 
   Future getappBarTitle() async {
     final chatData =
@@ -56,10 +61,77 @@ class _ChatScreenWidState extends State<ChatScreenWid> {
     }
   }
 
+  getChats() {
+    setState(() {
+      chat = DatabaseService().getChats(widget.chatId);
+    });
+  }
+
+  getUserData() async {
+    final data = await DatabaseService().getUserDataUsingUid(
+      FirebaseAuth.instance.currentUser!.uid,
+    );
+
+    userData = data;
+  }
+
+  _sendMessage() {
+    if (_controller.text.isNotEmpty) {
+      Map<String, dynamic> chatMessage = {
+        'message': _controller.text,
+      };
+    }
+  }
+
+  Widget chatMessages() {
+    return StreamBuilder(
+      stream: chat,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: MainLoading(),
+          );
+        }
+
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return MessageTile(
+                    message: snapshot.data.docs[index]['message'],
+                    senderId: snapshot.data.docs[index]['senderId'],
+                    senderName: snapshot.data.docs[index]['senderName'],
+                    sentByMe: snapshot.data.docs[index]['senderId'] ==
+                        FirebaseAuth.instance.currentUser!.uid,
+                  );
+                },
+              )
+            : Center(
+                child: Text(
+                  'No messages...',
+                  style: sourceSansProSemiBold.copyWith(
+                    fontSize: 20,
+                    color: lightGrey,
+                  ),
+                ),
+              );
+      },
+    );
+  }
+
   @override
   void initState() {
     getappBarTitle();
+    getChats();
+    getUserData();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,37 +146,55 @@ class _ChatScreenWidState extends State<ChatScreenWid> {
           ),
         ),
       ),
-      body: FutureBuilder(
-        future: DatabaseService().getStaticChatDataUsingUid(
-          widget.chatId,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: MainLoading(),
-            );
-          }
-
-          if (snapshot.hasData) {
-            return Center(
-              child: Text(
-                currentUser == snapshot.data!['senderId']
-                    ? snapshot.data!['receiverName']
-                    : snapshot.data!['senderName'],
-              ),
-            );
-          }
-
-          return Center(
-            child: Text(
-              'Something went wrong...',
-              style: sourceSansProRegular.copyWith(
-                fontSize: 18,
-                color: grey,
+      body: Stack(
+        children: <Widget>[
+          chatMessages(),
+          Container(
+            alignment: Alignment.bottomCenter,
+            width: double.infinity,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              color: Colors.grey[300],
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: paddingHorizontal),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        controller: _controller,
+                        style: sourceSansProSemiBold,
+                        decoration: InputDecoration(
+                          hintText: 'Your message...',
+                          hintStyle: sourceSansProSemiBold,
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: _sendMessage,
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: boxShadowColor,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.send_rounded,
+                            color: grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

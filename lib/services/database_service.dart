@@ -239,4 +239,12 @@ class DatabaseService {
 
     return chatData;
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getChats(String chatId) {
+    return chatCollection
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('time')
+        .snapshots();
+  }
 }

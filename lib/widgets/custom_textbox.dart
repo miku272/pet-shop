@@ -5,8 +5,8 @@ import '../app_styles.dart';
 class CustomTextbox extends StatelessWidget {
   final TextEditingController? textEditingController;
   final String? initValue;
-  final String labelData;
-  final IconData prefixIcon;
+  final String? labelData;
+  final IconData? prefixIcon;
   final TextInputType? textInputType;
   final bool? isHidden;
   final String? Function(String?)? validator;
@@ -15,8 +15,8 @@ class CustomTextbox extends StatelessWidget {
   const CustomTextbox({
     this.textEditingController,
     this.initValue,
-    required this.prefixIcon,
-    required this.labelData,
+    this.prefixIcon,
+    this.labelData,
     this.textInputType,
     this.isHidden,
     this.validator,
@@ -46,7 +46,7 @@ class CustomTextbox extends StatelessWidget {
             prefixIcon,
             color: grey,
           ),
-          label: Text(labelData),
+          label: labelData != null ? Text(labelData!) : null,
           labelStyle: const TextStyle(
             color: lightGrey,
           ),
