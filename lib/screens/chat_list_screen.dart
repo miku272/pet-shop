@@ -6,6 +6,7 @@ import '../app_styles.dart';
 import '../widgets/custom_app_drawer.dart';
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/main_loading.dart';
+import '../widgets/chat_list_tile.dart';
 
 import '../services/database_service.dart';
 
@@ -37,9 +38,21 @@ class _ChatListScreenState extends State<ChatListScreen> {
           return const Center(
             child: MainLoading(),
           );
-        } else if (snapshot.hasData) {
-          if (snapshot.data['chats'] == null ||
-              snapshot.data['chats'].length == 0) {
+        }
+
+        if (snapshot.hasData) {
+          if (snapshot.data['chats'].length != 0) {
+            return ListView.builder(
+              itemCount: snapshot.data['chats'].length,
+              itemBuilder: (context, index) {
+                int reverseIndex = snapshot.data['chats'].length - index - 1;
+
+                return ChatListTile(
+                  chatId: snapshot.data['chats'][reverseIndex],
+                );
+              },
+            );
+          } else {
             return Center(
               child: Column(
                 children: <Widget>[
@@ -62,8 +75,26 @@ class _ChatListScreenState extends State<ChatListScreen> {
             );
           }
         }
-
-        return const SizedBox();
+        return Center(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 40),
+              Lottie.asset(
+                'assets/loaders/lurking-cat.json',
+                height: 250,
+                width: 250,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Nothing here for now...',
+                style: sourceSansProSemiBold.copyWith(
+                  fontSize: 18,
+                  color: grey,
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -98,7 +129,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: paddingHorizontal,
               ),
-              child: chatList(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.9,
+                width: double.infinity,
+                child: chatList(),
+              ),
             ),
           ],
         ),
