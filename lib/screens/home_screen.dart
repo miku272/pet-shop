@@ -13,6 +13,7 @@ import '../services/database_service.dart';
 import './login_screen.dart';
 import './pet_detail_screen.dart';
 import './chat_list_screen.dart';
+import './add_pet_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -281,6 +282,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Add Pet',
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddPetScreen.routeName);
+        },
+        child: const Center(
+          child: Icon(
+            Icons.pets,
+            size: 30,
+          ),
         ),
       ),
     );

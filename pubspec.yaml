@@ -46,6 +46,7 @@ dependencies:
   firebase_auth: ^4.2.1
   cloud_firestore: ^4.2.0
   flutter_animated_dialog: ^2.0.1
+  dotted_border: ^2.0.0+3
 
 dev_dependencies:
   flutter_test:
