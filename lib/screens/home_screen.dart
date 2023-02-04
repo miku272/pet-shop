@@ -285,6 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: boxShadowColor,
         tooltip: 'Add Pet',
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
