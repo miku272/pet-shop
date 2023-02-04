@@ -8,6 +8,7 @@ class CustomTextbox extends StatelessWidget {
   final String? labelData;
   final IconData? prefixIcon;
   final TextInputType? textInputType;
+  final int? maxLines;
   final bool? isHidden;
   final String? Function(String?)? validator;
   final void Function(String?)? onSave;
@@ -18,6 +19,7 @@ class CustomTextbox extends StatelessWidget {
     this.prefixIcon,
     this.labelData,
     this.textInputType,
+    this.maxLines,
     this.isHidden,
     this.validator,
     this.onSave,
@@ -41,6 +43,7 @@ class CustomTextbox extends StatelessWidget {
         obscureText: isHidden ?? false,
         keyboardType: textInputType ?? TextInputType.text,
         cursorColor: grey,
+        maxLines: maxLines,
         decoration: InputDecoration(
           prefixIcon: Icon(
             prefixIcon,

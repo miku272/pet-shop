@@ -17,6 +17,32 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final List imageList = [];
+  String? petType;
+  var postingForAdoption = false;
+  var petName = 'unspecified';
+  var petBreed = 'unspecified';
+  var petAge = 0;
+  var petWeight = 0;
+  var location = '';
+  var petDescription = '';
+
+  var _isLoading = false;
+
+  Future postPet() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,8 +109,36 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  imageList.isNotEmpty
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: paddingHorizontal,
+                            vertical: 5,
+                          ),
+                          height: 100,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 0.5,
+                              color: lightGrey,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: imageList.length,
+                            itemBuilder: (context, index) => Text(
+                              imageList[index].toString(),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                  imageList.isNotEmpty
+                      ? const SizedBox(height: 20)
+                      : const SizedBox(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 0.5,
@@ -108,47 +162,209 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           child: Text('Cat'),
                         ),
                       ],
-                      onChanged: (value) {},
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please choose your pet type';
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        petType = value!;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        postingForAdoption = !postingForAdoption;
+                      });
+                    },
+                    child: Container(
+                      height: 60,
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 0.5,
+                          color: lightGrey,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Availabe for adoption',
+                            style: sourceSansProMedium.copyWith(
+                              fontSize: 17,
+                              color: grey,
+                            ),
+                          ),
+                          Checkbox(
+                            value: postingForAdoption,
+                            onChanged: (value) {
+                              setState(() {
+                                postingForAdoption = value!;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
                     prefixIcon: Icons.pets,
                     labelData: 'Pet Name',
-                    validator: (value) {
-                      return null;
+                    onSave: (value) {
+                      if (value != null) {
+                        petName = value;
+                      }
                     },
-                    onSave: (value) {},
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
                     prefixIcon: Icons.pets,
                     labelData: 'Pet Breed',
-                    validator: (value) {
-                      return null;
+                    onSave: (value) {
+                      if (value != null) {
+                        petBreed = value;
+                      }
                     },
-                    onSave: (value) {},
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
                     prefixIcon: Icons.numbers,
                     labelData: 'PetAge (In Months)',
                     textInputType: TextInputType.number,
-                    validator: (value) {
-                      return null;
+                    onSave: (value) {
+                      if (value != null) {
+                        petAge = int.tryParse(value) ?? 0;
+                      }
                     },
-                    onSave: (value) {},
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
                     prefixIcon: Icons.monitor_weight_rounded,
                     labelData: 'Pet Weight (In KGs)',
                     textInputType: TextInputType.number,
-                    validator: (value) {
-                      return null;
+                    onSave: (value) {
+                      if (value != null) {
+                        petWeight = int.tryParse(value) ?? 0;
+                      }
                     },
-                    onSave: (value) {},
                   ),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 60,
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 0.5,
+                        color: lightGrey,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        const Icon(
+                          Icons.location_pin,
+                          color: grey,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Choose Location',
+                          style: sourceSansProMedium.copyWith(
+                            fontSize: 17,
+                            color: grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: paddingHorizontal,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 0.5,
+                        color: lightGrey,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SingleChildScrollView(
+                      child: TextFormField(
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        cursorColor: grey,
+                        decoration: const InputDecoration(
+                          label: Text('Tell us more about your pet'),
+                          labelStyle: TextStyle(
+                            color: lightGrey,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length < 20) {
+                            return 'Please tell us something about your pet';
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {
+                          petDescription = value!;
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: _isLoading ? () {} : postPet,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      height: 65,
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 63,
+                      ),
+                      decoration: BoxDecoration(
+                        color: grey,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: boxShadowColor,
+                              )
+                            : Text(
+                                'Post',
+                                style: sourceSansProBold.copyWith(
+                                  color: boxShadowColor,
+                                  fontSize: 20,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
