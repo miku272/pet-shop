@@ -24,6 +24,95 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Widget greeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Good Morning,',
+            style: sourceSansProSemiBold.copyWith(
+              fontSize: 25,
+              letterSpacing: 1.5,
+            ),
+          ),
+          Text(
+            'Start your day with great energy!',
+            style: sourceSansProMedium.copyWith(
+              color: grey,
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            '🌅🌅🌅',
+            style: sourceSansProMedium.copyWith(
+              color: grey,
+              fontSize: 20,
+            ),
+          ),
+        ],
+      ); // For Morning
+    }
+    if (hour < 17) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Good Afternoon,',
+            style: sourceSansProSemiBold.copyWith(
+              fontSize: 25,
+              letterSpacing: 1.5,
+            ),
+          ),
+          Text(
+            'It\'s time for some nap. Isn\'t it?',
+            style: sourceSansProMedium.copyWith(
+              color: grey,
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            '😪😪😪',
+            style: sourceSansProMedium.copyWith(
+              color: grey,
+              fontSize: 20,
+            ),
+          ),
+        ],
+      ); // For Afternoon
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Good Evening,',
+          style: sourceSansProSemiBold.copyWith(
+            fontSize: 25,
+            letterSpacing: 1.5,
+          ),
+        ),
+        Text(
+          'Hope your day went well',
+          style: sourceSansProMedium.copyWith(
+            color: grey,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          '🌆🌆🌆',
+          style: sourceSansProMedium.copyWith(
+            color: grey,
+            fontSize: 20,
+          ),
+        ),
+      ],
+    ); // For Evening
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -112,6 +201,33 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: paddingHorizontal,
+              ),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: lighterOrange,
+                      blurRadius: 20,
+                      spreadRadius: 0.9,
+                    )
+                  ],
+                ),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: white,
+                  ),
+                  child: greeting(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
             SizedBox(
               height: 200,
               child: Stack(
