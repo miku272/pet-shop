@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import './helper_fucntion.dart';
+import 'helper_function.dart';
 import './database_service.dart';
 
 class AuthService {

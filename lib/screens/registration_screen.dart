@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../size_config.dart';
 import '../app_styles.dart';
 
-import '../services/helper_fucntion.dart';
+import '../services/helper_function.dart';
 import '../widgets/my_snackbar.dart';
 import '../widgets/custom_textbox.dart';
 import '../services/auth_service.dart';

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HelperFunction {
   // static String userLoggedInKey = '';
@@ -70,5 +73,35 @@ class HelperFunction {
     } else {
       return null;
     }
+  }
+
+  static Future<File?> getImage(String imageSource) async {
+    final imagePicker = ImagePicker();
+    XFile? xFile;
+    File? file;
+
+    if (imageSource == 'gallery') {
+      xFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (xFile != null) {
+        file = File(xFile.path);
+
+        return file;
+      } else {
+        return null;
+      }
+    } else if (imageSource == 'camera') {
+      xFile = await imagePicker.pickImage(source: ImageSource.camera);
+
+      if (xFile != null) {
+        file = File(xFile.path);
+
+        return file;
+      } else {
+        return null;
+      }
+    }
+
+    return null;
   }
 }

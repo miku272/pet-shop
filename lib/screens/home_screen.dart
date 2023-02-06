@@ -297,6 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Icon(
             Icons.pets,
             size: 30,
+            color: black,
           ),
         ),
       ),

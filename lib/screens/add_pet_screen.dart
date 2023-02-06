@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import '../app_styles.dart';
 
+import '../services/helper_function.dart';
+
 import '../widgets/custom_textbox.dart';
+import '../widgets/image_list_tile.dart';
 
 class AddPetScreen extends StatefulWidget {
   static const routeName = '/app-pet-screen';
@@ -17,7 +22,7 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final List imageList = [];
+  List<File> imageList = [];
   String? petType;
   var postingForAdoption = false;
   var petName = 'unspecified';
@@ -28,6 +33,65 @@ class _AddPetScreenState extends State<AddPetScreen> {
   var petDescription = '';
 
   var _isLoading = false;
+
+  Future _uploadImage() async {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        children: <Widget>[
+          InkWell(
+            onTap: () async {
+              final image = await HelperFunction.getImage('gallery');
+
+              if (image != null) {
+                setState(() {
+                  imageList.add(image);
+                });
+
+                if (mounted) {
+                  Navigator.of(context).pop();
+                }
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: paddingHorizontal),
+              child: Text(
+                'Upload from gallery',
+                style: sourceSansProSemiBold.copyWith(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          InkWell(
+            onTap: () async {
+              final image = await HelperFunction.getImage('camera');
+
+              if (image != null) {
+                setState(() {
+                  imageList.add(image);
+                });
+
+                if (mounted) {
+                  Navigator.of(context).pop();
+                }
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: paddingHorizontal),
+              child: Text(
+                'Upload from camera',
+                style: sourceSansProSemiBold.copyWith(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future postPet() async {
     if (_formKey.currentState!.validate()) {
@@ -95,7 +159,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                             ),
                             const SizedBox(height: 10),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: _uploadImage,
                               child: Text(
                                 'Upload',
                                 style: sourceSansProRegular.copyWith(
@@ -112,7 +176,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   imageList.isNotEmpty
                       ? Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: paddingHorizontal,
+                            horizontal: 20,
                             vertical: 5,
                           ),
                           height: 100,
@@ -127,8 +191,62 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: imageList.length,
-                            itemBuilder: (context, index) => Text(
-                              imageList[index].toString(),
+                            itemBuilder: (context, index) => ImageListTile(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => SimpleDialog(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: const EdgeInsets.all(5),
+                                        height: 500,
+                                        width: 500,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: FileImage(
+                                              imageList[index],
+                                            ),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              onLongPress: () async {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => SimpleDialog(
+                                    children: <Widget>[
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            imageList.removeAt(index);
+                                          });
+
+                                          if (mounted) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: paddingHorizontal,
+                                          ),
+                                          child: Text(
+                                            'Remove',
+                                            style:
+                                                sourceSansProSemiBold.copyWith(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              image: imageList[index],
                             ),
                           ),
                         )

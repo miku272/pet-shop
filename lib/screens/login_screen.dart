@@ -9,7 +9,7 @@ import '../app_styles.dart';
 import '../widgets/my_snackbar.dart';
 import '../widgets/custom_textbox.dart';
 import '../services/auth_service.dart';
-import '../services/helper_fucntion.dart';
+import '../services/helper_function.dart';
 import './registration_screen.dart';
 import './forget_password_screen.dart';
 import './home_screen.dart';
@@ -153,6 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 15),
                           CustomTextbox(
                             prefixIcon: Icons.lock_outline,
+                            textInputType: TextInputType.text,
                             labelData: 'Password',
                             isHidden: true,
                             validator: (value) {

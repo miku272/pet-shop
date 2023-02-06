@@ -43,7 +43,7 @@ class CustomTextbox extends StatelessWidget {
         obscureText: isHidden ?? false,
         keyboardType: textInputType ?? TextInputType.text,
         cursorColor: grey,
-        maxLines: maxLines,
+        // maxLines: maxLines,
         decoration: InputDecoration(
           prefixIcon: Icon(
             prefixIcon,
