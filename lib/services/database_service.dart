@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -5,6 +7,7 @@ class DatabaseService {
   final String? uid;
   final userCollection = FirebaseFirestore.instance.collection('users');
   final chatCollection = FirebaseFirestore.instance.collection('chats');
+  final petCollection = FirebaseFirestore.instance.collection('pets');
 
   DatabaseService({this.uid});
 
@@ -257,5 +260,21 @@ class DatabaseService {
       'recentMessageSender': chat['senderId'],
       'recentMessageTime': chat['time'].toString(),
     });
+  }
+
+  Future addPet(
+    String authorId,
+    String datePosted,
+    List<File> imageList,
+    String type,
+    bool avlForAdopt,
+    String name,
+    String breed,
+    int age,
+    int weight,
+    String location,
+    String description,
+  ) async {
+    List<String> imageLinkList = [];
   }
 }

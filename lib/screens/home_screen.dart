@@ -7,6 +7,7 @@ import '../app_styles.dart';
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/pet_container.dart';
 import '../widgets/custom_app_drawer.dart';
+import '../widgets/my_snackbar.dart';
 
 import '../services/database_service.dart';
 
@@ -407,7 +408,12 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(50),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(AddPetScreen.routeName);
+          if (FirebaseAuth.instance.currentUser == null) {
+            MySnackbar.showSnackbar(context, black, 'Please signin first');
+            Navigator.of(context).pushNamed(LoginScreen.routeName);
+          } else {
+            Navigator.of(context).pushNamed(AddPetScreen.routeName);
+          }
         },
         child: const Center(
           child: Icon(

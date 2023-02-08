@@ -45,9 +45,13 @@ dependencies:
   firebase_core: ^2.4.0
   firebase_auth: ^4.2.1
   cloud_firestore: ^4.2.0
+  firebase_storage: ^11.0.10
   flutter_animated_dialog: ^2.0.1
   dotted_border: ^2.0.0+3
   image_picker: ^0.8.6+1
+  http: ^0.13.5
+  latlong2: ^0.8.1
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:

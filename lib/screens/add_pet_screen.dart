@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import '../app_styles.dart';
@@ -9,6 +10,7 @@ import '../services/helper_function.dart';
 
 import '../widgets/custom_textbox.dart';
 import '../widgets/image_list_tile.dart';
+import '../widgets/my_snackbar.dart';
 
 class AddPetScreen extends StatefulWidget {
   static const routeName = '/app-pet-screen';
@@ -29,7 +31,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
   var petBreed = 'unspecified';
   var petAge = 0;
   var petWeight = 0;
-  var location = '';
+  var userLocation = '';
   var petDescription = '';
 
   var _isLoading = false;
@@ -93,6 +95,34 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
+  Future _getCurrentUserLocation() async {
+    final location = Location();
+    var permission = await location.hasPermission();
+
+    if (permission == PermissionStatus.denied ||
+        permission == PermissionStatus.deniedForever) {
+      permission = await location.requestPermission();
+
+      if (permission == PermissionStatus.denied ||
+          permission == PermissionStatus.deniedForever) {
+        return;
+      }
+    } else {
+      final locationData = await location.getLocation();
+
+      if (locationData.latitude != null && locationData.longitude != null) {
+        final addr = await HelperFunction.getPlaceAddress(
+          locationData.latitude!,
+          locationData.longitude!,
+        );
+
+        setState(() {
+          userLocation = addr;
+        });
+      }
+    }
+  }
+
   Future postPet() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -100,6 +130,34 @@ class _AddPetScreenState extends State<AddPetScreen> {
       setState(() {
         _isLoading = true;
       });
+
+      if (imageList.isEmpty) {
+        MySnackbar.showSnackbar(
+          context,
+          black,
+          'Please upload at least 1 image',
+        );
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        return;
+      }
+
+      if (userLocation == '') {
+        MySnackbar.showSnackbar(
+          context,
+          black,
+          'Please specify your current location',
+        );
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        return;
+      }
 
       setState(() {
         _isLoading = false;
@@ -380,34 +438,39 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     },
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    height: 60,
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 0.5,
-                        color: lightGrey,
+                  InkWell(
+                    radius: 10,
+                    onTap: _getCurrentUserLocation,
+                    child: Container(
+                      height: 60,
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(
+                        left: 20,
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        const Icon(
-                          Icons.location_pin,
-                          color: grey,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 0.5,
+                          color: lightGrey,
                         ),
-                        const SizedBox(width: 10),
-                        Text(
-                          'Choose Location',
-                          style: sourceSansProMedium.copyWith(
-                            fontSize: 17,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          const Icon(
+                            Icons.location_pin,
                             color: grey,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 10),
+                          Text(
+                            userLocation == '' ? 'Get Location' : userLocation,
+                            style: sourceSansProMedium.copyWith(
+                              fontSize: 17,
+                              color: grey,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
