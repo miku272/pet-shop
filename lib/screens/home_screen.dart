@@ -40,14 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Text(
-            'Start your day with great energy!',
-            style: sourceSansProMedium.copyWith(
-              color: grey,
-              fontSize: 20,
-            ),
-          ),
-          Text(
-            '🌅🌅🌅',
+            'Start your day with great energy! 🌅',
             style: sourceSansProMedium.copyWith(
               color: grey,
               fontSize: 20,
@@ -69,14 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Text(
-            'It\'s time for some nap. Isn\'t it?',
-            style: sourceSansProMedium.copyWith(
-              color: grey,
-              fontSize: 20,
-            ),
-          ),
-          Text(
-            '😪😪😪',
+            'It\'s time for some nap. Isn\'t it? 😪',
             style: sourceSansProMedium.copyWith(
               color: grey,
               fontSize: 20,
@@ -97,14 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Text(
-          'Hope your day went well',
-          style: sourceSansProMedium.copyWith(
-            color: grey,
-            fontSize: 20,
-          ),
-        ),
-        Text(
-          '🌆🌆🌆',
+          'Hope your day went well 🌆',
           style: sourceSansProMedium.copyWith(
             color: grey,
             fontSize: 20,
@@ -202,33 +181,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(
-            //     horizontal: paddingHorizontal,
-            //   ),
-            //   child: Container(
-            //     width: double.infinity,
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(20),
-            //       boxShadow: const [
-            //         BoxShadow(
-            //           color: lighterOrange,
-            //           blurRadius: 20,
-            //           spreadRadius: 0.9,
-            //         )
-            //       ],
-            //     ),
-            //     child: Container(
-            //       padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(20),
-            //         color: white,
-            //       ),
-            //       child: greeting(),
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: paddingHorizontal,
+              ),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: greeting(),
+              ),
+            ),
+            const SizedBox(height: 10),
             SizedBox(
               height: 200,
               child: Stack(
