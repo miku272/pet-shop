@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:pet_shop/services/database_service.dart';
 
 import '../app_styles.dart';
 
@@ -157,6 +159,24 @@ class _AddPetScreenState extends State<AddPetScreen> {
         });
 
         return;
+      }
+
+      await DatabaseService().addPet(
+        FirebaseAuth.instance.currentUser!.uid,
+        '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+        imageList,
+        petType!,
+        postingForAdoption,
+        petName,
+        petBreed,
+        petAge,
+        petWeight,
+        userLocation,
+        petDescription,
+      );
+
+      if (mounted) {
+        MySnackbar.showSnackbar(context, black, 'Upload Complete');
       }
 
       setState(() {

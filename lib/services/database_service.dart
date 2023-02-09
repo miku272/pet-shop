@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import './storage_service.dart';
 
 class DatabaseService {
   final String? uid;
@@ -275,6 +276,39 @@ class DatabaseService {
     String location,
     String description,
   ) async {
+    String imageLink;
     List<String> imageLinkList = [];
+    var index = 0;
+
+    final petDoc = await petCollection.add({
+      'uid': null,
+      'authorId': authorId,
+      'datePosted': datePosted,
+      'imageList': null,
+      'petType': type,
+      'avlForAdopt': avlForAdopt,
+      'petName': name,
+      'petBreed': breed,
+      'petAge': age,
+      'petWeight': weight,
+      'location': location,
+      'description': description,
+    });
+
+    for (File element in imageList) {
+      imageLink = await StorageService().uploadPetImages(
+        petDoc.id,
+        element,
+        index.toString(),
+      );
+
+      imageLinkList.add(imageLink);
+      index++;
+    }
+
+    petDoc.update({
+      'uid': petDoc.id,
+      'imageList': FieldValue.arrayUnion(imageLinkList),
+    });
   }
 }
