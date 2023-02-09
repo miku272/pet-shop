@@ -177,6 +177,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
       if (mounted) {
         MySnackbar.showSnackbar(context, black, 'Upload Complete');
+
+        Navigator.of(context).pop();
       }
 
       setState(() {
