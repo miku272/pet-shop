@@ -186,6 +186,7 @@ class DatabaseService {
             );
 
     return querySnapshot;
+    // Call using 'querySnapshot.docs[0].data()';
   }
 
   Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getUserChats() async {
@@ -194,7 +195,7 @@ class DatabaseService {
         .snapshots();
   }
 
-  Future createChat(String senderId, String receiverId) async {
+  Future<String> createChat(String senderId, String receiverId) async {
     final chatDoc = await chatCollection.add({
       'senderId': senderId,
       'senderName': null,
@@ -231,6 +232,8 @@ class DatabaseService {
         'chats': FieldValue.arrayUnion([(chatDoc.id)]),
       },
     );
+
+    return chatDoc.id;
   }
 
   Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getChatDataUsingUid(

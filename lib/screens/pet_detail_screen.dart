@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -6,7 +7,7 @@ import '../app_styles.dart';
 
 import '../services/database_service.dart';
 
-import './chat_list_screen.dart';
+import './chat_screen.dart';
 
 class PetDetailScreen extends StatefulWidget {
   static const String routeName = '/pet-detail-screen';
@@ -18,24 +19,77 @@ class PetDetailScreen extends StatefulWidget {
 
 class _PetDetailScreenState extends State<PetDetailScreen> {
   var _isChatLoading = false;
+  var isNewChat = false;
 
   createChat() async {
     setState(() {
       _isChatLoading = true;
     });
 
-    await DatabaseService().createChat(
-      '7Ymz94J2UTgSk6ZbOfX8UoTe3jk1',
-      'MHJo8F9IrVPmA7FIdwQBUAH8aVn1',
+    final senderData = await DatabaseService().getUserDataUsingUid(
+      FirebaseAuth.instance.currentUser!.uid,
     );
 
-    setState(() {
-      _isChatLoading = false;
-    });
+    if (senderData.docs[0].data()!['chats'].isNotEmpty &&
+        senderData.docs[0].data()!['chats'] != null) {
+      for (String chatId in senderData.docs[0].data()!['chats']) {
+        isNewChat = true;
 
-    if (mounted) {
-      Navigator.of(context).pushNamed(ChatListScreen.routeName);
+        final chatData =
+            await DatabaseService().getStaticChatDataUsingUid(chatId);
+
+        if (chatData.data()!['senderId'] == 'MHJo8F9IrVPmA7FIdwQBUAH8aVn1' ||
+            chatData.data()!['receiverId'] == 'MHJo8F9IrVPmA7FIdwQBUAH8aVn1') {
+          isNewChat = false;
+
+          if (mounted) {
+            Navigator.of(context).pushNamed(
+              ChatScreen.routeName,
+              arguments: chatId,
+            );
+          }
+
+          setState(() {
+            _isChatLoading = false;
+          });
+
+          break;
+        }
+      }
+    } else {
+      isNewChat = true;
     }
+
+    if (isNewChat) {
+      final newChatId = await DatabaseService().createChat(
+        '7Ymz94J2UTgSk6ZbOfX8UoTe3jk1',
+        'MHJo8F9IrVPmA7FIdwQBUAH8aVn1',
+      );
+
+      setState(() {
+        _isChatLoading = false;
+      });
+
+      if (mounted) {
+        Navigator.of(context).pushNamed(
+          ChatScreen.routeName,
+          arguments: newChatId,
+        );
+      }
+    }
+
+    // await DatabaseService().createChat(
+    //   '7Ymz94J2UTgSk6ZbOfX8UoTe3jk1',
+    //   'MHJo8F9IrVPmA7FIdwQBUAH8aVn1',
+    // );
+
+    // setState(() {
+    //   _isChatLoading = false;
+    // });
+
+    // if (mounted) {
+    //   Navigator.of(context).pushNamed(ChatListScreen.routeName);
+    // }
   }
 
   @override
