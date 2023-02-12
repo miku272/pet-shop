@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import './storage_service.dart';
 
 class DatabaseService {
@@ -313,5 +314,22 @@ class DatabaseService {
       'uid': petDoc.id,
       'imageList': FieldValue.arrayUnion(imageLinkList),
     });
+  }
+
+  Future<QuerySnapshot> getPetDataUsingAuthorId(String authorId) async {
+    QuerySnapshot petData =
+        await petCollection.where('authorId', isEqualTo: authorId).get(
+              const GetOptions(
+                source: Source.server,
+              ),
+            );
+
+    return petData;
+  }
+
+  Future deletePetDataUsingUid(String uid) async {
+    StorageService().removePetImages(uid);
+
+    await petCollection.doc(uid).delete();
   }
 }

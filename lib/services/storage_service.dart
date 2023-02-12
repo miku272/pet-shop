@@ -24,8 +24,10 @@ class StorageService {
   }
 
   Future removePetImages(String petId) async {
-    final uniqueFolder = petFolder.child(petId);
-
-    uniqueFolder.delete();
+    await FirebaseStorage.instance.ref('pets/$petId').listAll().then((value) {
+      for (var element in value.items) {
+        FirebaseStorage.instance.ref(element.fullPath).delete();
+      }
+    });
   }
 }

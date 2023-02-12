@@ -11,6 +11,7 @@ import './screens/cart_screen.dart';
 import './screens/profile_screen.dart';
 import './screens/edit_profile_screen.dart';
 import './screens/update_password_screen.dart';
+import './screens/your_post_and_pet_screen.dart';
 import './screens/address_screen.dart';
 import './screens/address_editor_screen.dart';
 import './screens/add_pet_screen.dart';
@@ -76,6 +77,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (context) => const EditProfileScreen(),
+      );
+
+    case YourPostAndPetScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const YourPostAndPetScreen(),
       );
 
     case AddressScreen.routeName:

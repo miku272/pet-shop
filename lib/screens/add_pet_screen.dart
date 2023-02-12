@@ -26,6 +26,21 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final Map<int, String> months = {
+    1: 'jan',
+    2: 'feb',
+    3: 'mar',
+    4: 'apr',
+    5: 'may',
+    6: 'jun',
+    7: 'jul',
+    8: 'aug',
+    9: 'sep',
+    10: 'oct',
+    11: 'nov',
+    12: 'dec',
+  };
+
   List<File> imageList = [];
   String? petType;
   var postingForAdoption = false;
@@ -163,7 +178,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
       await DatabaseService().addPet(
         FirebaseAuth.instance.currentUser!.uid,
-        '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+        '${DateTime.now().day} ${months[DateTime.now().month]} ${DateTime.now().year}',
         imageList,
         petType!,
         postingForAdoption,
