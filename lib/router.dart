@@ -14,7 +14,7 @@ import './screens/update_password_screen.dart';
 import './screens/your_post_and_pet_screen.dart';
 import './screens/address_screen.dart';
 import './screens/address_editor_screen.dart';
-import './screens/add_pet_screen.dart';
+import 'screens/pet_editor_screen.dart';
 import './screens/pet_detail_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -103,10 +103,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (context) => const UpdatePasswordScreen(),
       );
 
-    case AddPetScreen.routeName:
+    case PetEditorScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (context) => const AddPetScreen(),
+        builder: (context) => const PetEditorScreen(),
       );
 
     case PetDetailScreen.routeName:

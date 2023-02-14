@@ -327,6 +327,27 @@ class DatabaseService {
     return petData;
   }
 
+  Future updatePet(
+    String petId,
+    bool avlForAdopt,
+    String name,
+    String breed,
+    int age,
+    int weight,
+    String location,
+    String description,
+  ) async {
+    return await petCollection.doc(petId).update({
+      'avlForAdopt': avlForAdopt,
+      'petName': name,
+      'petBreed': breed,
+      'petAge': age,
+      'petWeight': weight,
+      'location': location,
+      'description': description,
+    });
+  }
+
   Future deletePetDataUsingUid(String uid) async {
     StorageService().removePetImages(uid);
 
