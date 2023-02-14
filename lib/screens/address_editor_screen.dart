@@ -31,17 +31,17 @@ class AddressEditor extends StatefulWidget {
 }
 
 class _AddressEditorState extends State<AddressEditor> {
-  bool isEditing = false;
+  var isEditing = false;
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
+  var _isLoading = false;
 
-  String fullName = '';
-  String mobNumber = '';
-  String pinCode = '';
-  String addressLine1 = '';
-  String addressLine2 = '';
-  String city = '';
-  String state = '';
+  var fullName = '';
+  var mobNumber = '';
+  var pinCode = '';
+  var addressLine1 = '';
+  var addressLine2 = '';
+  var city = '';
+  var state = '';
 
   @override
   void initState() {
@@ -105,7 +105,7 @@ class _AddressEditorState extends State<AddressEditor> {
         _isLoading = false;
       });
 
-      if(mounted) {
+      if (mounted) {
         Navigator.of(context).pop();
       }
     }

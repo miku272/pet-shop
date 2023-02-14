@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-class ImageListTile extends StatelessWidget {
+class FileImageListTile extends StatelessWidget {
   final File image;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
-  const ImageListTile({
+  const FileImageListTile({
     required this.image,
     required this.onTap,
     required this.onLongPress,

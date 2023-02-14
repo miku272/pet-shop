@@ -14,7 +14,7 @@ import '../services/database_service.dart';
 import './login_screen.dart';
 import './pet_detail_screen.dart';
 import './chat_list_screen.dart';
-import './add_pet_screen.dart';
+import 'pet_editor_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -377,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MySnackbar.showSnackbar(context, black, 'Please signin first');
             Navigator.of(context).pushNamed(LoginScreen.routeName);
           } else {
-            Navigator.of(context).pushNamed(AddPetScreen.routeName);
+            Navigator.of(context).pushNamed(PetEditorScreen.routeName);
           }
         },
         child: const Center(

@@ -11,20 +11,37 @@ import '../app_styles.dart';
 import '../services/helper_function.dart';
 
 import '../widgets/custom_textbox.dart';
-import '../widgets/image_list_tile.dart';
+import '../widgets/file_image_list_tile.dart';
+import '../widgets/network_image_list_tile.dart';
 import '../widgets/my_snackbar.dart';
 
-class AddPetScreen extends StatefulWidget {
+class PetEditorScreen extends StatelessWidget {
   static const routeName = '/app-pet-screen';
 
-  const AddPetScreen({super.key});
+  const PetEditorScreen({super.key});
 
   @override
-  State<AddPetScreen> createState() => _AddPetScreenState();
+  Widget build(BuildContext context) {
+    final Map? modalArgs =
+        ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
+
+    return PetEditor(modalArgs);
+  }
 }
 
-class _AddPetScreenState extends State<AddPetScreen> {
+class PetEditor extends StatefulWidget {
+  final Map? args;
+
+  const PetEditor(this.args, {super.key});
+
+  @override
+  State<PetEditor> createState() => _PetEditorState();
+}
+
+class _PetEditorState extends State<PetEditor> {
+  var _isEditing = false;
   final _formKey = GlobalKey<FormState>();
+  var _isLoading = false;
 
   final Map<int, String> months = {
     1: 'jan',
@@ -51,7 +68,18 @@ class _AddPetScreenState extends State<AddPetScreen> {
   var userLocation = '';
   var petDescription = '';
 
-  var _isLoading = false;
+  @override
+  void initState() {
+    if (widget.args != null && widget.args?['isEditing'] != null) {
+      _isEditing = widget.args?['isEditing'];
+
+      postingForAdoption = widget.args?['avlForAdopt'];
+
+      userLocation = widget.args?['location'];
+    }
+
+    super.initState();
+  }
 
   Future _uploadImage() async {
     showDialog(
@@ -202,13 +230,58 @@ class _AddPetScreenState extends State<AddPetScreen> {
     }
   }
 
+  Future updatePet(String petId) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      if (userLocation == '') {
+        MySnackbar.showSnackbar(
+          context,
+          black,
+          'Please specify your current location',
+        );
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        return;
+      }
+
+      await DatabaseService().updatePet(
+        petId,
+        postingForAdoption,
+        petName,
+        petBreed,
+        petAge,
+        petWeight,
+        userLocation,
+        petDescription,
+      );
+
+      if (mounted) {
+        MySnackbar.showSnackbar(context, black, 'Upload Complete');
+
+        Navigator.of(context).pop();
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Add Pet Details',
+          _isEditing ? 'Edit Pet Details' : 'Add Pet Details',
           style: sourceSansProSemiBold.copyWith(
             fontSize: 18,
           ),
@@ -223,50 +296,52 @@ class _AddPetScreenState extends State<AddPetScreen> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 20),
-                  Container(
-                    height: 250,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300]!.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: DottedBorder(
-                      radius: const Radius.circular(20),
-                      borderType: BorderType.RRect,
-                      color: lightGrey,
-                      strokeWidth: 1,
-                      dashPattern: const [6, 6],
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const Icon(
-                              Icons.upload_file,
-                              size: 50,
-                            ),
-                            Text(
-                              'Upload image',
-                              style: sourceSansProSemiBold.copyWith(
-                                fontSize: 20,
-                                letterSpacing: 2,
+                  !_isEditing
+                      ? Container(
+                          height: 250,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300]!.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: DottedBorder(
+                            radius: const Radius.circular(20),
+                            borderType: BorderType.RRect,
+                            color: lightGrey,
+                            strokeWidth: 1,
+                            dashPattern: const [6, 6],
+                            child: Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  const Icon(
+                                    Icons.upload_file,
+                                    size: 50,
+                                  ),
+                                  Text(
+                                    'Upload image',
+                                    style: sourceSansProSemiBold.copyWith(
+                                      fontSize: 20,
+                                      letterSpacing: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  ElevatedButton(
+                                    onPressed: _uploadImage,
+                                    child: Text(
+                                      'Upload',
+                                      style: sourceSansProRegular.copyWith(
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: _uploadImage,
-                              child: Text(
-                                'Upload',
-                                style: sourceSansProRegular.copyWith(
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                          ),
+                        )
+                      : const SizedBox(),
                   const SizedBox(height: 20),
                   imageList.isNotEmpty
                       ? Container(
@@ -286,7 +361,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: imageList.length,
-                            itemBuilder: (context, index) => ImageListTile(
+                            itemBuilder: (context, index) => FileImageListTile(
                               onTap: () {
                                 showDialog(
                                   context: context,
@@ -349,6 +424,54 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   imageList.isNotEmpty
                       ? const SizedBox(height: 20)
                       : const SizedBox(),
+                  _isEditing
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 5,
+                          ),
+                          height: 100,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 0.5,
+                              color: lightGrey,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: widget.args!['imageList'].length,
+                            itemBuilder: (context, index) =>
+                                NetworkImageListTile(
+                              imageUrl: widget.args!['imageList'][index],
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => SimpleDialog(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: const EdgeInsets.all(5),
+                                        height: 500,
+                                        width: 500,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              widget.args!['imageList'][index],
+                                            ),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                  _isEditing ? const SizedBox(height: 20) : const SizedBox(),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -359,33 +482,49 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: DropdownButtonFormField(
-                      hint: const Text('Select type'),
-                      borderRadius: BorderRadius.circular(20),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'dog',
-                          child: Text('Dog'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'cat',
-                          child: Text('Cat'),
-                        ),
-                      ],
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please choose your pet type';
-                        }
+                    child: !_isEditing
+                        ? DropdownButtonFormField(
+                            hint: const Text('Select type'),
+                            borderRadius: BorderRadius.circular(20),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'dog',
+                                child: Text('Dog'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'cat',
+                                child: Text('Cat'),
+                              ),
+                            ],
+                            validator: _isEditing
+                                ? (value) {
+                                    if (value == null) {
+                                      return 'Please choose your pet type';
+                                    }
 
-                        return null;
-                      },
-                      onChanged: (value) {
-                        petType = value!;
-                      },
-                    ),
+                                    return null;
+                                  }
+                                : null,
+                            onChanged: (value) {
+                              petType = value!;
+                            },
+                          )
+                        : Container(
+                            padding: const EdgeInsets.only(left: 20),
+                            width: double.infinity,
+                            height: 40,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Type: ${widget.args!['petType']}',
+                              style: sourceSansProMedium.copyWith(
+                                color: grey,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
@@ -434,6 +573,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
+                    initValue: _isEditing ? widget.args!['petName'] : null,
                     prefixIcon: Icons.pets,
                     labelData: 'Pet Name',
                     onSave: (value) {
@@ -444,6 +584,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
+                    initValue: _isEditing ? widget.args!['petBreed'] : null,
                     prefixIcon: Icons.pets,
                     labelData: 'Pet Breed',
                     onSave: (value) {
@@ -454,6 +595,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
+                    initValue:
+                        _isEditing ? widget.args!['petAge'].toString() : null,
                     prefixIcon: Icons.numbers,
                     labelData: 'PetAge (In Months)',
                     textInputType: TextInputType.number,
@@ -465,6 +608,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                   const SizedBox(height: 10),
                   CustomTextbox(
+                    initValue: _isEditing
+                        ? widget.args!['petWeight'].toString()
+                        : null,
                     prefixIcon: Icons.monitor_weight_rounded,
                     labelData: 'Pet Weight (In KGs)',
                     textInputType: TextInputType.number,
@@ -526,6 +672,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     ),
                     child: SingleChildScrollView(
                       child: TextFormField(
+                        initialValue:
+                            _isEditing ? widget.args!['description'] : null,
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
                         cursorColor: grey,
@@ -553,7 +701,17 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                   const SizedBox(height: 10),
                   InkWell(
-                    onTap: _isLoading ? () {} : postPet,
+                    onTap: () {
+                      if (!_isLoading) {
+                        if (_isEditing) {
+                          updatePet(widget.args!['petId']);
+                        } else {
+                          postPet();
+                        }
+                      } else {
+                        () {};
+                      }
+                    },
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       height: 65,
@@ -572,7 +730,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                                 color: boxShadowColor,
                               )
                             : Text(
-                                'Post',
+                                _isEditing ? 'Update' : 'Post',
                                 style: sourceSansProBold.copyWith(
                                   color: boxShadowColor,
                                   fontSize: 20,

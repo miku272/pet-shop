@@ -8,7 +8,7 @@ import '../services/database_service.dart';
 
 import '../widgets/main_loading.dart';
 
-import './add_pet_screen.dart';
+import 'pet_editor_screen.dart';
 
 class YourPostAndPetScreen extends StatefulWidget {
   static const routeName = '/your-post-and-pet-screen';
@@ -59,106 +59,145 @@ class _YourPostAndPetScreenState extends State<YourPostAndPetScreen> {
 
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(
-                      snapshot.data!.docs[index]['petName'],
-                      style: sourceSansProSemiBold.copyWith(
-                        fontSize: 20,
-                        overflow: TextOverflow.ellipsis,
-                        letterSpacing: 2,
+                  itemBuilder: (context, index) => Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Image.network(
+                          snapshot.data!.docs[index]['imageList'][0],
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    subtitle: Text(
-                      'Date Posted: ${snapshot.data!.docs[index]['datePosted']}',
-                      style: sourceSansProRegular.copyWith(
-                        fontSize: 18,
-                        color: grey,
-                        letterSpacing: 1,
+                      title: Text(
+                        snapshot.data!.docs[index]['petName'],
+                        style: sourceSansProSemiBold.copyWith(
+                          fontSize: 20,
+                          overflow: TextOverflow.ellipsis,
+                          letterSpacing: 2,
+                        ),
                       ),
-                    ),
-                    trailing: SizedBox(
-                      width: 70,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Tooltip(
-                            message: 'Edit',
-                            child: InkWell(
-                              onTap: () {},
-                              child: const Icon(
-                                Icons.edit,
-                                color: boxShadowColor,
+                      subtitle: Text(
+                        'Posted on: ${snapshot.data!.docs[index]['datePosted']}',
+                        style: sourceSansProRegular.copyWith(
+                          fontSize: 15,
+                          color: grey,
+                        ),
+                      ),
+                      trailing: SizedBox(
+                        width: 70,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Tooltip(
+                              message: 'Edit',
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    PetEditorScreen.routeName,
+                                    arguments: {
+                                      'isEditing': true,
+                                      'petId': snapshot.data!.docs[index]
+                                          ['uid'],
+                                      'imageList': snapshot.data!.docs[index]
+                                          ['imageList'],
+                                      'petType': snapshot.data!.docs[index]
+                                          ['petType'],
+                                      'avlForAdopt': snapshot.data!.docs[index]
+                                          ['avlForAdopt'],
+                                      'petName': snapshot.data!.docs[index]
+                                          ['petName'],
+                                      'petBreed': snapshot.data!.docs[index]
+                                          ['petBreed'],
+                                      'petAge': snapshot.data!.docs[index]
+                                          ['petAge'],
+                                      'petWeight': snapshot.data!.docs[index]
+                                          ['petWeight'],
+                                      'location': snapshot.data!.docs[index]
+                                          ['location'],
+                                      'description': snapshot.data!.docs[index]
+                                          ['description'],
+                                    },
+                                  ).then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: boxShadowColor,
+                                ),
                               ),
                             ),
-                          ),
-                          Tooltip(
-                            message: 'Delete',
-                            child: InkWell(
-                              onTap: () {
-                                showAnimatedDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  animationType:
-                                      DialogTransitionType.slideFromBottom,
-                                  duration: const Duration(milliseconds: 300),
-                                  builder: (context) => AlertDialog(
-                                    elevation: 5,
-                                    alignment: Alignment.bottomCenter,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    title: const Text('Delete'),
-                                    content: Text(
-                                      'Are you sure you want to delete this post?',
-                                      style: sourceSansProRegular.copyWith(
-                                        color: grey,
-                                        fontSize: 18,
+                            Tooltip(
+                              message: 'Delete',
+                              child: InkWell(
+                                onTap: () {
+                                  showAnimatedDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    animationType:
+                                        DialogTransitionType.slideFromBottom,
+                                    duration: const Duration(milliseconds: 300),
+                                    builder: (context) => AlertDialog(
+                                      elevation: 5,
+                                      alignment: Alignment.bottomCenter,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
                                       ),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () async {
-                                          DatabaseService()
-                                              .deletePetDataUsingUid(
-                                            snapshot.data!.docs[index]['uid'],
-                                          )
-                                              .then((value) {
-                                            setState(() {});
-                                          });
+                                      title: const Text('Delete'),
+                                      content: Text(
+                                        'Are you sure you want to delete this post?',
+                                        style: sourceSansProRegular.copyWith(
+                                          color: grey,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () async {
+                                            DatabaseService()
+                                                .deletePetDataUsingUid(
+                                              snapshot.data!.docs[index]['uid'],
+                                            )
+                                                .then((value) {
+                                              setState(() {});
+                                            });
 
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          'Yes',
-                                          style: sourceSansProSemiBold.copyWith(
-                                            color: orange,
-                                            fontSize: 20,
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'Yes',
+                                            style:
+                                                sourceSansProSemiBold.copyWith(
+                                              color: orange,
+                                              fontSize: 20,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          'No',
-                                          style: sourceSansProSemiBold.copyWith(
-                                            color: orange,
-                                            fontSize: 20,
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'No',
+                                            style:
+                                                sourceSansProSemiBold.copyWith(
+                                              color: orange,
+                                              fontSize: 20,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.delete,
-                                color: red,
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: red,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -177,7 +216,11 @@ class _YourPostAndPetScreenState extends State<YourPostAndPetScreen> {
           borderRadius: BorderRadius.circular(50),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(AddPetScreen.routeName);
+          Navigator.of(context)
+              .pushNamed(PetEditorScreen.routeName)
+              .then((value) {
+            setState(() {});
+          });
         },
         child: const Center(
           child: Icon(
