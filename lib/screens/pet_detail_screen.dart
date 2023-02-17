@@ -98,33 +98,6 @@ class _PetDetailScreenState extends State<PetDetailScreen> {
 
     return Scaffold(
       backgroundColor: white,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _isChatLoading ? () {} : createChat,
-        extendedPadding: const EdgeInsets.symmetric(
-            horizontal: paddingHorizontal, vertical: 18),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        backgroundColor: grey,
-        label: _isChatLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: boxShadowColor,
-                ),
-              )
-            : const Text(
-                'Ask for adoption',
-                style: TextStyle(
-                  color: boxShadowColor,
-                ),
-              ),
-        // icon: SvgPicture.asset('assets/add_to_cart_icon.svg'),
-        icon: const Icon(
-          Icons.chat_bubble_outline_rounded,
-          color: boxShadowColor,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -302,29 +275,6 @@ class _PetDetailScreenState extends State<PetDetailScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: paddingHorizontal),
                 child: Text(
-                  'About Me',
-                  style: sourceSansProRegular.copyWith(
-                    color: lightGrey,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: paddingHorizontal),
-                child: Text(
-                  'Remember this sweet face? Several years ago Charlie came into our care when their person died. These two easy going Lhasa Apso mixes quickly to settle into foster care. Living with kids, cats and other dogs, they were the perfect guests, and once their vetting and evaluation was done this bonded pair found their home with a kind couple.',
-                  style: sourceSansProBold.copyWith(
-                    color: grey,
-                    letterSpacing: 1,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: paddingHorizontal),
-                child: Text(
                   'Photo Album',
                   style: sourceSansProRegular.copyWith(
                     color: lightGrey,
@@ -395,10 +345,60 @@ class _PetDetailScreenState extends State<PetDetailScreen> {
                 ),
               ),
               const SizedBox(height: 30),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: paddingHorizontal),
+                child: Text(
+                  'About Me',
+                  style: sourceSansProRegular.copyWith(
+                    color: lightGrey,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: paddingHorizontal),
+                child: Text(
+                  'Remember this sweet face? Several years ago Charlie came into our care when their person died. These two easy going Lhasa Apso mixes quickly to settle into foster care. Living with kids, cats and other dogs, they were the perfect guests, and once their vetting and evaluation was done this bonded pair found their home with a kind couple.',
+                  style: sourceSansProBold.copyWith(
+                    color: grey,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 100),
             ],
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _isChatLoading ? () {} : createChat,
+        extendedPadding: const EdgeInsets.symmetric(
+            horizontal: paddingHorizontal, vertical: 18),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        backgroundColor: grey,
+        label: _isChatLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: boxShadowColor,
+                ),
+              )
+            : const Text(
+                'Ask for adoption',
+                style: TextStyle(
+                  color: boxShadowColor,
+                ),
+              ),
+        // icon: SvgPicture.asset('assets/add_to_cart_icon.svg'),
+        icon: const Icon(
+          Icons.chat_bubble_outline_rounded,
+          color: boxShadowColor,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

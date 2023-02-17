@@ -8,6 +8,7 @@ import '../widgets/drawer_icon_button.dart';
 import '../widgets/pet_container.dart';
 import '../widgets/custom_app_drawer.dart';
 import '../widgets/my_snackbar.dart';
+import '../widgets/main_loading.dart';
 
 import '../services/database_service.dart';
 
@@ -97,19 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    List<String> dogs = [
-      'dog_marly.png',
-      'dog_marly02.png',
-      'dog_cocoa.png',
-      'dog_walt.png',
-    ];
-
-    List<String> cats = [
-      'cat_alyx.png',
-      'cat_brook.png',
-      'cat_marly.png',
-    ];
-
     return Scaffold(
       drawer: const CustomAppDrawer(),
       body: SafeArea(
@@ -157,23 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Icons.chat_bubble_outline_rounded,
                                 color: grey,
                               ),
-                              // temp
-                              //     ? Positioned(
-                              //         top: -10,
-                              //         right: -10,
-                              //         child: CircleAvatar(
-                              //           backgroundColor: boxShadowColor,
-                              //           radius: 10,
-                              //           child: Center(
-                              //             child: Text(
-                              //               '1',
-                              //               style: sourceSansProSemiBold
-                              //                   .copyWith(color: black),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       )
-                              //     : const SizedBox(),
                             ],
                           ),
                         ),
@@ -269,14 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: black,
                                     ),
                                   ),
-                            // Text(
-                            //   textAlign: TextAlign.left,
-                            //   'User 👋',
-                            //   style: sourceSansProMedium.copyWith(
-                            //       fontSize:
-                            //           SizeConfig.blockSizeHorizontal! * 5.5,
-                            //       color: black),
-                            // ),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -310,22 +273,61 @@ class _HomeScreenState extends State<HomeScreen> {
               height: MediaQuery.of(context).orientation == Orientation.portrait
                   ? 200
                   : 220,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: dogs.length,
-                itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, PetDetailScreen.routeName);
-                  },
-                  child: PetContainer(
-                    totalLength: dogs.length,
-                    index: index,
-                    petImage: 'assets/images/${dogs[index]}',
-                    petName: 'Charlie',
-                    petBreed: 'Marly',
-                    postingDate: '17 Nov 2022',
-                  ),
-                ),
+              child: FutureBuilder(
+                future: DatabaseService().getDogPetDataForHomeScreen(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: MainLoading(),
+                    );
+                  }
+
+                  if (snapshot.data == null) {
+                    return Center(
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'Something Went Wrong...',
+                            style: sourceSansProRegular.copyWith(
+                              color: grey,
+                              fontSize: 18,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Refresh',
+                              style: sourceSansProSemiBold.copyWith(
+                                color: boxShadowColor,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) => InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, PetDetailScreen.routeName);
+                      },
+                      child: PetContainer(
+                        totalLength: snapshot.data!.docs.length,
+                        index: index,
+                        petImageUrl: snapshot.data!.docs[index]['imageList'][0],
+                        petName: snapshot.data!.docs[index]['petName'],
+                        petBreed: snapshot.data!.docs[index]['petBreed'],
+                        postingDate: snapshot.data!.docs[index]['datePosted'],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 30),
@@ -344,22 +346,61 @@ class _HomeScreenState extends State<HomeScreen> {
               height: MediaQuery.of(context).orientation == Orientation.portrait
                   ? 200
                   : 220,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: cats.length,
-                itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, PetDetailScreen.routeName);
-                  },
-                  child: PetContainer(
-                    totalLength: cats.length,
-                    index: index,
-                    petImage: 'assets/images/${cats[index]}',
-                    petName: 'Golden',
-                    petBreed: 'Alyx',
-                    postingDate: '21 Nov 2022',
-                  ),
-                ),
+              child: FutureBuilder(
+                future: DatabaseService().getCatPetDataForHomeScreen(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: MainLoading(),
+                    );
+                  }
+
+                  if (snapshot.data == null) {
+                    return Center(
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'Something Went Wrong...',
+                            style: sourceSansProRegular.copyWith(
+                              color: grey,
+                              fontSize: 18,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Refresh',
+                              style: sourceSansProSemiBold.copyWith(
+                                color: boxShadowColor,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) => InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, PetDetailScreen.routeName);
+                      },
+                      child: PetContainer(
+                        totalLength: snapshot.data!.docs.length,
+                        index: index,
+                        petImageUrl: snapshot.data!.docs[index]['imageList'][0],
+                        petName: snapshot.data!.docs[index]['petName'],
+                        petBreed: snapshot.data!.docs[index]['petBreed'],
+                        postingDate: snapshot.data!.docs[index]['datePosted'],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 20),

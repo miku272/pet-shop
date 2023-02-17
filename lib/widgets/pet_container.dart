@@ -6,7 +6,7 @@ import '../app_styles.dart';
 class PetContainer extends StatelessWidget {
   final int totalLength;
   final int index;
-  final String petImage;
+  final String petImageUrl;
   final String petName;
   final String petBreed;
   final String postingDate;
@@ -14,7 +14,7 @@ class PetContainer extends StatelessWidget {
   const PetContainer({
     required this.totalLength,
     required this.index,
-    required this.petImage,
+    required this.petImageUrl,
     required this.petName,
     required this.petBreed,
     required this.postingDate,
@@ -46,11 +46,14 @@ class PetContainer extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: Image.asset(
-              petImage,
-              fit: BoxFit.cover,
+          SizedBox(
+            height: screenProps.orientation == Orientation.portrait ? 100 : 100,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: Image.network(
+                petImageUrl,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -65,13 +68,17 @@ class PetContainer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(9),
                 ),
                 child: Center(
-                  child: Text(
-                    petName,
-                    style: sourceSansProBold.copyWith(
-                      fontSize: screenProps.orientation == Orientation.portrait
-                          ? SizeConfig.blockSizeHorizontal! * 4
-                          : SizeConfig.blockSizeHorizontal! * 2,
-                      color: orange,
+                  child: Expanded(
+                    child: Text(
+                      petName,
+                      style: sourceSansProBold.copyWith(
+                        fontSize:
+                            screenProps.orientation == Orientation.portrait
+                                ? SizeConfig.blockSizeHorizontal! * 4
+                                : SizeConfig.blockSizeHorizontal! * 2,
+                        color: orange,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                 ),
@@ -86,30 +93,34 @@ class PetContainer extends StatelessWidget {
           const SizedBox(height: 1),
           Row(
             children: [
-              Text(
-                petBreed,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: sourceSansProBold.copyWith(
-                  fontSize: screenProps.orientation == Orientation.portrait
-                      ? SizeConfig.blockSizeHorizontal! * 3.9
-                      : SizeConfig.blockSizeHorizontal! * 2.5,
-                  color: grey,
+              Expanded(
+                child: Text(
+                  petBreed,
+                  maxLines: 1,
+                  style: sourceSansProBold.copyWith(
+                    fontSize: screenProps.orientation == Orientation.portrait
+                        ? SizeConfig.blockSizeHorizontal! * 3.9
+                        : SizeConfig.blockSizeHorizontal! * 2.5,
+                    color: grey,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],
           ),
           Row(
             children: [
-              Text(
-                postingDate,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: sourceSansProRegular.copyWith(
-                  fontSize: screenProps.orientation == Orientation.portrait
-                      ? SizeConfig.blockSizeHorizontal! * 3.5
-                      : SizeConfig.blockSizeHorizontal! * 2,
-                  color: lightGrey,
+              Expanded(
+                child: Text(
+                  postingDate,
+                  maxLines: 1,
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: screenProps.orientation == Orientation.portrait
+                        ? SizeConfig.blockSizeHorizontal! * 3.5
+                        : SizeConfig.blockSizeHorizontal! * 2,
+                    color: lightGrey,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],
