@@ -353,4 +353,26 @@ class DatabaseService {
 
     await petCollection.doc(uid).delete();
   }
+
+  Future<QuerySnapshot> getDogPetDataForHomeScreen() async {
+    QuerySnapshot querySnapshot =
+        await petCollection.where('petType', isEqualTo: 'dog').limit(5).get(
+              const GetOptions(
+                source: Source.server,
+              ),
+            );
+
+    return querySnapshot;
+  }
+
+  Future<QuerySnapshot> getCatPetDataForHomeScreen() async {
+    QuerySnapshot querySnapshot =
+        await petCollection.where('petType', isEqualTo: 'cat').limit(5).get(
+              const GetOptions(
+                source: Source.server,
+              ),
+            );
+
+    return querySnapshot;
+  }
 }
