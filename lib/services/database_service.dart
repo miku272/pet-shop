@@ -316,6 +316,12 @@ class DatabaseService {
     });
   }
 
+  Future<Object?> getPetDataUsinguid(String petId) async {
+    DocumentSnapshot petData = await petCollection.doc(petId).get();
+
+    return petData.data();
+  }
+
   Future<QuerySnapshot> getPetDataUsingAuthorId(String authorId) async {
     QuerySnapshot petData =
         await petCollection.where('authorId', isEqualTo: authorId).get(
@@ -374,5 +380,17 @@ class DatabaseService {
             );
 
     return querySnapshot;
+  }
+
+  Future likePost(String petId, String likedById) async {
+    return await petCollection.doc(petId).update({
+      'likedBy': FieldValue.arrayUnion([likedById]),
+    });
+  }
+
+  Future removeLike(String petId, String unlikeById) async {
+    return await petCollection.doc(petId).update({
+      'likedBy': FieldValue.arrayRemove([unlikeById]),
+    });
   }
 }

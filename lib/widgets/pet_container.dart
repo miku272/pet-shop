@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
 
-class PetContainer extends StatelessWidget {
+import '../services/database_service.dart';
+
+class PetContainer extends StatefulWidget {
   final int totalLength;
   final int index;
+  final String petId;
   final String petImageUrl;
   final String petName;
   final String petBreed;
@@ -14,12 +18,72 @@ class PetContainer extends StatelessWidget {
   const PetContainer({
     required this.totalLength,
     required this.index,
+    required this.petId,
     required this.petImageUrl,
     required this.petName,
     required this.petBreed,
     required this.postingDate,
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<PetContainer> createState() => _PetContainerState();
+}
+
+class _PetContainerState extends State<PetContainer> {
+  var likedIcon = Icons.favorite_outline;
+
+  Future initFavIcon() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return;
+    }
+
+    final snapshot =
+        await DatabaseService().getPetDataUsinguid(widget.petId) as Map?;
+
+    if (snapshot?['likedBy'].contains(FirebaseAuth.instance.currentUser!.uid)) {
+      setState(() {
+        likedIcon = Icons.favorite;
+      });
+    }
+  }
+
+  onFavTap() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return;
+    }
+
+    final snapshot =
+        await DatabaseService().getPetDataUsinguid(widget.petId) as Map?;
+
+    if (snapshot?['likedBy'].contains(FirebaseAuth.instance.currentUser!.uid)) {
+      await DatabaseService().removeLike(
+        widget.petId,
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      setState(() {
+        likedIcon = Icons.favorite_outline;
+      });
+    } else if (!(snapshot?['likedBy']
+        .contains(FirebaseAuth.instance.currentUser!.uid))) {
+      await DatabaseService().likePost(
+        widget.petId,
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      setState(() {
+        likedIcon = Icons.favorite;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    initFavIcon();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +93,8 @@ class PetContainer extends StatelessWidget {
       height: screenProps.orientation == Orientation.portrait ? 200 : 250,
       width: 180,
       margin: EdgeInsets.only(
-        left: index == 0 ? 25 : 15,
-        right: index == totalLength - 1 ? 25 : 0,
+        left: widget.index == 0 ? 25 : 15,
+        right: widget.index == widget.totalLength - 1 ? 25 : 0,
       ),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -51,7 +115,7 @@ class PetContainer extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
               child: Image.network(
-                petImageUrl,
+                widget.petImageUrl,
                 fit: BoxFit.fill,
               ),
             ),
@@ -70,7 +134,7 @@ class PetContainer extends StatelessWidget {
                 child: Center(
                   child: Expanded(
                     child: Text(
-                      petName,
+                      widget.petName,
                       style: sourceSansProBold.copyWith(
                         fontSize:
                             screenProps.orientation == Orientation.portrait
@@ -83,10 +147,13 @@ class PetContainer extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(
-                Icons.favorite_outline,
-                color: red,
-                size: 23,
+              InkWell(
+                onTap: onFavTap,
+                child: Icon(
+                  likedIcon,
+                  color: red,
+                  size: 23,
+                ),
               ),
             ],
           ),
@@ -95,7 +162,7 @@ class PetContainer extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  petBreed,
+                  widget.petBreed,
                   maxLines: 1,
                   style: sourceSansProBold.copyWith(
                     fontSize: screenProps.orientation == Orientation.portrait
@@ -112,7 +179,7 @@ class PetContainer extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  postingDate,
+                  widget.postingDate,
                   maxLines: 1,
                   style: sourceSansProRegular.copyWith(
                     fontSize: screenProps.orientation == Orientation.portrait
