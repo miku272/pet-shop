@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pet_shop/widgets/my_snackbar.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import '../size_config.dart';
 import '../app_styles.dart';
@@ -9,6 +9,7 @@ import '../app_styles.dart';
 import '../services/database_service.dart';
 
 import '../widgets/main_loading.dart';
+import '../widgets/my_snackbar.dart';
 
 import './pet_editor_screen.dart';
 import './chat_screen.dart';
@@ -216,6 +217,7 @@ class _PetDetailState extends State<PetDetail> {
               }
 
               var data = snapshot.data as Map?;
+              var imageList = data?['imageList'] as List<dynamic>;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,12 +226,21 @@ class _PetDetailState extends State<PetDetail> {
                     height: SizeConfig.blockSizeVertical! * 50,
                     child: Stack(
                       children: <Widget>[
-                        Image.network(
-                          // 'assets/images/dog_marly_cover.png',
-                          data?['imageList'][0],
-                          height: SizeConfig.blockSizeVertical! * 50,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            height: SizeConfig.blockSizeVertical! * 50,
+                            enableInfiniteScroll: false,
+                          ),
+                          items: imageList.map((imageLink) {
+                            return Builder(
+                              builder: (context) => Image.network(
+                                // 'assets/images/dog_marly_cover.png',
+                                imageLink,
+                                height: SizeConfig.blockSizeVertical! * 50,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          }).toList(),
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
@@ -437,80 +448,80 @@ class _PetDetailState extends State<PetDetail> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingHorizontal),
-                    child: Text(
-                      'Photo Album',
-                      style: sourceSansProRegular.copyWith(
-                        color: lightGrey,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingHorizontal),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            height: MediaQuery.of(context).orientation ==
-                                    Orientation.landscape
-                                ? SizeConfig.blockSizeVertical! * 40
-                                : 75,
-                            width: SizeConfig.blockSizeHorizontal! * 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: const DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                  'assets/images/dog_marly01.png',
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 7),
-                          Container(
-                            height: MediaQuery.of(context).orientation ==
-                                    Orientation.landscape
-                                ? SizeConfig.blockSizeVertical! * 40
-                                : 75,
-                            width: SizeConfig.blockSizeHorizontal! * 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: const DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                  'assets/images/dog_marly02.png',
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 7),
-                          Container(
-                            height: MediaQuery.of(context).orientation ==
-                                    Orientation.landscape
-                                ? SizeConfig.blockSizeVertical! * 40
-                                : 75,
-                            width: SizeConfig.blockSizeHorizontal! * 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: const DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                  'assets/images/dog_marly03.png',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // const SizedBox(height: 30),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: paddingHorizontal),
+                  //   child: Text(
+                  //     'Photo Album',
+                  //     style: sourceSansProRegular.copyWith(
+                  //       color: lightGrey,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: paddingHorizontal),
+                  //   child: SingleChildScrollView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: <Widget>[
+                  //         Container(
+                  //           height: MediaQuery.of(context).orientation ==
+                  //                   Orientation.landscape
+                  //               ? SizeConfig.blockSizeVertical! * 40
+                  //               : 75,
+                  //           width: SizeConfig.blockSizeHorizontal! * 30,
+                  //           decoration: BoxDecoration(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             image: const DecorationImage(
+                  //               fit: BoxFit.cover,
+                  //               image: AssetImage(
+                  //                 'assets/images/dog_marly01.png',
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         const SizedBox(width: 7),
+                  //         Container(
+                  //           height: MediaQuery.of(context).orientation ==
+                  //                   Orientation.landscape
+                  //               ? SizeConfig.blockSizeVertical! * 40
+                  //               : 75,
+                  //           width: SizeConfig.blockSizeHorizontal! * 30,
+                  //           decoration: BoxDecoration(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             image: const DecorationImage(
+                  //               fit: BoxFit.cover,
+                  //               image: AssetImage(
+                  //                 'assets/images/dog_marly02.png',
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         const SizedBox(width: 7),
+                  //         Container(
+                  //           height: MediaQuery.of(context).orientation ==
+                  //                   Orientation.landscape
+                  //               ? SizeConfig.blockSizeVertical! * 40
+                  //               : 75,
+                  //           width: SizeConfig.blockSizeHorizontal! * 30,
+                  //           decoration: BoxDecoration(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             image: const DecorationImage(
+                  //               fit: BoxFit.cover,
+                  //               image: AssetImage(
+                  //                 'assets/images/dog_marly03.png',
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.symmetric(
