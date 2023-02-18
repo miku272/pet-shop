@@ -63,6 +63,7 @@ class _PetEditorState extends State<PetEditor> {
   var postingForAdoption = false;
   var petName = 'unspecified';
   var petBreed = 'unspecified';
+  var petColor = 'unspecified';
   var petAge = 0;
   var petWeight = 0;
   var userLocation = '';
@@ -213,6 +214,7 @@ class _PetEditorState extends State<PetEditor> {
         petName,
         petBreed,
         petAge,
+        petColor,
         petWeight,
         userLocation,
         petDescription,
@@ -258,6 +260,7 @@ class _PetEditorState extends State<PetEditor> {
         petName,
         petBreed,
         petAge,
+        petColor,
         petWeight,
         userLocation,
         petDescription,
@@ -598,11 +601,23 @@ class _PetEditorState extends State<PetEditor> {
                     initValue:
                         _isEditing ? widget.args!['petAge'].toString() : null,
                     prefixIcon: Icons.numbers,
-                    labelData: 'PetAge (In Months)',
+                    labelData: 'Pet Age (In Months)',
                     textInputType: TextInputType.number,
                     onSave: (value) {
                       if (value != null) {
                         petAge = int.tryParse(value) ?? 0;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextbox(
+                    initValue:
+                        _isEditing ? widget.args!['petColor'].toString() : null,
+                    prefixIcon: Icons.color_lens,
+                    labelData: 'Pet Color',
+                    onSave: (value) {
+                      if (value != null) {
+                        petColor = value;
                       }
                     },
                   ),

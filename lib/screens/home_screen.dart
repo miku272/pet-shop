@@ -317,7 +317,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, PetDetailScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          PetDetailScreen.routeName,
+                          arguments: snapshot.data!.docs[index]['uid'],
+                        ).then((value) {
+                          setState(() {});
+                        });
                       },
                       child: PetContainer(
                         totalLength: snapshot.data!.docs.length,
@@ -391,7 +397,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, PetDetailScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          PetDetailScreen.routeName,
+                          arguments: snapshot.data!.docs[index]['uid'],
+                        ).then((value) {
+                          setState(() {});
+                        });
                       },
                       child: PetContainer(
                         totalLength: snapshot.data!.docs.length,
