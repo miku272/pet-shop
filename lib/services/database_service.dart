@@ -298,6 +298,7 @@ class DatabaseService {
       'petColor': color,
       'petWeight': weight,
       'location': location,
+      'likedBy': [],
       'description': description,
     });
 

@@ -1,14 +1,15 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:location/location.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:pet_shop/services/database_service.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../app_styles.dart';
 
 import '../services/helper_function.dart';
+import '../services/database_service.dart';
 
 import '../widgets/custom_textbox.dart';
 import '../widgets/file_image_list_tile.dart';
@@ -289,6 +290,76 @@ class _PetEditorState extends State<PetEditor> {
             fontSize: 18,
           ),
         ),
+        actions: _isEditing
+            ? [
+                Container(
+                  margin: const EdgeInsets.only(right: 20),
+                  child: Tooltip(
+                    message: 'Delete',
+                    child: InkWell(
+                      onTap: () {
+                        showAnimatedDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          animationType: DialogTransitionType.slideFromBottom,
+                          duration: const Duration(milliseconds: 300),
+                          builder: (context) => AlertDialog(
+                            elevation: 5,
+                            alignment: Alignment.bottomCenter,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            title: const Text('Delete'),
+                            content: Text(
+                              'Are you sure you want to delete this post?',
+                              style: sourceSansProRegular.copyWith(
+                                color: grey,
+                                fontSize: 18,
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () async {
+                                  DatabaseService().deletePetDataUsingUid(
+                                    widget.args!['petId'],
+                                  );
+
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Yes',
+                                  style: sourceSansProSemiBold.copyWith(
+                                    color: orange,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'No',
+                                  style: sourceSansProSemiBold.copyWith(
+                                    color: orange,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.delete,
+                        color: red,
+                      ),
+                    ),
+                  ),
+                ),
+              ]
+            : null,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
