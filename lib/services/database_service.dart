@@ -276,6 +276,7 @@ class DatabaseService {
     String name,
     String breed,
     int age,
+    String color,
     int weight,
     String location,
     String description,
@@ -294,8 +295,10 @@ class DatabaseService {
       'petName': name,
       'petBreed': breed,
       'petAge': age,
+      'petColor': color,
       'petWeight': weight,
       'location': location,
+      'likedBy': [],
       'description': description,
     });
 
@@ -316,6 +319,12 @@ class DatabaseService {
     });
   }
 
+  Future<Object?> getPetDataUsinguid(String petId) async {
+    DocumentSnapshot petData = await petCollection.doc(petId).get();
+
+    return petData.data();
+  }
+
   Future<QuerySnapshot> getPetDataUsingAuthorId(String authorId) async {
     QuerySnapshot petData =
         await petCollection.where('authorId', isEqualTo: authorId).get(
@@ -333,6 +342,7 @@ class DatabaseService {
     String name,
     String breed,
     int age,
+    String color,
     int weight,
     String location,
     String description,
@@ -342,6 +352,7 @@ class DatabaseService {
       'petName': name,
       'petBreed': breed,
       'petAge': age,
+      'petColor': color,
       'petWeight': weight,
       'location': location,
       'description': description,
@@ -374,5 +385,17 @@ class DatabaseService {
             );
 
     return querySnapshot;
+  }
+
+  Future likePost(String petId, String likedById) async {
+    return await petCollection.doc(petId).update({
+      'likedBy': FieldValue.arrayUnion([likedById]),
+    });
+  }
+
+  Future removeLike(String petId, String unlikeById) async {
+    return await petCollection.doc(petId).update({
+      'likedBy': FieldValue.arrayRemove([unlikeById]),
+    });
   }
 }

@@ -285,6 +285,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (snapshot.data == null) {
                     return Center(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
                             'Something Went Wrong...',
@@ -315,11 +317,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, PetDetailScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          PetDetailScreen.routeName,
+                          arguments: snapshot.data!.docs[index]['uid'],
+                        ).then((value) {
+                          setState(() {});
+                        });
                       },
                       child: PetContainer(
                         totalLength: snapshot.data!.docs.length,
                         index: index,
+                        petId: snapshot.data!.docs[index]['uid'],
                         petImageUrl: snapshot.data!.docs[index]['imageList'][0],
                         petName: snapshot.data!.docs[index]['petName'],
                         petBreed: snapshot.data!.docs[index]['petBreed'],
@@ -388,11 +397,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, PetDetailScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          PetDetailScreen.routeName,
+                          arguments: snapshot.data!.docs[index]['uid'],
+                        ).then((value) {
+                          setState(() {});
+                        });
                       },
                       child: PetContainer(
                         totalLength: snapshot.data!.docs.length,
                         index: index,
+                        petId: snapshot.data!.docs[index]['uid'],
                         petImageUrl: snapshot.data!.docs[index]['imageList'][0],
                         petName: snapshot.data!.docs[index]['petName'],
                         petBreed: snapshot.data!.docs[index]['petBreed'],

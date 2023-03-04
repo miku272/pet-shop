@@ -52,6 +52,7 @@ dependencies:
   http: ^0.13.5
   latlong2: ^0.8.1
   location: ^4.4.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
