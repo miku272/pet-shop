@@ -39,6 +39,8 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       drawer: const CustomAppDrawer(),
       appBar: AppBar(
+        elevation: 0,
+        shadowColor: white,
         leadingWidth: 80,
         leading: const DrawerIconButton(),
         centerTitle: true,
@@ -55,16 +57,103 @@ class _CartScreenState extends State<CartScreen> {
           padding: const EdgeInsets.symmetric(horizontal: paddingHorizontal),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20),
-              const CartListContainer(),
+              const SizedBox(height: 40),
+              SizedBox(
+                height: 300,
+                width: double.infinity,
+                child: ListView(
+                  children: const <Widget>[
+                    CartListContainer(),
+                    CartListContainer(),
+                    CartListContainer(),
+                    CartListContainer(),
+                    CartListContainer(),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
               Divider(color: boxShadowColor.withOpacity(0.5)),
-              const CartListContainer(),
-              Divider(color: boxShadowColor.withOpacity(0.5)),
-              const CartListContainer(),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Total:',
+                    style: sourceSansProRegular.copyWith(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    '80',
+                    style: sourceSansProRegular.copyWith(
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Delivery Charges:',
+                    style: sourceSansProRegular.copyWith(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    '20',
+                    style: sourceSansProRegular.copyWith(
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Grand Total:',
+                    style: sourceSansProSemiBold.copyWith(
+                      fontSize: 30,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  Text(
+                    '100',
+                    style: sourceSansProSemiBold.copyWith(
+                      fontSize: 40,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: FloatingActionButton.extended(
+          onPressed: () {},
+          extendedPadding: const EdgeInsets.symmetric(
+            horizontal: paddingHorizontal,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          backgroundColor: grey,
+          label: Text(
+            'Proceed to checkout',
+            style: sourceSansProSemiBold.copyWith(
+              fontSize: 25,
+              color: boxShadowColor,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

@@ -90,6 +90,24 @@ class _CartListContainerState extends State<CartListContainer> {
               ),
             ],
           ),
+          const Spacer(),
+          Column(
+            children: <Widget>[
+              Text(
+                'Price: 50',
+                style: sourceSansProRegular.copyWith(
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Total: 50',
+                style: sourceSansProRegular.copyWith(
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
