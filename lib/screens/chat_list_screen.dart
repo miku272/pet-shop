@@ -111,6 +111,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return Scaffold(
       drawer: const CustomAppDrawer(),
       appBar: AppBar(
+        leadingWidth: 80,
         leading: const DrawerIconButton(),
         title: Text(
           'Chats',
