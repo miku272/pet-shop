@@ -111,7 +111,7 @@ class _PetContainerState extends State<PetContainer> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: screenProps.orientation == Orientation.portrait ? 100 : 100,
+            height: screenProps.orientation == Orientation.portrait ? 98 : 98,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
               child: Image.network(
