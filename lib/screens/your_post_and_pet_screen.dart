@@ -110,6 +110,8 @@ class _YourPostAndPetScreenState extends State<YourPostAndPetScreen> {
                                           ['petBreed'],
                                       'petAge': snapshot.data!.docs[index]
                                           ['petAge'],
+                                      'petColor': snapshot.data!.docs[index]
+                                          ['petColor'],
                                       'petWeight': snapshot.data!.docs[index]
                                           ['petWeight'],
                                       'location': snapshot.data!.docs[index]
