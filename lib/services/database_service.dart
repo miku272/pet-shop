@@ -10,6 +10,7 @@ class DatabaseService {
   final userCollection = FirebaseFirestore.instance.collection('users');
   final chatCollection = FirebaseFirestore.instance.collection('chats');
   final petCollection = FirebaseFirestore.instance.collection('pets');
+  final productCollection = FirebaseFirestore.instance.collection('products');
 
   DatabaseService({this.uid});
 
@@ -397,5 +398,13 @@ class DatabaseService {
     return await petCollection.doc(petId).update({
       'likedBy': FieldValue.arrayRemove([unlikeById]),
     });
+  }
+
+  Future getAllProducts() async {
+    final productData = await productCollection.get();
+
+    for (var element in productData.docs) {
+      print(element.data());
+    }
   }
 }

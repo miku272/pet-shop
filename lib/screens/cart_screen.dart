@@ -6,6 +6,8 @@ import '../widgets/custom_app_drawer.dart';
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/cart_list_container.dart';
 
+import '../services/database_service.dart';
+
 class CartScreen extends StatefulWidget {
   static const routeName = '/cart-screen';
 
@@ -135,7 +137,9 @@ class _CartScreenState extends State<CartScreen> {
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width * 0.9,
         child: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            DatabaseService().getAllProducts();
+          },
           extendedPadding: const EdgeInsets.symmetric(
             horizontal: paddingHorizontal,
           ),
