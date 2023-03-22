@@ -417,7 +417,7 @@ class DatabaseService {
     return productData;
   }
 
-  Future<QuerySnapshot> getCatProduct() async {
+  Future<QuerySnapshot> getCatProducts() async {
     QuerySnapshot productData = await productCollection
         .where(
           'category',

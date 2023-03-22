@@ -10,7 +10,7 @@ import '../services/database_service.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/cart_screen.dart';
-import '../screens/view_all_screen.dart';
+import '../screens/product_list_screen.dart';
 
 class CustomAppDrawer extends StatefulWidget {
   const CustomAppDrawer({super.key});
@@ -148,7 +148,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                 ),
                 onTap: () {
                   Navigator.of(context).pushNamed(
-                    ViewAllScreen.routeName,
+                    ProductListScreen.routeName,
                   );
                 },
               ),
