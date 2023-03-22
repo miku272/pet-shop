@@ -10,6 +10,7 @@ import '../services/database_service.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/cart_screen.dart';
+import '../screens/view_all_screen.dart';
 
 class CustomAppDrawer extends StatefulWidget {
   const CustomAppDrawer({super.key});
@@ -137,6 +138,20 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                       },
                     )
                   : const SizedBox(),
+              ListTile(
+                leading: const Icon(Icons.pets_outlined),
+                title: Text(
+                  'Pet Care',
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    ViewAllScreen.routeName,
+                  );
+                },
+              ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
                       leading: const Icon(Icons.card_travel),

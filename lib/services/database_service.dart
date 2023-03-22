@@ -405,4 +405,26 @@ class DatabaseService {
 
     return productData;
   }
+
+  Future<QuerySnapshot> getDogProducts() async {
+    QuerySnapshot productData = await productCollection
+        .where(
+          'category',
+          isEqualTo: 'dog',
+        )
+        .get();
+
+    return productData;
+  }
+
+  Future<QuerySnapshot> getCatProduct() async {
+    QuerySnapshot productData = await productCollection
+        .where(
+          'category',
+          isEqualTo: 'cat',
+        )
+        .get();
+
+    return productData;
+  }
 }

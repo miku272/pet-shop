@@ -16,6 +16,7 @@ import './screens/address_screen.dart';
 import './screens/address_editor_screen.dart';
 import 'screens/pet_editor_screen.dart';
 import './screens/pet_detail_screen.dart';
+import './screens/view_all_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -113,6 +114,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (context) => const PetDetailScreen(),
+      );
+
+    case ViewAllScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const ViewAllScreen(),
       );
 
     default:
