@@ -400,11 +400,9 @@ class DatabaseService {
     });
   }
 
-  Future getAllProducts() async {
-    final productData = await productCollection.get();
+  Future<QuerySnapshot> getAllProducts() async {
+    QuerySnapshot productData = await productCollection.get();
 
-    for (var element in productData.docs) {
-      print(element.data());
-    }
+    return productData;
   }
 }
