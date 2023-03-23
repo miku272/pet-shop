@@ -187,8 +187,25 @@ class DatabaseService {
               ),
             );
 
+    // print(querySnapshot.docs[0].data());
     return querySnapshot;
     // Call using 'querySnapshot.docs[0].data()';
+  }
+
+  Future<bool> addItemToWishlist(String userId, String productId) async {
+    await userCollection.doc(userId).update({
+      'wishlist': FieldValue.arrayUnion([productId]),
+    });
+
+    return true;
+  }
+
+  Future<bool> removeItemFromWishlist(String userId, String productId) async {
+    await userCollection.doc(userId).update({
+      'wishlist': FieldValue.arrayRemove([productId])
+    });
+
+    return true;
   }
 
   Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getUserChats() async {
@@ -402,6 +419,12 @@ class DatabaseService {
 
   Future<QuerySnapshot> getAllProducts() async {
     QuerySnapshot productData = await productCollection.get();
+
+    return productData;
+  }
+
+  Future<DocumentSnapshot> getProductDataUsingUid(String uid) async {
+    DocumentSnapshot productData = await productCollection.doc(uid).get();
 
     return productData;
   }

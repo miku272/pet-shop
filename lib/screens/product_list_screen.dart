@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../app_styles.dart';
@@ -6,6 +7,7 @@ import '../app_styles.dart';
 import '../widgets/custom_app_drawer.dart';
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/main_loading.dart';
+import '../widgets/my_snackbar.dart';
 
 import '../services/database_service.dart';
 
@@ -190,7 +192,34 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      if (FirebaseAuth.instance.currentUser ==
+                                          null) {
+                                        MySnackbar.showSnackbar(
+                                          context,
+                                          black,
+                                          'Please login first',
+                                        );
+
+                                        return;
+                                      }
+
+                                      final result = await DatabaseService()
+                                          .addItemToWishlist(
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                        snapshot.data!.docs[index]['uid'],
+                                      );
+
+                                      if (result) {
+                                        if (mounted) {
+                                          MySnackbar.showSnackbar(
+                                            context,
+                                            black,
+                                            'Item added to wishlist',
+                                          );
+                                        }
+                                      }
+                                    },
                                     icon: const Icon(
                                       Icons.favorite,
                                       color: red,
