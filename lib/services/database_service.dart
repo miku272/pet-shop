@@ -450,4 +450,59 @@ class DatabaseService {
 
     return productData;
   }
+
+  Future<String> addToCart(String userId, String productId) async {
+    QuerySnapshot cartData =
+        await userCollection.doc(userId).collection('cart').get();
+
+    for (var element in cartData.docs) {
+      final cart = element.data() as Map;
+
+      if (cart['productId'] == productId) {
+        return 'Item already in the cart';
+      }
+    }
+
+    await userCollection.doc(userId).collection('cart').add({
+      'productId': productId,
+      'quantity': 1,
+    });
+
+    return 'Item added to cart';
+  }
+
+  Future removeFromCart(String userId, String cartId) async {
+    await userCollection.doc(userId).collection('cart').doc(cartId).delete();
+  }
+
+  Future<bool> updateCartProductQuantity(
+      String userId, String cartId, int qty) async {
+    if (qty < 1) {
+      return false;
+    } else if (qty > 5) {
+      return false;
+    }
+
+    await userCollection.doc(userId).collection('cart').doc(cartId).update(
+      {
+        'quantity': qty,
+      },
+    );
+
+    return true;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserCartData(String userId) {
+    Stream<QuerySnapshot<Map<String, dynamic>>> cartSize =
+        userCollection.doc(userId).collection('cart').snapshots();
+
+    return cartSize;
+  }
+
+  Future<QuerySnapshot> getUserStaticCartData(String userId) async {
+    QuerySnapshot cartData =
+        await userCollection.doc(userId).collection('cart').get();
+
+    return cartData;
+  }
 }

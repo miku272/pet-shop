@@ -40,6 +40,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
           );
         }
 
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox();
+        }
+
         if (snapshot.hasData) {
           if (snapshot.data['chats'].length != 0) {
             return ListView.builder(

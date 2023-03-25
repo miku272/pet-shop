@@ -51,6 +51,10 @@ class _ChatListTileState extends State<ChatListTile> {
           );
         }
 
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox();
+        }
+
         return ListTile(
           onTap: () {
             Navigator.of(context).pushNamed(

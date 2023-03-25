@@ -7,8 +7,11 @@ import '../widgets/custom_app_drawer.dart';
 import '../widgets/drawer_icon_button.dart';
 import '../widgets/main_loading.dart';
 import '../widgets/wishlist_container.dart';
+import '../widgets/my_snackbar.dart';
 
 import '../services/database_service.dart';
+
+import './cart_screen.dart';
 
 class WishlistScreen extends StatefulWidget {
   static const routeName = '/wishlist-screen';
@@ -141,7 +144,16 @@ class _WishlistScreenState extends State<WishlistScreen> {
                               setState(() {});
                             }
                           },
-                          onAddToCart: () {},
+                          onAddToCart: () async {
+                            final response = await DatabaseService().addToCart(
+                              FirebaseAuth.instance.currentUser!.uid,
+                              productData['uid'],
+                            );
+
+                            if (mounted) {
+                              MySnackbar.showSnackbar(context, black, response);
+                            }
+                          },
                         ),
                       );
                     },
@@ -154,8 +166,45 @@ class _WishlistScreenState extends State<WishlistScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: orange,
-        onPressed: () {},
-        child: const Icon(Icons.shopping_bag_outlined),
+        onPressed: () {
+          Navigator.of(context).pushNamed(CartScreen.routeName);
+        },
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            FirebaseAuth.instance.currentUser != null
+                ? StreamBuilder(
+                    stream: DatabaseService().getUserCartData(
+                      FirebaseAuth.instance.currentUser!.uid,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox();
+                      }
+
+                      if (!snapshot.hasData ||
+                          snapshot.data == null ||
+                          snapshot.data!.docs.isEmpty) {
+                        return const SizedBox();
+                      }
+
+                      return Positioned(
+                        bottom: 10,
+                        left: 20,
+                        child: Text(
+                          snapshot.data!.docs.length.toString(),
+                          style: sourceSansProBold.copyWith(
+                            color: grey,
+                            fontSize: 20,
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : const SizedBox(),
+            const Icon(Icons.shopping_bag_outlined),
+          ],
+        ),
       ),
     );
   }
