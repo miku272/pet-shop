@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -12,6 +13,8 @@ import '../widgets/cart_list_container.dart';
 
 import '../services/database_service.dart';
 
+import './checkout_screen.dart';
+
 class CartScreen extends StatefulWidget {
   static const routeName = '/cart-screen';
 
@@ -23,6 +26,8 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   var counter = 1;
+
+  bool isLoading = false;
 
   void increaseCounter() {
     setState(() {
@@ -129,6 +134,10 @@ class _CartScreenState extends State<CartScreen> {
                             int qty =
                                 snapshot.data!.docs[index]['quantity'] + 1;
 
+                            setState(() {
+                              isLoading = true;
+                            });
+
                             final result = await DatabaseService()
                                 .updateCartProductQuantity(
                               FirebaseAuth.instance.currentUser!.uid,
@@ -137,8 +146,13 @@ class _CartScreenState extends State<CartScreen> {
                             );
 
                             if (result) {
-                              setState(() {});
+                              setState(() {
+                                isLoading = false;
+                              });
                             } else {
+                              setState(() {
+                                isLoading = false;
+                              });
                               if (mounted) {
                                 MySnackbar.showSnackbar(
                                   context,
@@ -152,6 +166,10 @@ class _CartScreenState extends State<CartScreen> {
                             int qty =
                                 snapshot.data!.docs[index]['quantity'] - 1;
 
+                            setState(() {
+                              isLoading = true;
+                            });
+
                             final result = await DatabaseService()
                                 .updateCartProductQuantity(
                               FirebaseAuth.instance.currentUser!.uid,
@@ -160,8 +178,13 @@ class _CartScreenState extends State<CartScreen> {
                             );
 
                             if (result) {
-                              setState(() {});
+                              setState(() {
+                                isLoading = false;
+                              });
                             } else {
+                              setState(() {
+                                isLoading = false;
+                              });
                               if (mounted) {
                                 MySnackbar.showSnackbar(
                                   context,
@@ -200,6 +223,10 @@ class _CartScreenState extends State<CartScreen> {
                                         snapshot.data!.docs[index].id,
                                       );
 
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+
                                       if (mounted) {
                                         MySnackbar.showSnackbar(
                                           context,
@@ -210,7 +237,9 @@ class _CartScreenState extends State<CartScreen> {
                                         Navigator.of(context).pop();
                                       }
 
-                                      setState(() {});
+                                      setState(() {
+                                        isLoading = false;
+                                      });
                                     },
                                     child: Text(
                                       'Yes',
@@ -305,7 +334,53 @@ class _CartScreenState extends State<CartScreen> {
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width * 0.9,
         child: FloatingActionButton.extended(
-          onPressed: null,
+          onPressed: isLoading
+              ? null
+              : () async {
+                  double totalOriginalPrice = 0;
+                  double totalDiscountPrice = 0;
+
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  QuerySnapshot cartData = await DatabaseService()
+                      .getUserStaticCartData(
+                          FirebaseAuth.instance.currentUser!.uid);
+
+                  if (cartData.docs.isEmpty) {
+                    setState(() {
+                      isLoading = false;
+                    });
+
+                    return;
+                  }
+
+                  for (var element in cartData.docs) {
+                    DocumentSnapshot product = await DatabaseService()
+                        .getProductDataUsingUid(element['productId']);
+                    int quantity = element['quantity'];
+
+                    Map productData = product.data() as Map;
+
+                    totalOriginalPrice += productData['price'] * quantity;
+                    totalDiscountPrice += (productData['price'] -
+                            (productData['price'] -
+                                (productData['discount'] / 100))) *
+                        quantity;
+                  }
+
+                  if (mounted) {
+                    Navigator.of(context).pushNamed(
+                      CheckoutScreen.routeName,
+                      arguments: {
+                        'originalPrice': totalOriginalPrice,
+                        'discountPrice': totalDiscountPrice,
+                        'savings': totalOriginalPrice - totalDiscountPrice,
+                      },
+                    );
+                  }
+                },
           extendedPadding: const EdgeInsets.symmetric(
             horizontal: paddingHorizontal,
           ),
