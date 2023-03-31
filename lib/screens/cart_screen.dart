@@ -365,7 +365,7 @@ class _CartScreenState extends State<CartScreen> {
 
                     totalOriginalPrice += productData['price'] * quantity;
                     totalDiscountPrice += (productData['price'] -
-                            (productData['price'] -
+                            (productData['price'] *
                                 (productData['discount'] / 100))) *
                         quantity;
                   }

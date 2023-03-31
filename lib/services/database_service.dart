@@ -160,6 +160,17 @@ class DatabaseService {
     return userData.data()!['defaultAddressId'];
   }
 
+  Future<DocumentSnapshot> getAddressUsingUid(
+      String userId, String addressId) async {
+    DocumentSnapshot addressData = await userCollection
+        .doc(userId)
+        .collection('address')
+        .doc(addressId)
+        .get();
+
+    return addressData;
+  }
+
   Future deleteUserAddress(String docId) async {
     await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)

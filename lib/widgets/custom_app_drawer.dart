@@ -5,8 +5,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../app_styles.dart';
+
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+
+import '../screens/login_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/cart_screen.dart';
@@ -258,7 +261,21 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                         );
                       },
                     )
-                  : const SizedBox(),
+                  : ListTile(
+                      leading: const Icon(Icons.login),
+                      title: Text(
+                        'Sign in',
+                        style: sourceSansProRegular.copyWith(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          LoginScreen.routeName,
+                          (route) => false,
+                        );
+                      },
+                    ),
             ],
           ),
           Container(

@@ -167,6 +167,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: orange,
         onPressed: () {
+          if (FirebaseAuth.instance.currentUser == null) {
+            MySnackbar.showSnackbar(context, black, 'Please login first');
+            return;
+          }
+
           Navigator.of(context).pushNamed(CartScreen.routeName);
         },
         child: Stack(

@@ -279,6 +279,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: orange,
         onPressed: () {
+          if (FirebaseAuth.instance.currentUser == null) {
+            MySnackbar.showSnackbar(context, black, 'Please login first');
+
+            return;
+          }
+
           Navigator.of(context).pushNamed(CartScreen.routeName);
         },
         child: Stack(
