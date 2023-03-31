@@ -12,6 +12,7 @@ import '../services/database_service.dart';
 import '../screens/login_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
+import '../screens/orders_screen.dart';
 import '../screens/cart_screen.dart';
 import '../screens/product_list_screen.dart';
 import '../screens/wishlist_screen.dart';
@@ -120,6 +121,21 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                 onTap: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     HomeScreen.routeName,
+                    (route) => false,
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: Text(
+                  'Orders',
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    OrdersScreen.routeName,
                     (route) => false,
                   );
                 },
