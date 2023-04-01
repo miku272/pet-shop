@@ -120,8 +120,6 @@ class _CheckOutState extends State<CheckOut> {
       await DatabaseService().clearCart(
         FirebaseAuth.instance.currentUser!.uid,
       );
-
-      debugPrint('Order Successfull');
     }
   }
 
