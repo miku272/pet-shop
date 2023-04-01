@@ -68,9 +68,9 @@ class _CartScreenState extends State<CartScreen> {
           padding: const EdgeInsets.symmetric(horizontal: paddingHorizontal),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               SizedBox(
-                height: 300,
+                height: MediaQuery.of(context).size.height * 0.8,
                 width: double.infinity,
                 child: FutureBuilder(
                   future: DatabaseService().getUserStaticCartData(
@@ -126,153 +126,174 @@ class _CartScreenState extends State<CartScreen> {
                     return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        return CartListContainer(
-                          cartId: snapshot.data!.docs[index].id,
-                          productId: snapshot.data!.docs[index]['productId'],
-                          quantity: snapshot.data!.docs[index]['quantity'],
-                          onIncrease: () async {
-                            int qty =
-                                snapshot.data!.docs[index]['quantity'] + 1;
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: CartListContainer(
+                            cartId: snapshot.data!.docs[index].id,
+                            productId: snapshot.data!.docs[index]['productId'],
+                            quantity: snapshot.data!.docs[index]['quantity'],
+                            onIncrease: () async {
+                              int qty =
+                                  snapshot.data!.docs[index]['quantity'] + 1;
+                              final product = await DatabaseService()
+                                  .getProductDataUsingUid(
+                                snapshot.data!.docs[index]['productId'],
+                              );
+                              Map productData = product.data() as Map;
 
-                            setState(() {
-                              isLoading = true;
-                            });
+                              if (productData['stock'] - qty < 0) {
+                                setState(() {
+                                  isLoading = false;
+                                });
 
-                            final result = await DatabaseService()
-                                .updateCartProductQuantity(
-                              FirebaseAuth.instance.currentUser!.uid,
-                              snapshot.data!.docs[index].id,
-                              qty,
-                            );
-
-                            if (result) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                            } else {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              if (mounted) {
-                                MySnackbar.showSnackbar(
-                                  context,
-                                  black,
-                                  'quantity can\'t be less than 1 or more than 5',
-                                );
+                                if (mounted) {
+                                  MySnackbar.showSnackbar(context, red,
+                                      'Item not available or exceeds stock');
+                                }
+                                return;
                               }
-                            }
-                          },
-                          onDecrease: () async {
-                            int qty =
-                                snapshot.data!.docs[index]['quantity'] - 1;
 
-                            setState(() {
-                              isLoading = true;
-                            });
-
-                            final result = await DatabaseService()
-                                .updateCartProductQuantity(
-                              FirebaseAuth.instance.currentUser!.uid,
-                              snapshot.data!.docs[index].id,
-                              qty,
-                            );
-
-                            if (result) {
                               setState(() {
-                                isLoading = false;
+                                isLoading = true;
                               });
-                            } else {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              if (mounted) {
-                                MySnackbar.showSnackbar(
-                                  context,
-                                  black,
-                                  'quantity can\'t be less than 1 or more than 5',
-                                );
+
+                              final result = await DatabaseService()
+                                  .updateCartProductQuantity(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                snapshot.data!.docs[index].id,
+                                qty,
+                              );
+
+                              if (result) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                if (mounted) {
+                                  MySnackbar.showSnackbar(
+                                    context,
+                                    black,
+                                    'quantity can\'t be less than 1 or more than 5',
+                                  );
+                                }
                               }
-                            }
-                          },
-                          onRemove: () async {
-                            showAnimatedDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              animationType:
-                                  DialogTransitionType.slideFromBottom,
-                              duration: const Duration(milliseconds: 300),
-                              builder: (context) => AlertDialog(
-                                elevation: 5,
-                                alignment: Alignment.bottomCenter,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                title: const Text('Remove?'),
-                                content: Text(
-                                  'Are you sure you want to remove this item from the cart?',
-                                  style: sourceSansProRegular.copyWith(
-                                    color: grey,
-                                    fontSize: 18,
+                            },
+                            onDecrease: () async {
+                              int qty =
+                                  snapshot.data!.docs[index]['quantity'] - 1;
+
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              final result = await DatabaseService()
+                                  .updateCartProductQuantity(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                snapshot.data!.docs[index].id,
+                                qty,
+                              );
+
+                              if (result) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                if (mounted) {
+                                  MySnackbar.showSnackbar(
+                                    context,
+                                    black,
+                                    'quantity can\'t be less than 1 or more than 5',
+                                  );
+                                }
+                              }
+                            },
+                            onRemove: () async {
+                              showAnimatedDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                animationType:
+                                    DialogTransitionType.slideFromBottom,
+                                duration: const Duration(milliseconds: 300),
+                                builder: (context) => AlertDialog(
+                                  elevation: 5,
+                                  alignment: Alignment.bottomCenter,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () async {
-                                      await DatabaseService().removeFromCart(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                        snapshot.data!.docs[index].id,
-                                      );
-
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-
-                                      if (mounted) {
-                                        MySnackbar.showSnackbar(
-                                          context,
-                                          black,
-                                          'Item removed from the cart',
+                                  title: const Text('Remove?'),
+                                  content: Text(
+                                    'Are you sure you want to remove this item from the cart?',
+                                    style: sourceSansProRegular.copyWith(
+                                      color: grey,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () async {
+                                        await DatabaseService().removeFromCart(
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          snapshot.data!.docs[index].id,
                                         );
 
-                                        Navigator.of(context).pop();
-                                      }
+                                        setState(() {
+                                          isLoading = true;
+                                        });
 
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Yes',
-                                      style: sourceSansProSemiBold.copyWith(
-                                        color: orange,
-                                        fontSize: 20,
+                                        if (mounted) {
+                                          MySnackbar.showSnackbar(
+                                            context,
+                                            black,
+                                            'Item removed from the cart',
+                                          );
+
+                                          Navigator.of(context).pop();
+                                        }
+
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                      child: Text(
+                                        'Yes',
+                                        style: sourceSansProSemiBold.copyWith(
+                                          color: orange,
+                                          fontSize: 20,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'No',
-                                      style: sourceSansProSemiBold.copyWith(
-                                        color: orange,
-                                        fontSize: 20,
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'No',
+                                        style: sourceSansProSemiBold.copyWith(
+                                          color: orange,
+                                          fontSize: 20,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         );
                       },
                     );
                   },
                 ),
               ),
-              Divider(color: boxShadowColor.withOpacity(0.5)),
-              const SizedBox(height: 30),
+              // Divider(color: boxShadowColor.withOpacity(0.5)),
+              // const SizedBox(height: 30),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
               //   children: <Widget>[
@@ -344,9 +365,10 @@ class _CartScreenState extends State<CartScreen> {
                     isLoading = true;
                   });
 
-                  QuerySnapshot cartData = await DatabaseService()
-                      .getUserStaticCartData(
-                          FirebaseAuth.instance.currentUser!.uid);
+                  QuerySnapshot cartData =
+                      await DatabaseService().getUserStaticCartData(
+                    FirebaseAuth.instance.currentUser!.uid,
+                  );
 
                   if (cartData.docs.isEmpty) {
                     setState(() {
@@ -368,6 +390,11 @@ class _CartScreenState extends State<CartScreen> {
                             (productData['price'] *
                                 (productData['discount'] / 100))) *
                         quantity;
+
+                    await DatabaseService().decreaseProductStock(
+                      element['productId'],
+                      quantity,
+                    );
                   }
 
                   if (mounted) {

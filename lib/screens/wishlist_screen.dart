@@ -133,6 +133,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                           imageUrl: productData['imageList'][0],
                           productName: productData['productName'],
                           productPrice: price.toString(),
+                          outOfStock: productData['stock'] < 1,
                           onRemove: () async {
                             final result =
                                 await DatabaseService().removeItemFromWishlist(

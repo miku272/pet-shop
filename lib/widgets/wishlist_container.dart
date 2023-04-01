@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../app_styles.dart';
 
+import '../widgets/my_snackbar.dart';
+
 class WishlistContainer extends StatelessWidget {
   final String imageUrl;
   final String productName;
   final String productPrice;
+  final bool outOfStock;
   final VoidCallback onRemove;
   final VoidCallback onAddToCart;
 
@@ -13,6 +16,7 @@ class WishlistContainer extends StatelessWidget {
     required this.imageUrl,
     required this.productName,
     required this.productPrice,
+    required this.outOfStock,
     required this.onRemove,
     required this.onAddToCart,
     super.key,
@@ -32,7 +36,7 @@ class WishlistContainer extends StatelessWidget {
         productName,
         maxLines: 3,
         style: sourceSansProRegular.copyWith(
-          color: grey,
+          color: outOfStock ? red : grey,
           overflow: TextOverflow.ellipsis,
         ),
       ),
@@ -53,7 +57,15 @@ class WishlistContainer extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: onAddToCart,
+              onTap: outOfStock
+                  ? () {
+                      MySnackbar.showSnackbar(
+                        context,
+                        red,
+                        'Item currenctly out of stock',
+                      );
+                    }
+                  : onAddToCart,
               child: const Icon(
                 Icons.shopping_bag,
                 color: black,

@@ -162,7 +162,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        mainAxisExtent: 270,
+                        mainAxisExtent: 300,
                       ),
                       itemBuilder: (context, index) {
                         return Container(
@@ -189,6 +189,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   color: grey,
                                 ),
                               ),
+                              snapshot.data!.docs[index]['stock'] < 1
+                                  ? Text(
+                                      'Item currently out of stock',
+                                      style: sourceSansProLight.copyWith(
+                                        color: red,
+                                      ),
+                                    )
+                                  : const SizedBox(),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -228,18 +236,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     ),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () async {
-                                      final response =
-                                          await DatabaseService().addToCart(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                        snapshot.data!.docs[index]['uid'],
-                                      );
+                                    onPressed:
+                                        snapshot.data!.docs[index]['stock'] < 1
+                                            ? null
+                                            : () async {
+                                                final response =
+                                                    await DatabaseService()
+                                                        .addToCart(
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.uid,
+                                                  snapshot.data!.docs[index]
+                                                      ['uid'],
+                                                );
 
-                                      if (mounted) {
-                                        MySnackbar.showSnackbar(
-                                            context, black, response);
-                                      }
-                                    },
+                                                if (mounted) {
+                                                  MySnackbar.showSnackbar(
+                                                      context, black, response);
+                                                }
+                                              },
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
@@ -252,7 +266,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                 ],
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed:
+                                    snapshot.data!.docs[index]['stock'] < 1
+                                        ? null
+                                        : () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: lightOrange,
                                   shape: RoundedRectangleBorder(

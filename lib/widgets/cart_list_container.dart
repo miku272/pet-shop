@@ -153,14 +153,16 @@ class _CartListContainerState extends State<CartListContainer> {
                   Text(
                     'Price: ${discountedPrice.toString()}',
                     style: sourceSansProRegular.copyWith(
-                      fontSize: 18,
+                      fontSize: 15,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     'Total: ${(discountedPrice * widget.quantity).toString()}',
                     style: sourceSansProRegular.copyWith(
-                      fontSize: 18,
+                      fontSize: 15,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

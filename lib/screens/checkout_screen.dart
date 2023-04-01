@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_options.dart';
 import '../app_styles.dart';
@@ -38,6 +39,12 @@ class CheckOut extends StatefulWidget {
 class _CheckOutState extends State<CheckOut> {
   final _razorPay = Razorpay();
 
+  int selectedRadioTile = 0;
+  int totalAmount = 0;
+
+  bool isLoading = false;
+  bool decreaseStockAgain = false;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -49,22 +56,96 @@ class _CheckOutState extends State<CheckOut> {
     super.initState();
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // print(response);
+  Future<void> _handlePayOnDelivery() async {
+    QuerySnapshot cart = await DatabaseService().getUserStaticCartData(
+      FirebaseAuth.instance.currentUser!.uid,
+    );
+    String day = DateTime.now().day.toString();
+    String month = DateTime.now().month.toString();
+    String year = DateTime.now().year.toString();
 
-    // verifySignature(
-    //   signature: response.signature!,
-    //   paymentId: response.paymentId!,
-    //   orderId: response.orderId!,
-    // );
+    for (var cartData in cart.docs) {
+      int quantity = cartData['quantity'];
+
+      await DatabaseService().decreaseProductStock(
+        cartData['productId'],
+        quantity,
+      );
+
+      await DatabaseService().addOrder(
+        FirebaseAuth.instance.currentUser!.uid,
+        null,
+        null,
+        cartData['productId'],
+        totalAmount,
+        cartData['quantity'],
+        true,
+        false,
+        '$day-$month-$year',
+        'payOnDelivery',
+      );
+
+      await DatabaseService().clearCart(
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      debugPrint('Order Successfull');
+    }
   }
 
-  void _handlePaymentError(PaymentFailureResponse response) {
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    final cart = await DatabaseService().getUserStaticCartData(
+      FirebaseAuth.instance.currentUser!.uid,
+    );
+    String day = DateTime.now().day.toString();
+    String month = DateTime.now().month.toString();
+    String year = DateTime.now().year.toString();
+
+    for (var element in cart.docs) {
+      Map cartData = element.data() as Map;
+
+      await DatabaseService().addOrder(
+        FirebaseAuth.instance.currentUser!.uid,
+        response.paymentId,
+        response.orderId,
+        cartData['productId'],
+        totalAmount,
+        cartData['quantity'],
+        true,
+        false,
+        '$day-$month-$year',
+        'razorpay',
+      );
+
+      await DatabaseService().clearCart(
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      debugPrint('Order Successfull');
+    }
+  }
+
+  Future<void> _handlePaymentError(PaymentFailureResponse response) async {
+    decreaseStockAgain = true;
+
     MySnackbar.showSnackbar(
       context,
       red,
       'Payment failed due to unknown error. Please try again',
     );
+
+    QuerySnapshot cartData = await DatabaseService().getUserStaticCartData(
+      FirebaseAuth.instance.currentUser!.uid,
+    );
+
+    for (var element in cartData.docs) {
+      int quantity = element['quantity'];
+
+      await DatabaseService().increaseProductStock(
+        element['productId'],
+        quantity,
+      );
+    }
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {}
@@ -117,6 +198,21 @@ class _CheckOutState extends State<CheckOut> {
       'amount': amount,
       'currency': 'INR',
     };
+
+    if (decreaseStockAgain) {
+      QuerySnapshot cartData = await DatabaseService().getUserStaticCartData(
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      for (var element in cartData.docs) {
+        int quantity = element['quantity'];
+
+        await DatabaseService().decreaseProductStock(
+          element['productId'],
+          quantity,
+        );
+      }
+    }
 
     var res = await http.post(
       Uri.https('api.razorpay.com', 'v1/orders'),
@@ -268,25 +364,130 @@ class _CheckOutState extends State<CheckOut> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    ElevatedButton(
-                      onPressed: () {
-                        String strAmt =
-                            (widget.args!['discountPrice'] as double)
-                                .toStringAsFixed(2);
-
-                        double dblAmt = double.parse(strAmt) * 100;
-                        int amount = dblAmt.toInt();
-
-                        createOrder(amount);
-                      },
-                      child: Text(
-                        'Pay ${(widget.args!['discountPrice'] as double).toStringAsFixed(2)}',
+                    RadioListTile(
+                      value: 1,
+                      groupValue: selectedRadioTile,
+                      activeColor: boxShadowColor,
+                      title: const Text(
+                        'Pay on Delivery',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
+                      subtitle: const Text(
+                        'Pay using cash when you receive your product',
+                        style: TextStyle(
+                          color: grey,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null) {
+                            selectedRadioTile = value;
+                          }
+                        });
+                      },
                     ),
+                    const SizedBox(height: 5),
+                    RadioListTile(
+                      value: 2,
+                      groupValue: selectedRadioTile,
+                      title: const Text(
+                        'Pay online',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      subtitle: const Text(
+                        'Pay online on razorpay using cards, UPI, wallet or netbanking',
+                        style: TextStyle(
+                          color: grey,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null) {
+                            selectedRadioTile = value;
+                          }
+                        });
+                      },
+                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     String strAmt =
+                    //         (widget.args!['discountPrice'] as double)
+                    //             .toStringAsFixed(2);
+
+                    //     double dblAmt = double.parse(strAmt) * 100;
+                    //     int amount = dblAmt.toInt();
+
+                    //     createOrder(amount);
+                    //   },
+                    //   child: Text(
+                    //     'Pay ${(widget.args!['discountPrice'] as double).toStringAsFixed(2)}',
+                    //   ),
+                    // ),
                   ],
                 ),
         ),
       ),
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: FloatingActionButton.extended(
+          onPressed: isLoading
+              ? null
+              : () async {
+                  if (selectedRadioTile == 0) {
+                    MySnackbar.showSnackbar(
+                      context,
+                      black,
+                      'Please choose a payment method',
+                    );
+
+                    return;
+                  }
+
+                  if (selectedRadioTile == 1) {
+                    String strAmt = (widget.args!['discountPrice'] as double)
+                        .toStringAsFixed(2);
+
+                    double dblAmt = double.parse(strAmt) * 100;
+                    int amount = dblAmt.toInt();
+
+                    totalAmount = amount;
+                    await _handlePayOnDelivery();
+                  }
+
+                  if (selectedRadioTile == 2) {
+                    String strAmt = (widget.args!['discountPrice'] as double)
+                        .toStringAsFixed(2);
+
+                    double dblAmt = double.parse(strAmt) * 100;
+                    int amount = dblAmt.toInt();
+
+                    totalAmount = amount;
+
+                    await createOrder(amount);
+                  }
+                },
+          extendedPadding: const EdgeInsets.symmetric(
+            horizontal: paddingHorizontal,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          backgroundColor: grey,
+          label: Text(
+            'Make Payment',
+            style: sourceSansProSemiBold.copyWith(
+              fontSize: 25,
+              color: boxShadowColor,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

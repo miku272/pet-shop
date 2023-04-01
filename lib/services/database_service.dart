@@ -11,6 +11,7 @@ class DatabaseService {
   final chatCollection = FirebaseFirestore.instance.collection('chats');
   final petCollection = FirebaseFirestore.instance.collection('pets');
   final productCollection = FirebaseFirestore.instance.collection('products');
+  final ordersCollection = FirebaseFirestore.instance.collection('orders');
 
   DatabaseService({this.uid});
 
@@ -440,6 +441,26 @@ class DatabaseService {
     return productData;
   }
 
+  Future increaseProductStock(String productId, int quantity) async {
+    final product = await productCollection.doc(productId).get();
+    Map productData = product.data() as Map;
+    int productStock = productData['stock'];
+
+    await productCollection.doc(productId).update({
+      'stock': productStock + quantity,
+    });
+  }
+
+  Future decreaseProductStock(String productId, int quantity) async {
+    final product = await productCollection.doc(productId).get();
+    Map productData = product.data() as Map;
+    int productStock = productData['stock'];
+
+    await productCollection.doc(productId).update({
+      'stock': productStock - quantity,
+    });
+  }
+
   Future<QuerySnapshot> getDogProducts() async {
     QuerySnapshot productData = await productCollection
         .where(
@@ -486,6 +507,15 @@ class DatabaseService {
     await userCollection.doc(userId).collection('cart').doc(cartId).delete();
   }
 
+  Future clearCart(String userId) async {
+    QuerySnapshot cart =
+        await userCollection.doc(userId).collection('cart').get();
+
+    for (var element in cart.docs) {
+      await element.reference.delete();
+    }
+  }
+
   Future<bool> updateCartProductQuantity(
       String userId, String cartId, int qty) async {
     if (qty < 1) {
@@ -515,5 +545,36 @@ class DatabaseService {
         await userCollection.doc(userId).collection('cart').get();
 
     return cartData;
+  }
+
+  Future addOrder(
+    String orderedById,
+    String? paymentId,
+    String? orderId,
+    String productId,
+    int totalAmount,
+    int quantity,
+    bool isOrderCompelete,
+    bool isOrderCancelled,
+    String orderDate,
+    String paymentMethod,
+  ) async {
+    DocumentReference orderDoc = await ordersCollection.add({
+      'uid': null,
+      'orderedById': orderedById,
+      'paymentId': paymentId,
+      'orderId': orderId,
+      'productId': productId,
+      'totalAmount': totalAmount,
+      'quantity': quantity,
+      'isOrderCompelete': isOrderCompelete,
+      'isOrderCancelled': isOrderCancelled,
+      'orderDate': orderDate,
+      'paymentMethod': paymentMethod,
+    });
+
+    await orderDoc.update({
+      'uid': orderDoc.id,
+    });
   }
 }
