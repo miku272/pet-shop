@@ -50,7 +50,7 @@ class _CheckOutState extends State<CheckOut> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print(response);
+    // print(response);
 
     // verifySignature(
     //   signature: response.signature!,
@@ -88,7 +88,7 @@ class _CheckOutState extends State<CheckOut> {
 
     var formData = parts.join('&');
 
-    print('Form Data: $formData');
+    // print('Form Data: $formData');
 
     var res = await http.post(
       Uri.parse('http://192.168.81.153:3000/verifyOrder'),
@@ -98,7 +98,7 @@ class _CheckOutState extends State<CheckOut> {
       body: formData,
     );
 
-    print('Signature verification: ${res.body}');
+    // print('Signature verification: ${res.body}');
 
     if (res.statusCode == 200) {
       if (mounted) {
@@ -134,7 +134,7 @@ class _CheckOutState extends State<CheckOut> {
       );
     }
 
-    print(jsonDecode(res.body));
+    // print(jsonDecode(res.body));
   }
 
   void openGateway(String orderId, int amount) {
