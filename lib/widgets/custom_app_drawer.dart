@@ -5,11 +5,17 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../app_styles.dart';
+
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+
+import '../screens/login_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
+import '../screens/orders_screen.dart';
 import '../screens/cart_screen.dart';
+import '../screens/product_list_screen.dart';
+import '../screens/wishlist_screen.dart';
 
 class CustomAppDrawer extends StatefulWidget {
   const CustomAppDrawer({super.key});
@@ -104,23 +110,36 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                   ),
                 ),
               ),
-              FirebaseAuth.instance.currentUser != null
-                  ? ListTile(
-                      leading: const Icon(Icons.home_outlined),
-                      title: Text(
-                        'Home',
-                        style: sourceSansProRegular.copyWith(
-                          fontSize: 20,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          HomeScreen.routeName,
-                          (route) => false,
-                        );
-                      },
-                    )
-                  : const SizedBox(),
+              ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: Text(
+                  'Home',
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomeScreen.routeName,
+                    (route) => false,
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delivery_dining_outlined),
+                title: Text(
+                  'Orders',
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    OrdersScreen.routeName,
+                    (route) => false,
+                  );
+                },
+              ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
                       leading: const Icon(Icons.person_outline),
@@ -131,12 +150,26 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).pushNamed(
+                        Navigator.of(context).pushReplacementNamed(
                           ProfileScreen.routeName,
                         );
                       },
                     )
                   : const SizedBox(),
+              ListTile(
+                leading: const Icon(Icons.pets_outlined),
+                title: Text(
+                  'Pet Care',
+                  style: sourceSansProRegular.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed(
+                    ProductListScreen.routeName,
+                  );
+                },
+              ),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
                       leading: const Icon(Icons.card_travel),
@@ -147,22 +180,26 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).pushNamed(
+                        Navigator.of(context).pushReplacementNamed(
                           CartScreen.routeName,
                         );
                       },
                     )
                   : const SizedBox(),
               FirebaseAuth.instance.currentUser != null
-                  ? const ListTile(
-                      leading: Icon(Icons.favorite_outline),
-                      title: Text(
+                  ? ListTile(
+                      leading: const Icon(Icons.favorite_outline),
+                      title: const Text(
                         'My wishlist',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
-                      onTap: null,
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed(
+                          WishlistScreen.routeName,
+                        );
+                      },
                     )
                   : const SizedBox(),
               ListTile(
@@ -240,7 +277,21 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                         );
                       },
                     )
-                  : const SizedBox(),
+                  : ListTile(
+                      leading: const Icon(Icons.login),
+                      title: Text(
+                        'Sign in',
+                        style: sourceSansProRegular.copyWith(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          LoginScreen.routeName,
+                          (route) => false,
+                        );
+                      },
+                    ),
             ],
           ),
           Container(

@@ -16,6 +16,10 @@ import './screens/address_screen.dart';
 import './screens/address_editor_screen.dart';
 import 'screens/pet_editor_screen.dart';
 import './screens/pet_detail_screen.dart';
+import './screens/product_list_screen.dart';
+import './screens/wishlist_screen.dart';
+import './screens/checkout_screen.dart';
+import './screens/orders_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -113,6 +117,30 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (context) => const PetDetailScreen(),
+      );
+
+    case ProductListScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const ProductListScreen(),
+      );
+
+    case WishlistScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const WishlistScreen(),
+      );
+
+    case CheckoutScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const CheckoutScreen(),
+      );
+
+    case OrdersScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (context) => const OrdersScreen(),
       );
 
     default:
