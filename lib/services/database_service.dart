@@ -558,6 +558,13 @@ class DatabaseService {
     bool isOrderCancelled,
     String orderDate,
     String paymentMethod,
+    String fullName,
+    String addressLine1,
+    String addressLine2,
+    String city,
+    String state,
+    String pinCode,
+    String mobNumber,
   ) async {
     DocumentReference orderDoc = await ordersCollection.add({
       'uid': null,
@@ -565,12 +572,19 @@ class DatabaseService {
       'paymentId': paymentId,
       'orderId': orderId,
       'productId': productId,
-      'totalAmount': (totalAmount as double) / 100,
+      'totalAmount': totalAmount / 100,
       'quantity': quantity,
       'isOrderDelivered': isOrderDelivered,
       'isOrderCancelled': isOrderCancelled,
       'orderDate': orderDate,
       'paymentMethod': paymentMethod,
+      'fullName': fullName,
+      'addressLine1': addressLine1,
+      'addressLine2': addressLine2,
+      'city': city,
+      'state': state,
+      'pinCode': pinCode,
+      'mobNumber': mobNumber,
     });
 
     await orderDoc.update({

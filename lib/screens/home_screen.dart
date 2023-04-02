@@ -100,57 +100,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       drawer: const CustomAppDrawer(),
+      appBar: AppBar(
+        leading: const DrawerIconButton(),
+        leadingWidth: 100,
+        title: Text(
+          'Paw Pals',
+          style: sourceSansProBold.copyWith(
+            fontSize: 23,
+            color: grey,
+          ),
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          FirebaseAuth.instance.currentUser == null
+              ? Container(
+                  margin: const EdgeInsets.only(right: 30),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(LoginScreen.routeName);
+                    },
+                    child: Text(
+                      'Login',
+                      style: sourceSansProSemiBold.copyWith(
+                        color: lightGrey,
+                        fontSize: 16.5,
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  margin: const EdgeInsets.only(right: 30),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        ChatListScreen.routeName,
+                      );
+                    },
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: const <Widget>[
+                        Icon(
+                          Icons.chat_bubble_outline_rounded,
+                          color: grey,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        ],
+      ),
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            const SizedBox(height: 20),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: paddingHorizontal),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const DrawerIconButton(),
-                  Text(
-                    'Pet Shop',
-                    style: sourceSansProBold.copyWith(
-                      fontSize: 23,
-                      color: grey,
-                    ),
-                  ),
-                  FirebaseAuth.instance.currentUser == null
-                      ? InkWell(
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(LoginScreen.routeName);
-                          },
-                          child: Text(
-                            'Login',
-                            style: sourceSansProSemiBold.copyWith(
-                              color: lightGrey,
-                              fontSize: 16.5,
-                            ),
-                          ),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              ChatListScreen.routeName,
-                            );
-                          },
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: const <Widget>[
-                              Icon(
-                                Icons.chat_bubble_outline_rounded,
-                                color: grey,
-                              ),
-                            ],
-                          ),
-                        ),
-                ],
-              ),
-            ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(

@@ -15,6 +15,9 @@ import '../services/database_service.dart';
 
 import './address_screen.dart';
 
+bool userHasAddress = false;
+String userAddressId = '';
+
 class CheckoutScreen extends StatelessWidget {
   static const routeName = '/checkout-screen';
 
@@ -41,7 +44,6 @@ class _CheckOutState extends State<CheckOut> {
 
   int selectedRadioTile = 0;
   int totalAmount = 0;
-
   bool isLoading = false;
   bool decreaseStockAgain = false;
 
@@ -60,6 +62,14 @@ class _CheckOutState extends State<CheckOut> {
     QuerySnapshot cart = await DatabaseService().getUserStaticCartData(
       FirebaseAuth.instance.currentUser!.uid,
     );
+
+    DocumentSnapshot userAddress = await DatabaseService().getAddressUsingUid(
+      FirebaseAuth.instance.currentUser!.uid,
+      userAddressId,
+    );
+
+    Map userAddressData = userAddress.data() as Map;
+
     String day = DateTime.now().day.toString();
     String month = DateTime.now().month.toString();
     String year = DateTime.now().year.toString();
@@ -67,10 +77,12 @@ class _CheckOutState extends State<CheckOut> {
     for (var cartData in cart.docs) {
       int quantity = cartData['quantity'];
 
-      await DatabaseService().decreaseProductStock(
-        cartData['productId'],
-        quantity,
-      );
+      if (decreaseStockAgain) {
+        await DatabaseService().decreaseProductStock(
+          cartData['productId'],
+          quantity,
+        );
+      }
 
       await DatabaseService().addOrder(
         FirebaseAuth.instance.currentUser!.uid,
@@ -83,6 +95,13 @@ class _CheckOutState extends State<CheckOut> {
         false,
         '$day-$month-$year',
         'payOnDelivery',
+        userAddressData['fullName'],
+        userAddressData['addressLine1'],
+        userAddressData['addressLine2'],
+        userAddressData['city'],
+        userAddressData['state'],
+        userAddressData['pinCode'],
+        userAddressData['mobNumber'],
       );
 
       await DatabaseService().clearCart(
@@ -97,6 +116,14 @@ class _CheckOutState extends State<CheckOut> {
     final cart = await DatabaseService().getUserStaticCartData(
       FirebaseAuth.instance.currentUser!.uid,
     );
+
+    DocumentSnapshot userAddress = await DatabaseService().getAddressUsingUid(
+      FirebaseAuth.instance.currentUser!.uid,
+      userAddressId,
+    );
+
+    Map userAddressData = userAddress.data() as Map;
+
     String day = DateTime.now().day.toString();
     String month = DateTime.now().month.toString();
     String year = DateTime.now().year.toString();
@@ -111,10 +138,17 @@ class _CheckOutState extends State<CheckOut> {
         cartData['productId'],
         totalAmount,
         cartData['quantity'],
-        true,
+        false,
         false,
         '$day-$month-$year',
         'razorpay',
+        userAddressData['fullName'],
+        userAddressData['addressLine1'],
+        userAddressData['addressLine2'],
+        userAddressData['city'],
+        userAddressData['state'],
+        userAddressData['pinCode'],
+        userAddressData['mobNumber'],
       );
 
       await DatabaseService().clearCart(
@@ -435,6 +469,16 @@ class _CheckOutState extends State<CheckOut> {
           onPressed: isLoading
               ? null
               : () async {
+                  if (!userHasAddress) {
+                    MySnackbar.showSnackbar(
+                      context,
+                      black,
+                      'Please select an address',
+                    );
+
+                    return;
+                  }
+
                   if (selectedRadioTile == 0) {
                     MySnackbar.showSnackbar(
                       context,
@@ -511,7 +555,7 @@ class _DefaultAddressState extends State<DefaultAddress> {
           );
         }
 
-        if (snapshot.data == null) {
+        if (!snapshot.hasData || snapshot.data == null) {
           return Center(
             child: TextButton(
               onPressed: () {
@@ -531,6 +575,9 @@ class _DefaultAddressState extends State<DefaultAddress> {
             ),
           );
         }
+
+        userAddressId = snapshot.data!;
+        userHasAddress = true;
 
         return FutureBuilder(
           future: DatabaseService().getAddressUsingUid(

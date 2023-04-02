@@ -405,7 +405,9 @@ class _CartScreenState extends State<CartScreen> {
                         'discountPrice': totalDiscountPrice,
                         'savings': totalOriginalPrice - totalDiscountPrice,
                       },
-                    );
+                    ).then((value) {
+                      setState(() {});
+                    });
                   }
                 },
           extendedPadding: const EdgeInsets.symmetric(

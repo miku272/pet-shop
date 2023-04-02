@@ -162,7 +162,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        mainAxisExtent: 300,
+                        mainAxisExtent: 230,
                       ),
                       itemBuilder: (context, index) {
                         return Container(
@@ -264,22 +264,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     ),
                                   ),
                                 ],
-                              ),
-                              ElevatedButton(
-                                onPressed:
-                                    snapshot.data!.docs[index]['stock'] < 1
-                                        ? null
-                                        : () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: lightOrange,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  minimumSize: const Size.fromHeight(50),
-                                ),
-                                child: const Text(
-                                  'Buy Now',
-                                ),
                               ),
                             ],
                           ),
