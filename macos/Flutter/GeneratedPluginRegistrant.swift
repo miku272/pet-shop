@@ -11,7 +11,7 @@ import firebase_core
 import firebase_storage
 import location
 import package_info_plus_macos
-import path_provider_foundation
+import path_provider_macos
 import share_plus
 import shared_preferences_macos
 
