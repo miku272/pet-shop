@@ -14,6 +14,8 @@ import '../widgets/my_snackbar.dart';
 import '../services/database_service.dart';
 
 import './address_screen.dart';
+import './cart_screen.dart';
+import './orders_screen.dart';
 
 bool userHasAddress = false;
 String userAddressId = '';
@@ -107,8 +109,13 @@ class _CheckOutState extends State<CheckOut> {
       await DatabaseService().clearCart(
         FirebaseAuth.instance.currentUser!.uid,
       );
+    }
 
-      debugPrint('Order Successfull');
+    if (mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        OrdersScreen.routeName,
+        ModalRoute.withName(CartScreen.routeName),
+      );
     }
   }
 
@@ -130,6 +137,14 @@ class _CheckOutState extends State<CheckOut> {
 
     for (var element in cart.docs) {
       Map cartData = element.data() as Map;
+      int quantity = cartData['quantity'];
+
+      if (decreaseStockAgain) {
+        await DatabaseService().decreaseProductStock(
+          cartData['productId'],
+          quantity,
+        );
+      }
 
       await DatabaseService().addOrder(
         FirebaseAuth.instance.currentUser!.uid,
@@ -153,6 +168,13 @@ class _CheckOutState extends State<CheckOut> {
 
       await DatabaseService().clearCart(
         FirebaseAuth.instance.currentUser!.uid,
+      );
+    }
+
+    if (mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        OrdersScreen.routeName,
+        ModalRoute.withName(CartScreen.routeName),
       );
     }
   }
