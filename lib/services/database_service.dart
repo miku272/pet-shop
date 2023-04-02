@@ -591,4 +591,17 @@ class DatabaseService {
       'uid': orderDoc.id,
     });
   }
+
+  Future cancelOrder(String orderUid) async {
+    await ordersCollection.doc(orderUid).update({
+      'isOrderCancelled': true,
+    });
+  }
+
+  Future<QuerySnapshot> getUserOrders(String userId) async {
+    QuerySnapshot userOrders =
+        await ordersCollection.where('orderedById', isEqualTo: userId).get();
+
+    return userOrders;
+  }
 }

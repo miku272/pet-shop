@@ -126,7 +126,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.home_outlined),
+                leading: const Icon(Icons.delivery_dining_outlined),
                 title: Text(
                   'Orders',
                   style: sourceSansProRegular.copyWith(
