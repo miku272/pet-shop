@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -188,7 +189,7 @@ class _PetDetailState extends State<PetDetail> {
                 );
               }
 
-              if (snapshot.data == null) {
+              if (!snapshot.hasData || snapshot.data == null) {
                 return Center(
                   child: Column(
                     children: <Widget>[
