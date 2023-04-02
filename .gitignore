@@ -45,3 +45,6 @@ app.*.map.json
 
 # Secret Files
 /lib/firebase_options.dart
+
+node_modules/
+keyFiles.js
