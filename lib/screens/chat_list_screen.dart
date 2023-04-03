@@ -40,6 +40,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
           );
         }
 
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox();
+        }
+
         if (snapshot.hasData) {
           if (snapshot.data['chats'].length != 0) {
             return ListView.builder(
@@ -111,6 +115,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return Scaffold(
       drawer: const CustomAppDrawer(),
       appBar: AppBar(
+        leadingWidth: 80,
         leading: const DrawerIconButton(),
         title: Text(
           'Chats',

@@ -188,7 +188,7 @@ class _PetDetailState extends State<PetDetail> {
                 );
               }
 
-              if (snapshot.data == null) {
+              if (!snapshot.hasData || snapshot.data == null) {
                 return Center(
                   child: Column(
                     children: <Widget>[
@@ -448,80 +448,6 @@ class _PetDetailState extends State<PetDetail> {
                       ],
                     ),
                   ),
-                  // const SizedBox(height: 30),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(
-                  //       horizontal: paddingHorizontal),
-                  //   child: Text(
-                  //     'Photo Album',
-                  //     style: sourceSansProRegular.copyWith(
-                  //       color: lightGrey,
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 10),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(
-                  //       horizontal: paddingHorizontal),
-                  //   child: SingleChildScrollView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: <Widget>[
-                  //         Container(
-                  //           height: MediaQuery.of(context).orientation ==
-                  //                   Orientation.landscape
-                  //               ? SizeConfig.blockSizeVertical! * 40
-                  //               : 75,
-                  //           width: SizeConfig.blockSizeHorizontal! * 30,
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(20),
-                  //             image: const DecorationImage(
-                  //               fit: BoxFit.cover,
-                  //               image: AssetImage(
-                  //                 'assets/images/dog_marly01.png',
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         const SizedBox(width: 7),
-                  //         Container(
-                  //           height: MediaQuery.of(context).orientation ==
-                  //                   Orientation.landscape
-                  //               ? SizeConfig.blockSizeVertical! * 40
-                  //               : 75,
-                  //           width: SizeConfig.blockSizeHorizontal! * 30,
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(20),
-                  //             image: const DecorationImage(
-                  //               fit: BoxFit.cover,
-                  //               image: AssetImage(
-                  //                 'assets/images/dog_marly02.png',
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         const SizedBox(width: 7),
-                  //         Container(
-                  //           height: MediaQuery.of(context).orientation ==
-                  //                   Orientation.landscape
-                  //               ? SizeConfig.blockSizeVertical! * 40
-                  //               : 75,
-                  //           width: SizeConfig.blockSizeHorizontal! * 30,
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(20),
-                  //             image: const DecorationImage(
-                  //               fit: BoxFit.cover,
-                  //               image: AssetImage(
-                  //                 'assets/images/dog_marly03.png',
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -593,7 +519,9 @@ class _PetDetailState extends State<PetDetail> {
                     return;
                   },
                   extendedPadding: const EdgeInsets.symmetric(
-                      horizontal: paddingHorizontal, vertical: 18),
+                    horizontal: paddingHorizontal,
+                    vertical: 18,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

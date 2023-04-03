@@ -10,6 +10,8 @@ class DatabaseService {
   final userCollection = FirebaseFirestore.instance.collection('users');
   final chatCollection = FirebaseFirestore.instance.collection('chats');
   final petCollection = FirebaseFirestore.instance.collection('pets');
+  final productCollection = FirebaseFirestore.instance.collection('products');
+  final ordersCollection = FirebaseFirestore.instance.collection('orders');
 
   DatabaseService({this.uid});
 
@@ -159,6 +161,17 @@ class DatabaseService {
     return userData.data()!['defaultAddressId'];
   }
 
+  Future<DocumentSnapshot> getAddressUsingUid(
+      String userId, String addressId) async {
+    DocumentSnapshot addressData = await userCollection
+        .doc(userId)
+        .collection('address')
+        .doc(addressId)
+        .get();
+
+    return addressData;
+  }
+
   Future deleteUserAddress(String docId) async {
     await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -186,8 +199,25 @@ class DatabaseService {
               ),
             );
 
+    // print(querySnapshot.docs[0].data());
     return querySnapshot;
     // Call using 'querySnapshot.docs[0].data()';
+  }
+
+  Future<bool> addItemToWishlist(String userId, String productId) async {
+    await userCollection.doc(userId).update({
+      'wishlist': FieldValue.arrayUnion([productId]),
+    });
+
+    return true;
+  }
+
+  Future<bool> removeItemFromWishlist(String userId, String productId) async {
+    await userCollection.doc(userId).update({
+      'wishlist': FieldValue.arrayRemove([productId])
+    });
+
+    return true;
   }
 
   Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getUserChats() async {
@@ -397,5 +427,181 @@ class DatabaseService {
     return await petCollection.doc(petId).update({
       'likedBy': FieldValue.arrayRemove([unlikeById]),
     });
+  }
+
+  Future<QuerySnapshot> getAllProducts() async {
+    QuerySnapshot productData = await productCollection.get();
+
+    return productData;
+  }
+
+  Future<DocumentSnapshot> getProductDataUsingUid(String uid) async {
+    DocumentSnapshot productData = await productCollection.doc(uid).get();
+
+    return productData;
+  }
+
+  Future increaseProductStock(String productId, int quantity) async {
+    final product = await productCollection.doc(productId).get();
+    Map productData = product.data() as Map;
+    int productStock = productData['stock'];
+
+    await productCollection.doc(productId).update({
+      'stock': productStock + quantity,
+    });
+  }
+
+  Future decreaseProductStock(String productId, int quantity) async {
+    final product = await productCollection.doc(productId).get();
+    Map productData = product.data() as Map;
+    int productStock = productData['stock'];
+
+    await productCollection.doc(productId).update({
+      'stock': productStock - quantity,
+    });
+  }
+
+  Future<QuerySnapshot> getDogProducts() async {
+    QuerySnapshot productData = await productCollection
+        .where(
+          'category',
+          isEqualTo: 'dog',
+        )
+        .get();
+
+    return productData;
+  }
+
+  Future<QuerySnapshot> getCatProducts() async {
+    QuerySnapshot productData = await productCollection
+        .where(
+          'category',
+          isEqualTo: 'cat',
+        )
+        .get();
+
+    return productData;
+  }
+
+  Future<String> addToCart(String userId, String productId) async {
+    QuerySnapshot cartData =
+        await userCollection.doc(userId).collection('cart').get();
+
+    for (var element in cartData.docs) {
+      final cart = element.data() as Map;
+
+      if (cart['productId'] == productId) {
+        return 'Item already in the cart';
+      }
+    }
+
+    await userCollection.doc(userId).collection('cart').add({
+      'productId': productId,
+      'quantity': 1,
+    });
+
+    return 'Item added to cart';
+  }
+
+  Future removeFromCart(String userId, String cartId) async {
+    await userCollection.doc(userId).collection('cart').doc(cartId).delete();
+  }
+
+  Future clearCart(String userId) async {
+    QuerySnapshot cart =
+        await userCollection.doc(userId).collection('cart').get();
+
+    for (var element in cart.docs) {
+      await element.reference.delete();
+    }
+  }
+
+  Future<bool> updateCartProductQuantity(
+      String userId, String cartId, int qty) async {
+    if (qty < 1) {
+      return false;
+    } else if (qty > 5) {
+      return false;
+    }
+
+    await userCollection.doc(userId).collection('cart').doc(cartId).update(
+      {
+        'quantity': qty,
+      },
+    );
+
+    return true;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserCartData(String userId) {
+    Stream<QuerySnapshot<Map<String, dynamic>>> cartSize =
+        userCollection.doc(userId).collection('cart').snapshots();
+
+    return cartSize;
+  }
+
+  Future<QuerySnapshot> getUserStaticCartData(String userId) async {
+    QuerySnapshot cartData =
+        await userCollection.doc(userId).collection('cart').get();
+
+    return cartData;
+  }
+
+  Future addOrder(
+    String orderedById,
+    String? paymentId,
+    String? orderId,
+    String productId,
+    int totalAmount,
+    int quantity,
+    bool isOrderDelivered,
+    bool isOrderCancelled,
+    String orderDate,
+    String paymentMethod,
+    String fullName,
+    String addressLine1,
+    String addressLine2,
+    String city,
+    String state,
+    String pinCode,
+    String mobNumber,
+  ) async {
+    DocumentReference orderDoc = await ordersCollection.add({
+      'uid': null,
+      'orderedById': orderedById,
+      'paymentId': paymentId,
+      'orderId': orderId,
+      'productId': productId,
+      'totalAmount': totalAmount / 100,
+      'quantity': quantity,
+      'isOrderDelivered': isOrderDelivered,
+      'isOrderCancelled': isOrderCancelled,
+      'orderDate': orderDate,
+      'paymentMethod': paymentMethod,
+      'fullName': fullName,
+      'addressLine1': addressLine1,
+      'addressLine2': addressLine2,
+      'city': city,
+      'state': state,
+      'pinCode': pinCode,
+      'mobNumber': mobNumber,
+    });
+
+    await orderDoc.update({
+      'uid': orderDoc.id,
+    });
+  }
+
+  Future cancelOrder(String orderUid) async {
+    await ordersCollection.doc(orderUid).update({
+      'isOrderCancelled': true,
+    });
+  }
+
+  Future<QuerySnapshot> getUserOrders(String userId) async {
+    QuerySnapshot userOrders =
+        await ordersCollection.where('orderedById', isEqualTo: userId).get();
+
+    return userOrders;
   }
 }
