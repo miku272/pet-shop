@@ -204,11 +204,11 @@ class AuthService {
 
   Future signOut() async {
     try {
+      await firebaseAuth.signOut();
+
       await HelperFunction.setUserFirstName('');
       await HelperFunction.setUserLastName('');
       await HelperFunction.setUserEmail('');
-
-      await firebaseAuth.signOut();
     } catch (error) {
       return null;
     }
