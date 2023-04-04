@@ -435,7 +435,11 @@ class _HomeScreenState extends State<HomeScreen> {
             MySnackbar.showSnackbar(context, black, 'Please signin first');
             Navigator.of(context).pushNamed(LoginScreen.routeName);
           } else {
-            Navigator.of(context).pushNamed(PetEditorScreen.routeName);
+            Navigator.of(context)
+                .pushNamed(PetEditorScreen.routeName)
+                .then((value) {
+              setState(() {});
+            });
           }
         },
         child: const Center(

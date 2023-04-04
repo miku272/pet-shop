@@ -166,16 +166,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 Text(
                                   'Total Price: ${productPrice.toStringAsFixed(2)} X $quantity',
                                 ),
-                                Text(
-                                  isOrderDelievered
-                                      ? 'Status: Delivered'
-                                      : 'Status: In transit',
-                                  style: sourceSansProBold.copyWith(
-                                    color: isOrderDelievered
-                                        ? Colors.greenAccent
-                                        : null,
-                                  ),
-                                ),
+                                isOrderCancelled
+                                    ? Text(
+                                        isOrderDelievered
+                                            ? 'Status: Delivered'
+                                            : 'Status: In transit',
+                                        style: sourceSansProBold.copyWith(
+                                          color: isOrderDelievered
+                                              ? Colors.greenAccent
+                                              : null,
+                                        ),
+                                      )
+                                    : const SizedBox(),
                               ],
                             ),
                             trailing: isOrderCancelled

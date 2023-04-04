@@ -320,12 +320,14 @@ class _PetEditorState extends State<PetEditor> {
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () async {
-                                  DatabaseService().deletePetDataUsingUid(
+                                  await DatabaseService().deletePetDataUsingUid(
                                     widget.args!['petId'],
                                   );
 
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
+                                  if (mounted) {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                  }
                                 },
                                 child: Text(
                                   'Yes',
