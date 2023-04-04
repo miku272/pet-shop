@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+// ignore: depend_on_referenced_packages
+import 'package:page_transition/page_transition.dart';
 
 import 'firebase_options.dart';
 import 'router.dart';
 
 import './screens/home_screen.dart';
+import './screens/splash_screen.dart';
 
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
@@ -33,7 +37,15 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      // home: const SplashScreen(),
+      home: AnimatedSplashScreen(
+        splash: const SplashScreen(),
+        nextScreen: const HomeScreen(),
+        centered: true,
+        splashTransition: SplashTransition.fadeTransition,
+        pageTransitionType: PageTransitionType.rightToLeftWithFade,
+      ),
     );
   }
 }
