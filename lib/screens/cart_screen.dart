@@ -292,62 +292,6 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
               ),
-              // Divider(color: boxShadowColor.withOpacity(0.5)),
-              // const SizedBox(height: 30),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              //     Text(
-              //       'Total:',
-              //       style: sourceSansProRegular.copyWith(
-              //         fontSize: 18,
-              //       ),
-              //     ),
-              //     Text(
-              //       '80',
-              //       style: sourceSansProRegular.copyWith(
-              //         fontSize: 18,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              //     Text(
-              //       'Delivery Charges:',
-              //       style: sourceSansProRegular.copyWith(
-              //         fontSize: 18,
-              //       ),
-              //     ),
-              //     Text(
-              //       '20',
-              //       style: sourceSansProRegular.copyWith(
-              //         fontSize: 18,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 10),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              //     Text(
-              //       'Grand Total:',
-              //       style: sourceSansProSemiBold.copyWith(
-              //         fontSize: 30,
-              //         letterSpacing: 1,
-              //       ),
-              //     ),
-              //     Text(
-              //       '100',
-              //       style: sourceSansProSemiBold.copyWith(
-              //         fontSize: 40,
-              //         letterSpacing: 1,
-              //       ),
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ),
@@ -397,6 +341,10 @@ class _CartScreenState extends State<CartScreen> {
                     );
                   }
 
+                  setState(() {
+                    isLoading = false;
+                  });
+
                   if (mounted) {
                     Navigator.of(context).pushNamed(
                       CheckoutScreen.routeName,
@@ -417,14 +365,20 @@ class _CartScreenState extends State<CartScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           backgroundColor: grey,
-          label: Text(
-            'Proceed to checkout',
-            style: sourceSansProSemiBold.copyWith(
-              fontSize: 25,
-              color: boxShadowColor,
-              letterSpacing: 1,
-            ),
-          ),
+          label: isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: boxShadowColor,
+                  ),
+                )
+              : Text(
+                  'Proceed to checkout',
+                  style: sourceSansProSemiBold.copyWith(
+                    fontSize: 25,
+                    color: boxShadowColor,
+                    letterSpacing: 1,
+                  ),
+                ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

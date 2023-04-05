@@ -93,7 +93,7 @@ class _CheckOutState extends State<CheckOut> {
         cartData['productId'],
         totalAmount,
         cartData['quantity'],
-        true,
+        false,
         false,
         '$day-$month-$year',
         'payOnDelivery',
