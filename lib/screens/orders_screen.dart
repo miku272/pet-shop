@@ -166,7 +166,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 Text(
                                   'Total Price: ${productPrice.toStringAsFixed(2)} X $quantity',
                                 ),
-                                isOrderCancelled
+                                !isOrderCancelled
                                     ? Text(
                                         isOrderDelievered
                                             ? 'Status: Delivered'
