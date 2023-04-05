@@ -24,7 +24,7 @@ class DatabaseService {
   }) async {
     return await userCollection.doc(uid).set({
       'uid': uid,
-      'defaultAddressid': null,
+      'defaultAddressId': '',
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
