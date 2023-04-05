@@ -125,21 +125,23 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
                   );
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.delivery_dining_outlined),
-                title: Text(
-                  'Orders',
-                  style: sourceSansProRegular.copyWith(
-                    fontSize: 20,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    OrdersScreen.routeName,
-                    (route) => false,
-                  );
-                },
-              ),
+              FirebaseAuth.instance.currentUser != null
+                  ? ListTile(
+                      leading: const Icon(Icons.delivery_dining_outlined),
+                      title: Text(
+                        'Orders',
+                        style: sourceSansProRegular.copyWith(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          OrdersScreen.routeName,
+                          (route) => false,
+                        );
+                      },
+                    )
+                  : const SizedBox(),
               FirebaseAuth.instance.currentUser != null
                   ? ListTile(
                       leading: const Icon(Icons.person_outline),
