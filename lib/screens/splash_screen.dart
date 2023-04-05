@@ -9,12 +9,8 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: white,
       body: Center(
-        // child: Icon(
-        //   Icons.pets,
-        //   size: 200,
-        //   color: boxShadowColor,
-        // ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -162,9 +162,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        mainAxisExtent: 230,
+                        mainAxisExtent: 250,
                       ),
                       itemBuilder: (context, index) {
+                        int originalPrice = snapshot.data!.docs[index]['price'];
+
+                        var discountPrice = originalPrice -
+                            (originalPrice *
+                                (snapshot.data!.docs[index]['discount'] / 100));
+
                         return Container(
                           decoration: BoxDecoration(
                             color: white,
@@ -189,10 +195,29 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   color: grey,
                                 ),
                               ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    'Price: ',
+                                    style: sourceSansProSemiBold,
+                                  ),
+                                  Text(
+                                    originalPrice.toString(),
+                                    style: sourceSansProSemiBold.copyWith(
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    discountPrice.toStringAsFixed(2),
+                                    style: sourceSansProSemiBold,
+                                  ),
+                                ],
+                              ),
                               snapshot.data!.docs[index]['stock'] < 1
                                   ? Text(
                                       'Item currently out of stock',
-                                      style: sourceSansProLight.copyWith(
+                                      style: sourceSansProRegular.copyWith(
                                         color: red,
                                       ),
                                     )

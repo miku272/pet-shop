@@ -9,6 +9,8 @@ import 'package:page_transition/page_transition.dart';
 import 'firebase_options.dart';
 import 'router.dart';
 
+import './app_styles.dart';
+
 import './screens/home_screen.dart';
 import './screens/splash_screen.dart';
 
@@ -37,9 +39,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       onGenerateRoute: (routeSettings) => generateRoute(routeSettings),
-      // home: const HomeScreen(),
-      // home: const SplashScreen(),
       home: AnimatedSplashScreen(
+        backgroundColor: white,
         splash: const SplashScreen(),
         nextScreen: const HomeScreen(),
         centered: true,
