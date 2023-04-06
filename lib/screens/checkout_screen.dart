@@ -466,21 +466,6 @@ class _CheckOutState extends State<CheckOut> {
                         });
                       },
                     ),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     String strAmt =
-                    //         (widget.args!['discountPrice'] as double)
-                    //             .toStringAsFixed(2);
-
-                    //     double dblAmt = double.parse(strAmt) * 100;
-                    //     int amount = dblAmt.toInt();
-
-                    //     createOrder(amount);
-                    //   },
-                    //   child: Text(
-                    //     'Pay ${(widget.args!['discountPrice'] as double).toStringAsFixed(2)}',
-                    //   ),
-                    // ),
                   ],
                 ),
         ),
@@ -577,7 +562,7 @@ class _DefaultAddressState extends State<DefaultAddress> {
           );
         }
 
-        if (!snapshot.hasData || snapshot.data == null) {
+        if (!snapshot.hasData || snapshot.data == null || snapshot.data == '') {
           return Center(
             child: TextButton(
               onPressed: () {
