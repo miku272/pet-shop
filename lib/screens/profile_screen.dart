@@ -188,9 +188,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed(
+                          Navigator.of(context)
+                              .pushNamed(
                             EditProfileScreen.routeName,
-                          );
+                          )
+                              .then((value) {
+                            setState(() {});
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: black,
