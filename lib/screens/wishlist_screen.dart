@@ -11,6 +11,7 @@ import '../widgets/my_snackbar.dart';
 
 import '../services/database_service.dart';
 
+import './product_detail_screen.dart';
 import './cart_screen.dart';
 
 class WishlistScreen extends StatefulWidget {
@@ -127,34 +128,44 @@ class _WishlistScreenState extends State<WishlistScreen> {
                           (productData['price'] *
                               (productData['discount'] / 100));
 
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: WishlistContainer(
-                          imageUrl: productData['imageList'][0],
-                          productName: productData['productName'],
-                          productPrice: price.toString(),
-                          outOfStock: productData['stock'] < 1,
-                          onRemove: () async {
-                            final result =
-                                await DatabaseService().removeItemFromWishlist(
-                              FirebaseAuth.instance.currentUser!.uid,
-                              productData['uid'],
-                            );
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            ProductDetailScreen.routeName,
+                            arguments: productData['uid'],
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: WishlistContainer(
+                            imageUrl: productData['imageList'][0],
+                            productName: productData['productName'],
+                            productPrice: price.toString(),
+                            outOfStock: productData['stock'] < 1,
+                            onRemove: () async {
+                              final result = await DatabaseService()
+                                  .removeItemFromWishlist(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                productData['uid'],
+                              );
 
-                            if (result) {
-                              setState(() {});
-                            }
-                          },
-                          onAddToCart: () async {
-                            final response = await DatabaseService().addToCart(
-                              FirebaseAuth.instance.currentUser!.uid,
-                              productData['uid'],
-                            );
+                              if (result) {
+                                setState(() {});
+                              }
+                            },
+                            onAddToCart: () async {
+                              final response =
+                                  await DatabaseService().addToCart(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                productData['uid'],
+                              );
 
-                            if (mounted) {
-                              MySnackbar.showSnackbar(context, black, response);
-                            }
-                          },
+                              if (mounted) {
+                                MySnackbar.showSnackbar(
+                                    context, black, response);
+                              }
+                            },
+                          ),
                         ),
                       );
                     },

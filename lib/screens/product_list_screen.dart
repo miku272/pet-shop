@@ -11,6 +11,7 @@ import '../widgets/my_snackbar.dart';
 
 import '../services/database_service.dart';
 
+import './product_detail_screen.dart';
 import './cart_screen.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -171,126 +172,137 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             (originalPrice *
                                 (snapshot.data!.docs[index]['discount'] / 100));
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 100,
-                                child: Image.network(
-                                  snapshot.data!.docs[index]['imageList'][0],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Text(
-                                '${snapshot.data!.docs[index]['productName']}\n',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: sourceSansProRegular.copyWith(
-                                  color: grey,
-                                ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Price: ',
-                                    style: sourceSansProSemiBold,
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              ProductDetailScreen.routeName,
+                              arguments: snapshot.data!.docs[index]['uid'],
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 100,
+                                  child: Image.network(
+                                    snapshot.data!.docs[index]['imageList'][0],
+                                    fit: BoxFit.cover,
                                   ),
-                                  Text(
-                                    originalPrice.toString(),
-                                    style: sourceSansProSemiBold.copyWith(
-                                      decoration: TextDecoration.lineThrough,
+                                ),
+                                Text(
+                                  '${snapshot.data!.docs[index]['productName']}\n',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: sourceSansProRegular.copyWith(
+                                    color: grey,
+                                  ),
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Price: ',
+                                      style: sourceSansProSemiBold,
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    discountPrice.toStringAsFixed(2),
-                                    style: sourceSansProSemiBold,
-                                  ),
-                                ],
-                              ),
-                              snapshot.data!.docs[index]['stock'] < 1
-                                  ? Text(
-                                      'Item currently out of stock',
-                                      style: sourceSansProRegular.copyWith(
-                                        color: red,
+                                    Text(
+                                      originalPrice.toString(),
+                                      style: sourceSansProSemiBold.copyWith(
+                                        decoration: TextDecoration.lineThrough,
                                       ),
-                                    )
-                                  : const SizedBox(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  IconButton(
-                                    onPressed: () async {
-                                      if (FirebaseAuth.instance.currentUser ==
-                                          null) {
-                                        MySnackbar.showSnackbar(
-                                          context,
-                                          black,
-                                          'Please login first',
-                                        );
-
-                                        return;
-                                      }
-
-                                      final result = await DatabaseService()
-                                          .addItemToWishlist(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                        snapshot.data!.docs[index]['uid'],
-                                      );
-
-                                      if (result) {
-                                        if (mounted) {
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      discountPrice.toStringAsFixed(2),
+                                      style: sourceSansProSemiBold,
+                                    ),
+                                  ],
+                                ),
+                                snapshot.data!.docs[index]['stock'] < 1
+                                    ? Text(
+                                        'Item currently out of stock',
+                                        style: sourceSansProRegular.copyWith(
+                                          color: red,
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    IconButton(
+                                      onPressed: () async {
+                                        if (FirebaseAuth.instance.currentUser ==
+                                            null) {
                                           MySnackbar.showSnackbar(
                                             context,
                                             black,
-                                            'Item added to wishlist',
+                                            'Please login first',
                                           );
-                                        }
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.favorite,
-                                      color: red,
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed:
-                                        snapshot.data!.docs[index]['stock'] < 1
-                                            ? null
-                                            : () async {
-                                                final response =
-                                                    await DatabaseService()
-                                                        .addToCart(
-                                                  FirebaseAuth.instance
-                                                      .currentUser!.uid,
-                                                  snapshot.data!.docs[index]
-                                                      ['uid'],
-                                                );
 
-                                                if (mounted) {
-                                                  MySnackbar.showSnackbar(
-                                                      context, black, response);
-                                                }
-                                              },
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                          return;
+                                        }
+
+                                        final result = await DatabaseService()
+                                            .addItemToWishlist(
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          snapshot.data!.docs[index]['uid'],
+                                        );
+
+                                        if (result) {
+                                          if (mounted) {
+                                            MySnackbar.showSnackbar(
+                                              context,
+                                              black,
+                                              'Item added to wishlist',
+                                            );
+                                          }
+                                        }
+                                      },
+                                      icon: const Icon(
+                                        Icons.favorite,
+                                        color: red,
                                       ),
                                     ),
-                                    child: const Text(
-                                      'Add to Cart',
+                                    ElevatedButton(
+                                      onPressed: snapshot.data!.docs[index]
+                                                  ['stock'] <
+                                              1
+                                          ? null
+                                          : () async {
+                                              final response =
+                                                  await DatabaseService()
+                                                      .addToCart(
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid,
+                                                snapshot.data!.docs[index]
+                                                    ['uid'],
+                                              );
+
+                                              if (mounted) {
+                                                MySnackbar.showSnackbar(
+                                                    context, black, response);
+                                              }
+                                            },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Add to Cart',
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
