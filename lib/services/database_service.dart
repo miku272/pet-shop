@@ -173,6 +173,12 @@ class DatabaseService {
   }
 
   Future deleteUserAddress(String docId) async {
+    String defaultAddressId = await getDefaultAddress();
+
+    if (defaultAddressId == docId) {
+      await setDefaultAddress('');
+    }
+
     await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('address')
