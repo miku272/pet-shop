@@ -275,6 +275,18 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                               1
                                           ? null
                                           : () async {
+                                              if (FirebaseAuth
+                                                      .instance.currentUser ==
+                                                  null) {
+                                                MySnackbar.showSnackbar(
+                                                  context,
+                                                  black,
+                                                  'Please login first',
+                                                );
+
+                                                return;
+                                              }
+
                                               final response =
                                                   await DatabaseService()
                                                       .addToCart(
