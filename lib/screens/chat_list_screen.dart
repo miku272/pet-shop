@@ -137,7 +137,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.9,
                 width: double.infinity,
-                child: chatList(),
+                child: chats != null
+                    ? chatList()
+                    : const SizedBox(),
               ),
             ),
           ],
