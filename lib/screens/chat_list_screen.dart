@@ -36,7 +36,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: MainLoading(),
+            child: CircularProgressIndicator(),
           );
         }
 
@@ -137,9 +137,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.9,
                 width: double.infinity,
-                child: chats != null
-                    ? chatList()
-                    : const SizedBox(),
+                child: chats != null ? chatList() : const MainLoading(),
               ),
             ),
           ],

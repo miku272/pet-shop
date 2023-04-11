@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_shop/app_styles.dart';
 
-import './main_loading.dart';
-
 import '../services/database_service.dart';
 
 import '../screens/chat_screen.dart';
@@ -42,18 +40,18 @@ class _ChatListTileState extends State<ChatListTile> {
     return StreamBuilder(
       stream: chatList,
       builder: (context, snapshot) {
-        String recentMessage =
-            snapshot.data['recentMessage'] ?? 'With ❤️ from pet shop';
-
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: MainLoading(),
+            child: CircularProgressIndicator(),
           );
         }
 
         if (!snapshot.hasData || snapshot.data == null) {
           return const SizedBox();
         }
+
+        String recentMessage =
+            snapshot.data['recentMessage'] ?? 'With ❤️ from pet shop';
 
         return ListTile(
           onTap: () {
