@@ -239,7 +239,49 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         const SizedBox(width: 15),
                         InkWell(
-                          onTap: () {},
+                          onTap: _isLoading
+                              ? () {}
+                              : () async {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+
+                                  dynamic value =
+                                      await authService.loginUserWithGoogle();
+
+                                  if (value[0] == true) {
+                                    // await HelperFunction.setUserLoggedInStatus(true);
+                                    await HelperFunction.setUserFirstName(
+                                        value[1]);
+                                    await HelperFunction.setUserLastName(
+                                        value[2]);
+                                    await HelperFunction.setUserEmail(value[3]);
+
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+
+                                    if (mounted) {
+                                      // Navigator.of(context).pushReplacementNamed(
+                                      //     HomeScreen.routeName);
+
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                        HomeScreen.routeName,
+                                        (route) => false,
+                                      );
+                                    }
+                                  } else {
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+
+                                    if (mounted) {
+                                      MySnackbar.showSnackbar(
+                                          context, red, value);
+                                    }
+                                  }
+                                },
                           borderRadius: BorderRadius.circular(12),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -251,57 +293,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               color: lightOrange,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: InkWell(
-                              onTap: () async {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-
-                                dynamic value =
-                                    await authService.loginUserWithGoogle();
-
-                                if (value[0] == true) {
-                                  // await HelperFunction.setUserLoggedInStatus(true);
-                                  await HelperFunction.setUserFirstName(
-                                      value[1]);
-                                  await HelperFunction.setUserLastName(
-                                      value[2]);
-                                  await HelperFunction.setUserEmail(value[3]);
-
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-
-                                  if (mounted) {
-                                    // Navigator.of(context).pushReplacementNamed(
-                                    //     HomeScreen.routeName);
-
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                      HomeScreen.routeName,
-                                      (route) => false,
-                                    );
-                                  }
-                                } else {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-
-                                  if (mounted) {
-                                    MySnackbar.showSnackbar(
-                                        context, red, value);
-                                  }
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  'G',
-                                  style: sourceSansProBold.copyWith(
-                                    color: orange,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
+                            child: Center(
+                              child: _isLoading
+                                  ? const CircularProgressIndicator()
+                                  : Text(
+                                      'G',
+                                      style: sourceSansProBold.copyWith(
+                                        color: orange,
+                                        fontSize: 30,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
