@@ -37,7 +37,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
 
   void _shareApp() async {
     await Share.share(
-      'Hey! Check out this cool app!\nwww . pet_shop . com',
+      'Hey! Check out this cool app!\nwww . pawpals . com',
     );
   }
 
@@ -300,7 +300,7 @@ class _CustomAppDrawerState extends State<CustomAppDrawer> {
             margin: const EdgeInsets.only(bottom: 60),
             child: Center(
               child: Text(
-                'Copyright©️ 2023    Pet Shop',
+                'Copyright©️ 2023    Paw Pals',
                 style: sourceSansProRegular.copyWith(
                   color: grey,
                   fontSize: 18,
